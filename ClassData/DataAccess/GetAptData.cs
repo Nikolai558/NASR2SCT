@@ -423,7 +423,7 @@ namespace ClassData.DataAccess
                     }
                 };
 
-                if (rwysTempVar.Count >= 1)
+                if (rwysTempVar.Count >= 1 && aptXMLFormat.MagVar != "")
                 {
                     allAptForXML.Add(aptXMLFormat);
                 }
