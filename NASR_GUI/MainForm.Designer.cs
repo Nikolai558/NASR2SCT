@@ -44,10 +44,11 @@
             this.airacCycleGroupBox = new System.Windows.Forms.GroupBox();
             this.convertGroupBox = new System.Windows.Forms.GroupBox();
             this.startGroupBox = new System.Windows.Forms.GroupBox();
+            this.checkUpdateButton = new System.Windows.Forms.Button();
             this.processingDataLabel = new System.Windows.Forms.Label();
             this.processingGroupBox = new System.Windows.Forms.GroupBox();
-            this.runAgainButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
+            this.runAgainButton = new System.Windows.Forms.Button();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
             this.startGroupBox.SuspendLayout();
@@ -228,6 +229,7 @@
             // 
             // startGroupBox
             // 
+            this.startGroupBox.Controls.Add(this.checkUpdateButton);
             this.startGroupBox.Controls.Add(this.facilityIDLabel);
             this.startGroupBox.Controls.Add(this.facilityIdTextbox);
             this.startGroupBox.Controls.Add(this.startButton);
@@ -238,6 +240,18 @@
             this.startGroupBox.Size = new System.Drawing.Size(269, 365);
             this.startGroupBox.TabIndex = 14;
             this.startGroupBox.TabStop = false;
+            // 
+            // checkUpdateButton
+            // 
+            this.checkUpdateButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkUpdateButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.checkUpdateButton.Location = new System.Drawing.Point(98, 273);
+            this.checkUpdateButton.Name = "checkUpdateButton";
+            this.checkUpdateButton.Size = new System.Drawing.Size(124, 23);
+            this.checkUpdateButton.TabIndex = 15;
+            this.checkUpdateButton.Text = "Check for Update";
+            this.checkUpdateButton.UseVisualStyleBackColor = true;
+            this.checkUpdateButton.Click += new System.EventHandler(this.checkUpdateButton_Click);
             // 
             // processingDataLabel
             // 
@@ -264,20 +278,6 @@
             this.processingGroupBox.TabStop = false;
             this.processingGroupBox.Visible = false;
             // 
-            // runAgainButton
-            // 
-            this.runAgainButton.Enabled = false;
-            this.runAgainButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.runAgainButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.runAgainButton.Location = new System.Drawing.Point(60, 86);
-            this.runAgainButton.Name = "runAgainButton";
-            this.runAgainButton.Size = new System.Drawing.Size(182, 34);
-            this.runAgainButton.TabIndex = 16;
-            this.runAgainButton.Text = "Run Again";
-            this.runAgainButton.UseVisualStyleBackColor = true;
-            this.runAgainButton.Visible = false;
-            this.runAgainButton.Click += new System.EventHandler(this.runAgainButton_Click);
-            // 
             // exitButton
             // 
             this.exitButton.Enabled = false;
@@ -291,6 +291,20 @@
             this.exitButton.UseVisualStyleBackColor = true;
             this.exitButton.Visible = false;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
+            // runAgainButton
+            // 
+            this.runAgainButton.Enabled = false;
+            this.runAgainButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.runAgainButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.runAgainButton.Location = new System.Drawing.Point(60, 86);
+            this.runAgainButton.Name = "runAgainButton";
+            this.runAgainButton.Size = new System.Drawing.Size(182, 34);
+            this.runAgainButton.TabIndex = 16;
+            this.runAgainButton.Text = "Run Again";
+            this.runAgainButton.UseVisualStyleBackColor = true;
+            this.runAgainButton.Visible = false;
+            this.runAgainButton.Click += new System.EventHandler(this.runAgainButton_Click);
             // 
             // MainForm
             // 
@@ -341,6 +355,7 @@
         private System.Windows.Forms.GroupBox processingGroupBox;
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Button runAgainButton;
+        private System.Windows.Forms.Button checkUpdateButton;
     }
 }
 

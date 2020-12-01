@@ -33,9 +33,10 @@
             // 
             // processingLabel
             // 
+            // this.Visible = false;
             this.processingLabel.AutoSize = true;
             this.processingLabel.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.processingLabel.Location = new System.Drawing.Point(297, 181);
+            this.processingLabel.Location = new System.Drawing.Point(187, 97);
             this.processingLabel.Name = "processingLabel";
             this.processingLabel.Size = new System.Drawing.Size(199, 32);
             this.processingLabel.TabIndex = 0;
@@ -46,7 +47,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.ClientSize = new System.Drawing.Size(792, 394);
+            this.ClientSize = new System.Drawing.Size(572, 226);
             this.Controls.Add(this.processingLabel);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.Name = "Processing";

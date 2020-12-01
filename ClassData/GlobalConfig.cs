@@ -228,7 +228,7 @@ namespace NASARData
 
         }
 
-        public void GetAiracDateFromFAA() 
+        public static void GetAiracDateFromFAA() 
         {
             string url = "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/";
 

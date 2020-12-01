@@ -12,6 +12,7 @@ using ClassData;
 using NASRData.DataAccess;
 using ClassData.DataAccess;
 using System.Threading;
+using Squirrel;
 
 namespace NASR_GUI
 {
@@ -20,6 +21,7 @@ namespace NASR_GUI
         public MainForm()
         {
             InitializeComponent();
+
 
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
@@ -37,6 +39,19 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
+        }
+
+        private async Task CheckForUpdates()
+        {
+            using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/Nikolai558/NASR2SCT"))
+            {
+                await mgr.Result.UpdateApp();
+            }
+
+            //    //using (var manager = new UpdateManager(@"C:\PoconoDocuments\Downloads\testing"))
+            //    //{
+            //    //    await manager.UpdateApp();
+            //    //}
         }
 
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
@@ -198,11 +213,38 @@ namespace NASR_GUI
 
         private void getAiracDate() 
         {
+
+            var Worker = new BackgroundWorker();
+            Worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            Worker.DoWork += Worker_DoWork;
+
+            Worker.RunWorkerAsync();
+
+            
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            getAiracDate();
+            currentAiracSelection.Text = GlobalConfig.currentAiracDate;
+            nextAiracSelection.Text = GlobalConfig.nextAiracDate;
+        }
+
+        private async void checkUpdateButton_Click(object sender, EventArgs e)
+        {
+            await CheckForUpdates();
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
             if (GlobalConfig.nextAiracDate == null)
             {
-                new GlobalConfig().GetAiracDateFromFAA();
+                GlobalConfig.GetAiracDateFromFAA();
             }
+        }
 
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             currentAiracSelection.Text = GlobalConfig.currentAiracDate;
             nextAiracSelection.Text = GlobalConfig.nextAiracDate;
 
@@ -234,11 +276,6 @@ namespace NASR_GUI
 
             startGroupBox.Enabled = true;
             startGroupBox.Visible = true;
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            getAiracDate();
         }
     }
 }
