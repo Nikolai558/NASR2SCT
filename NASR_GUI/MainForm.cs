@@ -12,7 +12,6 @@ using ClassData;
 using NASRData.DataAccess;
 using ClassData.DataAccess;
 using System.Threading;
-using Squirrel;
 
 namespace NASR_GUI
 {
@@ -41,18 +40,7 @@ namespace NASR_GUI
 
         }
 
-        private async Task CheckForUpdates()
-        {
-            using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/Nikolai558/NASR2SCT"))
-            {
-                await mgr.Result.UpdateApp();
-            }
-
-            //    //using (var manager = new UpdateManager(@"C:\PoconoDocuments\Downloads\testing"))
-            //    //{
-            //    //    await manager.UpdateApp();
-            //    //}
-        }
+        
 
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
         {
@@ -230,11 +218,6 @@ namespace NASR_GUI
             nextAiracSelection.Text = GlobalConfig.nextAiracDate;
         }
 
-        private async void checkUpdateButton_Click(object sender, EventArgs e)
-        {
-            await CheckForUpdates();
-        }
-
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             if (GlobalConfig.nextAiracDate == null)
@@ -277,5 +260,7 @@ namespace NASR_GUI
             startGroupBox.Enabled = true;
             startGroupBox.Visible = true;
         }
+
+        
     }
 }
