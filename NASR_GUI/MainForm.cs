@@ -40,8 +40,6 @@ namespace NASR_GUI
 
         }
 
-        
-
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
         {
             currentAiracSelection.Text = GlobalConfig.currentAiracDate;
@@ -96,6 +94,8 @@ namespace NASR_GUI
             }
 
             GlobalConfig.createDirectories();
+
+            GlobalConfig.WriteTestSctFile();
 
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
@@ -207,8 +207,6 @@ namespace NASR_GUI
             Worker.DoWork += Worker_DoWork;
 
             Worker.RunWorkerAsync();
-
-            
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -260,7 +258,5 @@ namespace NASR_GUI
             startGroupBox.Enabled = true;
             startGroupBox.Visible = true;
         }
-
-        
     }
 }

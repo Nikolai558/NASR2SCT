@@ -436,6 +436,8 @@ namespace ClassData.DataAccess
             writer.Close();
 
             File.AppendAllText(filePath, $"\n<!--AIRAC_EFFECTIVE_DATE {effectiveDate}-->");
+
+            File.Copy($"{GlobalConfig.outputDirectory}\\VERAM\\Airports.xml", $"{GlobalConfig.outputDirectory}\\VSTARS\\Airports.xml");
         }
 
         public void StoreWaypointsXMLData() 
@@ -546,6 +548,10 @@ namespace ClassData.DataAccess
 
             // Write all the data to our apt.sct2 file.
             File.WriteAllText(filePath, sb.ToString());
+
+            File.AppendAllText(filePath, $"\n\n\n\n\n\n");
+
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
         }
 
         /// <summary>
@@ -572,6 +578,10 @@ namespace ClassData.DataAccess
 
             // Write to the file.
             File.WriteAllText(filePath, sb.ToString());
+
+            File.AppendAllText(filePath, $"\n\n\n\n\n\n");
+
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
         }
 
         /// <summary>

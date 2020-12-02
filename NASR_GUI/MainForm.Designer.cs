@@ -247,7 +247,7 @@
             this.processingDataLabel.Name = "processingDataLabel";
             this.processingDataLabel.Size = new System.Drawing.Size(545, 68);
             this.processingDataLabel.TabIndex = 15;
-            this.processingDataLabel.Text = "Processing Data, Please Wait.";
+            this.processingDataLabel.Text = "Getting AIRAC date.";
             this.processingDataLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.processingDataLabel.Visible = false;
             // 

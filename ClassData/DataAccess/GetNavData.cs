@@ -272,6 +272,11 @@ namespace ClassData.DataAccess
             }
             File.WriteAllText(NDBfilePath, sb.ToString());
 
+            File.AppendAllText(NDBfilePath, $"\n\n\n\n\n\n");
+
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(NDBfilePath));
+
+
             // Overide the previous NDB String Builder with a new one and create VOR String builder with all the required data.
             sb = new StringBuilder();
             sb.AppendLine("[VOR]");
@@ -280,6 +285,11 @@ namespace ClassData.DataAccess
                 sb.AppendLine($"{vor.Id.PadRight(4)}{vor.Freq.PadRight(8)}{vor.Lat} {vor.Lon} ;{vor.Name} {vor.Type}");
             }
             File.WriteAllText(VORfilePath, sb.ToString());
+
+            File.AppendAllText(VORfilePath, $"\n\n\n\n\n\n");
+
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(VORfilePath));
+
         }
 
         /// <summary>

@@ -178,6 +178,11 @@ namespace ClassData.DataAccess
             }
 
             File.WriteAllText(filePath, sb.ToString());
+            
+            File.AppendAllText(filePath, $"\n\n\n\n\n\n");
+
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
+
         }
 
         private void deleteUnneededDir() 

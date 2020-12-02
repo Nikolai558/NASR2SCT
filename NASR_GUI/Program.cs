@@ -25,6 +25,14 @@ namespace NASR_GUI
             //new GetAptData().WriteEramAirportsXML();
             //new GetAptData().WriteEramXML();
 
+            GlobalConfig.githubVersion();
+
+            if (GlobalConfig.ProgramVersion != GlobalConfig.GithubVersion)
+            {
+                DialogResult dialogResult = MessageBox.Show($"There is a new version released on Github\nProgram Version: {GlobalConfig.ProgramVersion}\nGithub Version: {GlobalConfig.GithubVersion}\n\nhttps://github.com/Nikolai558/NASR2SCT/releases", "Update Available", MessageBoxButtons.OK);
+            }
+
+
             Application.Run(new MainForm());
         }
     }

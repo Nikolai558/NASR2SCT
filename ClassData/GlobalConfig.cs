@@ -15,6 +15,9 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
+        public static readonly string ProgramVersion = "V-0.4.3-beta";
+        public static string GithubVersion = "";
+
         private static XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Waypoints");
 
         public static XmlSerializer WaypointSerializer = new XmlSerializer(typeof(Waypoint[]), xmlRootAttribute);
@@ -75,6 +78,13 @@ namespace NASARData
 
 -------------------------------------------------------------";
 
+        public static void githubVersion()
+        {
+            var client = new WebClient();
+            GithubVersion = client.DownloadString("https://raw.githubusercontent.com/Nikolai558/NASR2SCT/main/tempLatestVersion.txt");
+
+            GithubVersion = GithubVersion.Split()[0];
+        }
 
         public void WriteTimeStamps() 
         {
@@ -218,12 +228,7 @@ namespace NASARData
 
             return decFormat;
 
-
             // dec = degrees + (minutes / 60) + (seconds.Miliseconds / 3600) 
-
-
-
-
         }
 
         public static void GetAiracDateFromFAA() 
@@ -257,6 +262,7 @@ namespace NASARData
             TextWriter writer = new StreamWriter(filePath);
             WaypointSerializer.Serialize(writer, waypoints);
             writer.Close();
+
         }
 
         /// <summary>
@@ -268,6 +274,12 @@ namespace NASARData
             string filepath = $"{outputDirectory}\\VERAM\\Waypoints.xml";
 
             File.AppendAllText(filepath, $"\n<!--AIRAC_EFFECTIVE_DATE {AiracDate}-->");
+            File.Copy($"{outputDirectory}\\VERAM\\Waypoints.xml", $"{outputDirectory}\\VSTARS\\Waypoints.xml");
+        }
+
+        public static void WriteTestSctFile() 
+        {
+            File.WriteAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", $"[INFO]\nTEST_SECTOR\nTST_CTR\nXXXX\nN043.31.08.418\nW112.03.50.103\n60.043\n43.536\n- 11.8\n1.000\n\n\n\n\n");
         }
     }
 }
