@@ -1,8 +1,8 @@
 # NASR2SCT
 
 ## Authors: 
-Kyle Sanders - [Github Profile](https://github.com/KSanders7070)
-Nikolas Boling - [Github Profile](https://github.com/Nikolai558)
+- Kyle Sanders - [Github Profile](https://github.com/KSanders7070)
+- Nikolas Boling - [Github Profile](https://github.com/Nikolai558)
 
 ### THIS PROGRAM WILL:
 - Pull data from the FAA NASR site and create Sector Files (.SCT) for virtual Radar Clients such as VRC by MetaCraft. As of now, it will create ALL: Weather Stations, Fixes, Airports, NAVAIDs, & Airways.
