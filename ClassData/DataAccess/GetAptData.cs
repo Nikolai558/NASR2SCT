@@ -2,20 +2,17 @@
 using NASARData;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace ClassData.DataAccess
 {
     /// <summary>
-    /// Download, Unzip, Parse, and Make SCT2 File for FAA APT data.
+    /// Download, Unzip, Parse, Make SCT2, Make Airports.xml, and Make Lables sector Files from FAA APT data.
     /// </summary>
     public class GetAptData
     {
@@ -36,11 +33,9 @@ namespace ClassData.DataAccess
         /// <summary>
         /// Call all the needed functions.
         /// </summary>
-        /// <param name="effectiveDate">Airac Effective Date, Format: "MM/DD/YYYY"</param>
+        /// <param name="effectiveDate">Airac Effective Date, Format: "YYYY-MM-DD"</param>
         public void APTQuarterbackFunc(string effectiveDate, string artcc, string color) 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "APTQuarterbackFunc()")}: {DateTime.Now}");
-
             DownloadAptData(effectiveDate);
             ParseAptData();
             WriteAptISR(artcc);
@@ -59,23 +54,17 @@ namespace ClassData.DataAccess
         /// <summary>
         /// Download and unzip the FAA Data
         /// </summary>
-        /// <param name="effectiveDate">Airac Effective Date, Format: "MM/DD/YYYY"</param>
+        /// <param name="effectiveDate">Airac Effective Date, Format: "YYYY-MM-DD"</param>
         private void DownloadAptData(string effectiveDate)
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadAptData()")}: {DateTime.Now}");
-
             // Create Web Client to connect to FAA
             var client = new WebClient();
-
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadAptData().DOWNLOADING")}: {DateTime.Now}");
 
             // Download the APT.ZIP file from FAA
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip", $"{GlobalConfig.tempPath}\\apt.zip");
 
             // Store our path for the zip folder we just downloaded so we can delete later
             zipFolder = $"{GlobalConfig.tempPath}\\apt.zip";
-
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadAptData().UNZIPING")}: {DateTime.Now}");
 
             // Unzip FAA apt.zip
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\apt.zip", $"{GlobalConfig.tempPath}\\apt");
@@ -87,23 +76,17 @@ namespace ClassData.DataAccess
         /// <summary>
         /// Download and Unzip the Wx Station Data from the FAA
         /// </summary>
-        /// <param name="effectiveDate">Airacc Effective Date: "MM/DD/YYYY"</param>
+        /// <param name="effectiveDate">Airacc Effective Date: "YYYY-MM-DD"</param>
         private void DownloadWxStationData(string effectiveDate)
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadWxStationData()")}: {DateTime.Now}");
-
             // Create Connection to FAA Site
             var client = new WebClient();
-
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadWxStationData().DOWNLOADING")}: {DateTime.Now}");
 
             // Download the Weather Stations Data
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/WXL.zip", $"{GlobalConfig.tempPath}\\wxStations.zip");
 
             // INSTANTIATE AND ASSIGN our zipFolder Variable to the file we just downloaded.
             WxzipFolder = $"{GlobalConfig.tempPath}\\wxStations.zip";
-
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadWxStationData().UNZIPING")}: {DateTime.Now}");
 
             // Extract the ZIP file that we just downloaded.
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\wxStations.zip", $"{GlobalConfig.tempPath}\\wxStations");
@@ -117,25 +100,29 @@ namespace ClassData.DataAccess
         /// </summary>
         private void ParseAptData()
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "ParseAptData()")}: {DateTime.Now}");
+            // Characters to be removed from each line TRAILING AND LEADING
             char[] removeChars = { ' ', '.' };
 
+            // Set Airport Model to be null. First time this runs it will overide it.
             AptModel airport = null ;
 
             // Read the apt.txt file
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\apt\\APT.txt"))
             {
-                // We only want the information if the line starts with "APT"
+                // If the line starts with "APT" create our Airport Model.
                 if (line.Substring(0, 3) == "APT")
                 {
-                    // Characters to be removed from each line TRAILING AND LEADING
-
+                    // If we have a full Airport Model and the status of the airport is Operational, add it to our list.
                     if (airport != null && airport.Status == "O")
                     {
+                        // Add the Airport to our List of Airports
                         allAptModels.Add(airport);
                     }
 
+                    // Create a new Airport Model.
                     airport = new AptModel();
+
+                    // Create an EMPTY list of runwayModels.
                     airport.Runways = new List<RunwayModel>();
 
                     // Create our Airport Model
@@ -149,41 +136,48 @@ namespace ClassData.DataAccess
                     airport.Twr = line.Substring(980, 1).Trim(removeChars);
                     airport.Ctaf = line.Substring(988, 7).Trim(removeChars);
                     airport.Icao = line.Substring(1210, 7).Trim(removeChars);
-
                     airport.Lon = new GlobalConfig().CorrectLatLon(line.Substring(550, 15).Trim(removeChars), false, GlobalConfig.Convert);
-
                     airport.Lat_Dec = new GlobalConfig().createDecFormat(airport.Lat);
                     airport.Lon_Dec = new GlobalConfig().createDecFormat(airport.Lon);
-
                     airport.magVariation = line.Substring(586, 3).Trim();
 
+                    // If Magnetic Variation is NOT empty Continue with the airport and runway building.
                     if (airport.magVariation != string.Empty)
                     {
+                        // If the Mag variation Declination is W
                         if (airport.magVariation[2] == 'W')
                         {
+                            // Remove the 'W' and make positive number.
                             airport.magVariation = $"{airport.magVariation.Substring(0, 2)}";
                         }
                         else
                         {
+                            // If it is not 'W', Make Negetive number
                             airport.magVariation = $"-{airport.magVariation.Substring(0, 2)}";
                         }
                     }
                 }
+
+                // If the Line starts with "RWY", This Airport has runway information.
                 else if (line.Substring(0,3) == "RWY")
                 {
+                    // Create a new Runway Model
                     RunwayModel rwy = new RunwayModel();
 
+                    // Populate that runway model with our data from the FAA
                     rwy.RwyGroup = line.Substring(16, 7).Trim();
                     rwy.RwyLength = line.Substring(23, 5).Trim();
                     rwy.RwyWidth = line.Substring(28, 4).Trim();
-
                     rwy.BaseRwyHdg = line.Substring(68, 3).Trim();
                     rwy.RecRwyHdg = line.Substring(290, 3).Trim();
 
+                    // Make sure the Base Rwy heading is not empty and make sure mag variation is not empty 
                     if (rwy.BaseRwyHdg != string.Empty && airport.magVariation != string.Empty)
                     {
+                        // Set base Rwy Hdg from true to mag variation accounted for hdg.
                         rwy.BaseRwyHdg = (double.Parse(rwy.BaseRwyHdg) + double.Parse(airport.magVariation)).ToString();
                         
+                        // Make sure the newly calculated value is between 1 and 360.
                         if (double.Parse(rwy.BaseRwyHdg) > 360)
                         {
                             rwy.BaseRwyHdg = (double.Parse(rwy.BaseRwyHdg) - 360).ToString();
@@ -194,10 +188,13 @@ namespace ClassData.DataAccess
                         }
                     }
 
+                    // Make sure the REC Rwy heading is not empty and make sure mag variation is not empty
                     if (rwy.RecRwyHdg != string.Empty && airport.magVariation != string.Empty)
                     {
+                        // Set REC Rwy Hdg from true to mag variation accounted for hdg.
                         rwy.RecRwyHdg = (double.Parse(rwy.RecRwyHdg) + double.Parse(airport.magVariation)).ToString();
-
+                        
+                        // Make sure the newly calculated value is between 1 and 360.
                         if (double.Parse(rwy.RecRwyHdg) > 360)
                         {
                             rwy.RecRwyHdg = (double.Parse(rwy.RecRwyHdg) - 360).ToString();
@@ -208,21 +205,28 @@ namespace ClassData.DataAccess
                         }
                     }
 
+                    // Make sure the Base Start Lat and Lon are not empty.
                     if (line.Substring(88, 15).Trim() != string.Empty && line.Substring(115, 15).Trim() != string.Empty)
                     {
+                        // Get and set the Lat and Lon for Start
                         rwy.BaseStartLat = new GlobalConfig().CorrectLatLon(line.Substring(88, 15).Trim(), true, GlobalConfig.Convert);
                         rwy.BaseStartLon = new GlobalConfig().CorrectLatLon(line.Substring(115, 15).Trim(), false, GlobalConfig.Convert);
                     }
 
+                    // Make sure the Base End Lat and Lon are not empty.
                     if (line.Substring(310, 15).Trim() != string.Empty && line.Substring(337, 15).Trim() != string.Empty)
                     {
+                        // Get and set the Lat and Lon for End
                         rwy.BaseEndLat = new GlobalConfig().CorrectLatLon(line.Substring(310, 15).Trim(), true, GlobalConfig.Convert);
                         rwy.BaseEndLon = new GlobalConfig().CorrectLatLon(line.Substring(337, 15).Trim(), false, GlobalConfig.Convert);
                     }
 
+                    // Add the runway info to the current airport runway list.
                     airport.Runways.Add(rwy);
                 }
             }
+
+            // If the airport is operational add it to our list of Airports.
             if (airport.Status == "O")
             {
                 allAptModels.Add(airport);
@@ -235,8 +239,6 @@ namespace ClassData.DataAccess
         /// <param name="color">Color in Number format, needed for VRC to draw.</param>
         private void ParseWxStationData(string color)
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "ParseWxStationData()")}: {DateTime.Now}");
-
             // Read each line of the WXL.TXT File
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\wxStations\\WXL.txt"))
             {
@@ -262,10 +264,10 @@ namespace ClassData.DataAccess
                     ColorDefine = color
                 };
 
-                
-
+                // Loop through the Airports in our list
                 foreach (AptModel apt in allAptModels)
                 {
+                    // Check the station ID against the Airport ID. If it is the same add the station Name.
                     if (station.Id == apt.Id)
                     {
                         station.Name = apt.Name;
@@ -275,10 +277,14 @@ namespace ClassData.DataAccess
 
                 // Check the type to see if it is in our wanted types.
                 string[] stationType = station.Type.Split();
+                
+                // Boolean to let us know if we want to keep the station. For the start we set it to False.
                 bool keep = false;
 
+                // Loop through all of our Types that we want to keep.
                 foreach (string tp in stationType)
                 {
+                    // If the station type contains any type we want to keep set our boolean to true.
                     if (keepTypes.Contains(tp))
                     {
                         keep = true;
@@ -286,17 +292,19 @@ namespace ClassData.DataAccess
                     }
                 }
 
+                // If keep is TRUE
                 if (keep)
                 {
                     // We set the name of the weather station based on if it matches a APT ID. If a Name exists then we want it. Add it to the list.
                     if (station.Name != "" && station.Name != null)
                     {
+                        // Set the Station's Lat and Lon
                         station.LatCorrect = new GlobalConfig().CorrectLatLon(station.Lat, true, GlobalConfig.Convert);
                         station.LonCorrect = new GlobalConfig().CorrectLatLon(station.Lon, false, GlobalConfig.Convert);
 
+                        // Set the stations Decimal Verison of Lat and Lon
                         station.Dec_Lat = new GlobalConfig().createDecFormat(station.LatCorrect);
                         station.Dec_Lon = new GlobalConfig().createDecFormat(station.LonCorrect);
-
 
                         // Add the Wx Station Model to our List of ALL station Models.
                         allWxStationsInData.Add(station);
@@ -305,34 +313,50 @@ namespace ClassData.DataAccess
             }
         }
 
+        /// <summary>
+        /// Write the VERAM and VSTARS File
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date: "YYYY-MM-DD"</param>
         public void WriteEramAirportsXML(string effectiveDate)
         {
+            // File path to where we want to store the Airports.xml file.
             string filePath = $"{GlobalConfig.outputDirectory}\\VERAM\\Airports.xml";
 
+            // Create an Empty list for our Airports in the format we need.
             List<Airport> allAptForXML = new List<Airport>();
 
+            // Using the XML Serializer - this creates and gets the Serializer ready to use.
             XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Airports");
             XmlSerializer serializer = new XmlSerializer(typeof(Airport[]), xmlRootAttribute);
 
+            // Loop through all of our Airports that we have collected
             foreach (AptModel aptModel in allAptModels)
             {
+                // Boolean to know if we want to use the runway.
                 bool doNotUseThisRwy = false;
 
+                // We need a temp string variable for our Airport ID
                 string aptIdTempVar;
+
+                // Create an Empty list of Runway data for the XML
                 List<Runway> rwysTempVar = new List<Runway>();
 
+                // Check to see if the ICAO exists.
                 if (aptModel.Icao != string.Empty)
                 {
+                    // If it does, set our temp apt id var to the ICAO 
                     aptIdTempVar = aptModel.Icao;
                 }
                 else
                 {
+                    // if it doesn't, set our temp apt id var to the FAA id. 
                     aptIdTempVar = aptModel.Id;
                 }
 
+                // Loop through the runway list inside of our Airport Model.
                 foreach (RunwayModel runwayModel in aptModel.Runways)
                 {
-
+                    // This list is used to make sure nothing in here is EMPTY or Null.
                     List<string> rwyProperties = new List<string>() 
                     {
                         runwayModel.RwyGroup,
@@ -352,18 +376,22 @@ namespace ClassData.DataAccess
                         runwayModel.RecRwyHdg
                     };
 
+                    // Loop through All the Properties
                     foreach (string stringProperty in rwyProperties)
                     {
+                        // Make sure it does NOT equal "" or Null.
                         if (string.IsNullOrEmpty(stringProperty))
                         {
+                            // If it does, tell our program to not use this runway data info. 
                             doNotUseThisRwy = true;
                             break;
                         }
                     }
 
-
+                    // If our boolean is False, this means the Runway data is good and complete and we can use it.
                     if (doNotUseThisRwy == false)
                     {
+                        // Set our Base Runway Model.
                         Runway rwy1 = new Runway
                         {
                             ID = runwayModel.BaseRwy,
@@ -382,6 +410,7 @@ namespace ClassData.DataAccess
                             }
                         };
 
+                        // Set our REC Runway Model
                         Runway rwy2 = new Runway
                         {
                             ID = runwayModel.RecRwy,
@@ -400,11 +429,13 @@ namespace ClassData.DataAccess
                             }
                         };
 
+                        // Add Both "Runways" to our runways list.
                         rwysTempVar.Add(rwy1);
                         rwysTempVar.Add(rwy2);
                     }
                 }
 
+                // Create our Airport Model for XML
                 Airport aptXMLFormat = new Airport
                 {
                     ID = aptIdTempVar,
@@ -423,54 +454,75 @@ namespace ClassData.DataAccess
                     }
                 };
 
+                // Make sure we have 1 or more runways in our list and also make sure Mag Variation is not empty.
                 if (rwysTempVar.Count >= 1 && aptXMLFormat.MagVar != "")
                 {
+                    // Add our Complete Airport information to our list of Airport Models for XML.
                     allAptForXML.Add(aptXMLFormat);
                 }
             }
 
+            // We have to convert our List into an Array.
             Airport[] aptArrayForXML = allAptForXML.ToArray();
 
+            // This is going to write the XML serializer to the xml file.
             TextWriter writer = new StreamWriter(filePath);
             serializer.Serialize(writer, aptArrayForXML);
             writer.Close();
 
+            // At the very end of the file add the AIRAC Effective date in XML comment form. 
             File.AppendAllText(filePath, $"\n<!--AIRAC_EFFECTIVE_DATE {effectiveDate}-->");
 
+            // VSTARS and VERAM use the same file format. Copy the file to the VSTARS output File.
             File.Copy($"{GlobalConfig.outputDirectory}\\VERAM\\Airports.xml", $"{GlobalConfig.outputDirectory}\\VSTARS\\Airports.xml");
         }
 
+        /// <summary>
+        /// Store Waypoints for XML Data. We can't write the file yet since Waypoints contains all of the following:
+        /// Airports, Fixxes, NDB, VOR. So we Store it to the Global list. Once all of these have been added, 
+        /// then we can write the xml file.
+        /// </summary>
         public void StoreWaypointsXMLData() 
         {
+            // Create an Empty list of Waypoints.
             List<Waypoint> waypointList = new List<Waypoint>();
 
+            // Loop through all of our Airport Models.
             foreach (AptModel apt in allAptModels)
             {
+                // Create our Location Model for XML
                 Location loc = new Location { Lat = apt.Lat_Dec, Lon = apt.Lon_Dec};
 
+                // Create our Waypoint Model for XML
                 Waypoint wpt = new Waypoint
                 {
                     Type = "Airport",
                     Location = loc
                 };
 
+                // Check to see if ICAO exists
                 if (apt.Icao != string.Empty)
                 {
+                    // If it does, set the ID to the ICAO
                     wpt.ID = apt.Icao;
                 }
                 else
                 {
+                    // If it doesnt, set the ID to the FAA ID
                     wpt.ID = apt.Id;
                 }
 
+                // Add the waypoint to our list.
                 waypointList.Add(wpt);
             }
 
+            // Loop through All previous Waypoint data that we have stored and add it to our List
             foreach (Waypoint globalWaypoint in GlobalConfig.waypoints)
             {
                 waypointList.Add(globalWaypoint);
             }
 
+            // Make the Global Waypoints List equal to our current list with everything we added and had.
             GlobalConfig.waypoints = waypointList.ToArray();
         }
 
@@ -480,8 +532,6 @@ namespace ClassData.DataAccess
         /// <param name="Artcc">ARTCC Code</param>
         private void WriteAptISR(string Artcc) 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "WriteAptISR()")}: {DateTime.Now}");
-
             // File path to save the ISR
             string filePath = $"{GlobalConfig.outputDirectory}\\ISR\\ISR_APT.txt";
 
@@ -522,8 +572,6 @@ namespace ClassData.DataAccess
         /// </summary>
         private void WriteAptSctData()
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "WriteAptSctData()")}: {DateTime.Now}");
-
             // File path and file name of the file we are about to create.
             string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\APT.sct2";
 
@@ -549,8 +597,10 @@ namespace ClassData.DataAccess
             // Write all the data to our apt.sct2 file.
             File.WriteAllText(filePath, sb.ToString());
 
+            // Write some New lines to the end of the file.
             File.AppendAllText(filePath, $"\n\n\n\n\n\n");
 
+            // Add this file to our TEST SECTOR FILE.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
         }
 
@@ -559,8 +609,6 @@ namespace ClassData.DataAccess
         /// </summary>
         private void WriteWxStationSctData()
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "WriteWxStationSctData()")}: {DateTime.Now}");
-
             // File Path to the file we want to write to
             string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\WxStations.sct2";
 
@@ -579,8 +627,10 @@ namespace ClassData.DataAccess
             // Write to the file.
             File.WriteAllText(filePath, sb.ToString());
 
+            // Add some new lines to the end of the file.
             File.AppendAllText(filePath, $"\n\n\n\n\n\n");
 
+            // Add this file to our TEST SECTOR file.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
         }
 
@@ -589,8 +639,6 @@ namespace ClassData.DataAccess
         /// </summary>
         private void deleteUnneededDir()
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "deleteUnneededDir().AIRPORTS")}: {DateTime.Now}");
-
             // Delete our Zip folder for Airports we downloaded from FAA
             File.Delete(zipFolder);
 
@@ -603,14 +651,11 @@ namespace ClassData.DataAccess
         /// </summary>
         private void deleteUnneededWXDir()
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "deleteUnneededDir().WEATHERSTATIONS")}: {DateTime.Now}");
-
             // Delete WX Zip Folder
             File.Delete(WxzipFolder);
 
             // Delete WX Unziped folder
             Directory.Delete(WxunzipedFolder, true);
-
         }
     }
 }

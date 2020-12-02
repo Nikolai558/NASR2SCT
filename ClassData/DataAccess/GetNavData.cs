@@ -27,11 +27,9 @@ namespace ClassData.DataAccess
         /// <summary>
         /// Call all the related functions to get the NAV data from the FAA.
         /// </summary>
-        /// <param name="effectiveDate">Airac Effective Date, Format: "MM/DD/YYYY"</param>
+        /// <param name="effectiveDate">Format: YYYY-MM-DD"</param>
         public void NAVQuarterbackFunc(string effectiveDate, string Artcc) 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "NAVQuarterbackFunc()")}: {DateTime.Now}");
-
             DownloadNAVData(effectiveDate);
             ParseNAVData();
             StoreXMLData();
@@ -43,24 +41,22 @@ namespace ClassData.DataAccess
         /// <summary>
         /// Download and Unzip the NAV data from FAA
         /// </summary>
-        /// <param name="effectiveDate">Airac Effective Date, Format: "MM/DD/YYYY"</param>
+        /// <param name="effectiveDate">Format: YYYY-MM-DD"</param>
         private void DownloadNAVData(string effectiveDate) 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadNAVData()")}: {DateTime.Now}");
-
             // Create a web client to download the data.
             var client = new WebClient();
 
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadNAVData().DOWNLOADING")}: {DateTime.Now}");
-
             // Go to the FAA website and download the NAV zip folder.
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip", $"{GlobalConfig.tempPath}\\nav.zip");
+            
+            // Set our ZipFolder File Path so we can delete it later.
             zipFolder = $"{GlobalConfig.tempPath}\\nav.zip";
-
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "DownloadNAVData().UNZIPING")}: {DateTime.Now}");
 
             // Extract the zip folder we downloaded.
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\nav.zip", $"{GlobalConfig.tempPath}\\nav");
+            
+            // Set our Unziped File path so we can delete it later.
             unzipedFolder = $"{GlobalConfig.tempPath}\\nav";
         }
 
@@ -70,8 +66,6 @@ namespace ClassData.DataAccess
         /// </summary>
         private void ParseNAVData() 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "ParseNAVData()")}: {DateTime.Now}");
-
             // FAA Provides data for ALL types of NDB and VOR, we only need certain types. Exclude the one we are on if it has any of these.
             List<string> excludeTypes = new List<string>{ "VOT", "FAN MARKER", "CONSOLAN", "MARINE NDB", "DECOMMISSIONED", "MARINE NDB/DME"};
             
@@ -82,7 +76,7 @@ namespace ClassData.DataAccess
             // Variable to Remove all LEADING AND TRAILING characters.
             char[] removeChars = { ' ', '.' };
 
-            // Read the NAV.txt file
+            // Read the NAV.txt file, Loop through all the lines in Nav.txt
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\nav\\NAV.txt"))
             {
                 // Bool to tell our program if it is to exclude this current line. To start we set it to false.
@@ -94,13 +88,15 @@ namespace ClassData.DataAccess
                     // If the current line we are working in has a string that matches excludeTypes, then set bool exclude to TRUE
                     foreach (string x in excludeTypes)
                     {
+                        // Make sure the line does not have any of the Types we want to EXCLUDE
                         if (line.IndexOf(x) != -1)
                         {
+                            // If it does, set exclude to True.
                             exclude = true;
                         }
                     }
 
-                    // Check to see if we need to exclude it.
+                    // Check to see if we need to exclude it. If exclude does not equal true.
                     if (exclude != true)
                     {
                         // Checks to see if the TYPE is an NDB
@@ -117,9 +113,9 @@ namespace ClassData.DataAccess
                                 Lon = new GlobalConfig().CorrectLatLon(line.Substring(396, 14).Trim(removeChars),false, GlobalConfig.Convert)
                             };
 
+                            // Get the Decimal Format for Lat Lon and set it in our Model.
                             individualNDB.Dec_Lat = new GlobalConfig().createDecFormat(individualNDB.Lat);
                             individualNDB.Dec_Lon = new GlobalConfig().createDecFormat(individualNDB.Lon);
-
 
                             // Add the NDB model we just created to our LIST of NDB Models
                             allNDBData.Add(individualNDB);
@@ -138,10 +134,10 @@ namespace ClassData.DataAccess
                                 Lat = new GlobalConfig().CorrectLatLon(line.Substring(371, 14).Trim(removeChars),true, GlobalConfig.Convert),
                                 Lon = new GlobalConfig().CorrectLatLon(line.Substring(396, 14).Trim(removeChars),false, GlobalConfig.Convert)
                             };
-
+                            
+                            // Get the Decimal Format for Lat Lon and set it in our Model.
                             individualVOR.Dec_Lat = new GlobalConfig().createDecFormat(individualVOR.Lat);
                             individualVOR.Dec_Lon = new GlobalConfig().createDecFormat(individualVOR.Lon);
-
 
                             // Add the VOR model we just created to our LIST of VOR Models.
                             allVORData.Add(individualVOR);
@@ -150,45 +146,65 @@ namespace ClassData.DataAccess
                 }
             }
         }
+
+        /// <summary>
+        /// Store the XML data in our Global XML data storage for Waypoints.xml. WE can not just write it or append the data
+        /// because the waypoints.xml file has airport, fix, vor, ndb data types included in it. 
+        /// so we just store it in a global variable so we can create the .xml file when it has all the data we need.
+        /// </summary>
         private void StoreXMLData()
         {
+            // Create an Empty list for our Waypoints 
             List<Waypoint> waypointList = new List<Waypoint>();
 
+            // Loop through all the NDB Modles in our list.
             foreach (NDBModel ndb in allNDBData)
             {
+                // Create our Location Model with the lat and lon of the NDB
                 Location loc = new Location { Lat = ndb.Dec_Lat, Lon = ndb.Dec_Lon };
 
+                // Create our Waypoint Model.
                 Waypoint wpt = new Waypoint
                 {
                     Type = "NDB",
                     Location = loc
                 };
 
+                // Set our Waypoint ID equal to our NDB id.
                 wpt.ID = ndb.Id;
 
+                // Add the Waypoint to our list.
                 waypointList.Add(wpt);
             }
 
+            // Loop through the VOR Models in our list.
             foreach (VORModel vor in allVORData)
             {
+                // Create our Location Model
                 Location loc = new Location { Lat = vor.Dec_Lat, Lon = vor.Dec_Lon };
 
+                // Create our Waypoint Model
                 Waypoint wpt = new Waypoint
                 {
                     Type = "VOR",
                     Location = loc
                 };
-
+                
+                // Set our Waypoint ID equal to our VOR Id
                 wpt.ID = vor.Id;
 
+                // Add our Waypoint to our List
                 waypointList.Add(wpt);
             }
 
+            // Loop through ALL the waypoints we have stored so far and add it to our list.
             foreach (Waypoint globalWaypoint in GlobalConfig.waypoints)
             {
+                // add the waypoint from our GLOBAL waypoint storage to our list.
                 waypointList.Add(globalWaypoint);
             }
 
+            // Set our GLOBAL storage of waypoints for the xml file to our list and convert it to an array.
             GlobalConfig.waypoints = waypointList.ToArray();
         }
 
@@ -198,8 +214,6 @@ namespace ClassData.DataAccess
         /// <param name="Artcc">User Artcc Code</param>
         private void WriteNavISR(string Artcc) 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "WriteNavISR()")}: {DateTime.Now}");
-
             // File path to save the ISR file
             string filePath = $"{GlobalConfig.outputDirectory}\\ISR\\ISR_NAVAID.txt";
             
@@ -257,39 +271,53 @@ namespace ClassData.DataAccess
         /// </summary>
         private void WriteNAVSctData() 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "WriteNAVSctData()")}: {DateTime.Now}");
-
             // Variable for the full file path for our two types.
             string NDBfilePath = $"{GlobalConfig.outputDirectory}\\VRC\\NDB.sct2";
             string VORfilePath = $"{GlobalConfig.outputDirectory}\\VRC\\VOR.sct2";
 
             // Create NDB String builder with all the required data.
             StringBuilder sb = new StringBuilder();
+
+            // Add NDB to the begining of the string builder
             sb.AppendLine("[NDB]");
+
+            // Loop through all the NDB models we have
             foreach (NDBModel ndb in allNDBData)
             {
+                // Add the Line containing all the Data for the NDB into the string builder
                 sb.AppendLine($"{ndb.Id.PadRight(4)}{ndb.Freq.PadRight(8)}{ndb.Lat} {ndb.Lon} ;{ndb.Name} {ndb.Type}");
             }
+
+            // Writh the string builder to the file.
             File.WriteAllText(NDBfilePath, sb.ToString());
 
+            // Add some blank lines to the end of the file.
             File.AppendAllText(NDBfilePath, $"\n\n\n\n\n\n");
 
+            // Add this file data to our Sector TEST file.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(NDBfilePath));
-
 
             // Overide the previous NDB String Builder with a new one and create VOR String builder with all the required data.
             sb = new StringBuilder();
+
+            // Add VOR to the begining of the String builder
             sb.AppendLine("[VOR]");
+
+            // Loop through all of our VORS
             foreach (VORModel vor in allVORData)
             {
+                // add the line with all the data into our string builder
                 sb.AppendLine($"{vor.Id.PadRight(4)}{vor.Freq.PadRight(8)}{vor.Lat} {vor.Lon} ;{vor.Name} {vor.Type}");
             }
+
+            // write the string builder to a file.
             File.WriteAllText(VORfilePath, sb.ToString());
 
+            // Add some Blank Lines to the end of the file.
             File.AppendAllText(VORfilePath, $"\n\n\n\n\n\n");
 
+            // Add this file data to our TEST sector File.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(VORfilePath));
-
         }
 
         /// <summary>
@@ -297,8 +325,6 @@ namespace ClassData.DataAccess
         /// </summary>
         private void deleteUnneededDir() 
         {
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "deleteUnneededDir()")}: {DateTime.Now}");
-
             // Delete the Zip "File"
             File.Delete(zipFolder);
 

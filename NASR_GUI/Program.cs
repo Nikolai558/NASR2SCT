@@ -1,9 +1,5 @@
-﻿using ClassData.DataAccess;
-using NASARData;
+﻿using NASARData;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NASR_GUI
@@ -16,23 +12,21 @@ namespace NASR_GUI
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-
-            //GlobalConfig.outputDirectory = "C:\\Users\\Pocono Coast West\\Downloads";
-            //GlobalConfig.createDirectories();
-            //new GetAptData().WriteEramAirportsXML();
-            //new GetAptData().WriteEramXML();
-
+            // Get Github latest Version of the Application
             GlobalConfig.githubVersion();
 
+            // Check to see if Version's match.
             if (GlobalConfig.ProgramVersion != GlobalConfig.GithubVersion)
             {
+                // If they don't match, Tell the user about the new version on Github.
                 DialogResult dialogResult = MessageBox.Show($"There is a new version released on Github\nProgram Version: {GlobalConfig.ProgramVersion}\nGithub Version: {GlobalConfig.GithubVersion}\n\nhttps://github.com/Nikolai558/NASR2SCT/releases", "Update Available", MessageBoxButtons.OK);
             }
 
+            // Set application settings.
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
+            // Start the application
             Application.Run(new MainForm());
         }
     }

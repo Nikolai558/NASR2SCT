@@ -22,9 +22,6 @@ namespace NASR2SctConsole
         {
             //new GlobalConfig().CorrectLatLon("51-53-00.8980N", true);
 
-            // Track timestamps
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "Program started")}: { DateTime.Now}");
-
             // Call the function to print the program begining messages.
             PrintBeginingMsgs();
 
@@ -67,12 +64,6 @@ namespace NASR2SctConsole
             // Instantiate and call our functions that deal with APT / WXL 
             GetAptData ParseAPT = new GetAptData();
             ParseAPT.APTQuarterbackFunc(AiracEffectiveDate, Artcc, "11579568");
-
-            // Track timestamps.
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "Program ended")}: {DateTime.Now}");
-
-            // We stored all the data for the timestamps now we just have to write it to the file.
-            new GlobalConfig().WriteTimeStamps();
         }
 
         /// <summary>
@@ -81,12 +72,7 @@ namespace NASR2SctConsole
         /// <returns></returns>
         private static string ConvertEastCoords() 
         {
-            // Track timestamps.
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "ConvertEastCoords()")}: {DateTime.Now}");
-
             // Print a message and wait for user input
-            Console.WriteLine(GlobalConfig.msg3);
-            Console.WriteLine();
             Console.WriteLine("Type Y or N and press Enter:");
             string convert = Console.ReadLine();
             Console.Clear();
@@ -103,9 +89,6 @@ namespace NASR2SctConsole
         /// <returns>Returns string in the format of "MM/DD/YYYY"</returns>
         private static string GetAiracEffDate() 
         {
-            // Track Time Stamps
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "GetAiracEffDate()")}: {DateTime.Now}");
-
             // Tell C# what all of our variables are going to be but don't set/INSTANTIATE them.
             string year;
             string month;
@@ -152,9 +135,6 @@ namespace NASR2SctConsole
         /// <returns>Returns the string the user put in.</returns>
         private static string GetArtcc() 
         {
-            // Track Timestamps
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "GetArtcc()")}: {DateTime.Now}");
-
             // Variable to store what the user inputs. Don't set it yet. 
             string artcc;
 
@@ -186,14 +166,7 @@ namespace NASR2SctConsole
         /// </summary>
         private static void PrintBeginingMsgs() 
         {
-            // Track Time Stamps
-            GlobalConfig.timetracker.AppendLine($"{string.Format("{0,-37}", "PrintBeginingMsgs()")}: {DateTime.Now}");
-
             // Print the messages.
-            Console.WriteLine(GlobalConfig.msg1);
-            Console.WriteLine();
-            Console.WriteLine(GlobalConfig.msg2);
-            Console.WriteLine();
             Console.WriteLine("Press Enter to continue.");
             Console.ReadLine();
             Console.Clear();
