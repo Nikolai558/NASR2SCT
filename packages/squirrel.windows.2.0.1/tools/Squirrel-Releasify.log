@@ -1,0 +1,68 @@
+﻿[03/12/20 20:21:43] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.5.0.nupkg
+[03/12/20 20:21:44] info: Program: Bootstrapper EXE found at:C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[03/12/20 20:21:44] info: Program: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.0.nupkg
+[03/12/20 20:21:45] info: ReleasePackage: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.0.nupkg => C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT-0.5.0-full.nupkg
+[03/12/20 20:21:46] info: ReleasePackage: Extracting dependent packages: []
+[03/12/20 20:21:46] info: ReleasePackage: Removing unnecessary data
+[03/12/20 20:21:46] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[03/12/20 20:21:48] info: Program: Building embedded zip file for Setup.exe
+[03/12/20 20:21:53] info: Program: Finished Squirrel Updater
+[03/12/20 20:36:42] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.5.1.nupkg
+[03/12/20 20:36:42] info: Program: Bootstrapper EXE found at:C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[03/12/20 20:36:42] info: Program: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.1.nupkg
+[03/12/20 20:36:42] info: ReleasePackage: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.1.nupkg => C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT-0.5.1-full.nupkg
+[03/12/20 20:36:42] info: ReleasePackage: Extracting dependent packages: []
+[03/12/20 20:36:42] info: ReleasePackage: Removing unnecessary data
+[03/12/20 20:36:42] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[03/12/20 20:36:43] info: DeltaPackageBuilder: Extracting .\Releases\NASR2SCT-0.5.0-full.nupkg and C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT-0.5.1-full.nupkg into C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb
+[03/12/20 20:36:43] info: DeltaPackageBuilder: Delta patching C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\lib\net45\ClassData.dll => C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb\lib\net45\ClassData.dll
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.MsDelta.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.PatchApi.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.Mdb.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.Pdb.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.Rocks.dll hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: Delta patching C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\lib\net45\NASR_GUI.exe => C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb\lib\net45\NASR_GUI.exe
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\NASR_GUI.exe.config hasn't changed, writing dummy file
+[03/12/20 20:36:43] info: DeltaPackageBuilder: Delta patching C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\lib\net45\NASR_GUI_ExecutionStub.exe => C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb\lib\net45\NASR_GUI_ExecutionStub.exe
+[03/12/20 20:36:43] info: DeltaPackageBuilder: \lib\net45\Newtonsoft.Json.dll hasn't changed, writing dummy file
+[03/12/20 20:36:44] info: DeltaPackageBuilder: \lib\net45\NuGet.Squirrel.dll hasn't changed, writing dummy file
+[03/12/20 20:36:44] info: DeltaPackageBuilder: \lib\net45\SharpCompress.dll hasn't changed, writing dummy file
+[03/12/20 20:36:44] info: DeltaPackageBuilder: \lib\net45\Squirrel.dll hasn't changed, writing dummy file
+[03/12/20 20:36:44] info: Program: Building embedded zip file for Setup.exe
+[03/12/20 20:36:48] info: Program: Finished Squirrel Updater
+[03/12/20 20:52:46] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.5.0.nupkg
+[03/12/20 20:52:46] info: Program: Bootstrapper EXE found at:C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[03/12/20 20:52:46] info: Program: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.0.nupkg
+[03/12/20 20:52:47] info: ReleasePackage: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.0.nupkg => C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT-0.5.0-full.nupkg
+[03/12/20 20:52:47] info: ReleasePackage: Extracting dependent packages: []
+[03/12/20 20:52:47] info: ReleasePackage: Removing unnecessary data
+[03/12/20 20:52:47] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[03/12/20 20:52:48] info: Program: Building embedded zip file for Setup.exe
+[03/12/20 20:52:55] info: Program: Finished Squirrel Updater
+[03/12/20 21:00:29] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.5.1.nupkg
+[03/12/20 21:00:29] info: Program: Bootstrapper EXE found at:C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[03/12/20 21:00:29] info: Program: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.1.nupkg
+[03/12/20 21:00:29] info: ReleasePackage: Creating release package: C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT.0.5.1.nupkg => C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT-0.5.1-full.nupkg
+[03/12/20 21:00:29] info: ReleasePackage: Extracting dependent packages: []
+[03/12/20 21:00:29] info: ReleasePackage: Removing unnecessary data
+[03/12/20 21:00:29] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[03/12/20 21:00:30] info: DeltaPackageBuilder: Extracting .\Releases\NASR2SCT-0.5.0-full.nupkg and C:\Users\Pocono Coast West\Dropbox\00_PERSONAL DROPBOX\KyleProject\Releases\NASR2SCT-0.5.1-full.nupkg into C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb
+[03/12/20 21:00:30] info: DeltaPackageBuilder: Delta patching C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\lib\net45\ClassData.dll => C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb\lib\net45\ClassData.dll
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.MsDelta.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.PatchApi.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.Mdb.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.Pdb.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\Mono.Cecil.Rocks.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: Delta patching C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\lib\net45\NASR_GUI.exe => C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb\lib\net45\NASR_GUI.exe
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\NASR_GUI.exe.config hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: Delta patching C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempa\lib\net45\NASR_GUI_ExecutionStub.exe => C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempb\lib\net45\NASR_GUI_ExecutionStub.exe
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\Newtonsoft.Json.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\NuGet.Squirrel.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\SharpCompress.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: DeltaPackageBuilder: \lib\net45\Squirrel.dll hasn't changed, writing dummy file
+[03/12/20 21:00:30] info: Program: Building embedded zip file for Setup.exe
+[03/12/20 21:00:34] info: Program: Finished Squirrel Updater
