@@ -1,0 +1,10 @@
+ARTCC BOUNDARIES:
+-[ARTCC] - Leave blank for now
+-[ARTCC HIGH] - Place High boundaries here
+-[ARTC LOW] - Place Low boundaries here
+
+ATS Routes
+-Place into [LOW AIRWAYS]
+
+[GEO]
+-Create one-time AUTOCAD Parse of: https://www.ngdc.noaa.gov/mgg/shorelines/
