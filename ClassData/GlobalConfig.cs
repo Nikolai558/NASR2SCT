@@ -1,7 +1,10 @@
 ﻿using ClassData.Models;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -16,10 +19,13 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "V-0.4.3-beta";
-        
-        // Github's Most recent release version
+        public static readonly string ProgramVersion = "0.5.1";
+
         public static string GithubVersion = "";
+
+        public static List<AssetsModel> AllAssetsToDownload = new List<AssetsModel>();
+
+        public static string ReleaseBody = "";
 
         // XML Serializer for our Waypoints.xml file.
         private static XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Waypoints");
@@ -41,19 +47,61 @@ namespace NASARData
         // Temp path for the user. ie: C:\Users\nik\AppData\Local\Temp\NASR_TO_SCT
         public static readonly string tempPath = $"{Path.GetTempPath()}NASR_TO_SCT";
 
-        /// <summary>
-        /// Get the Github Version from: https://raw.githubusercontent.com/Nikolai558/NASR2SCT/main/tempLatestVersion.txt
-        /// </summary>
-        public static void githubVersion()
+
+        public static void DownloadAssets() 
         {
-            // Create Webclient
-            var client = new WebClient();
+            foreach (AssetsModel asset in GlobalConfig.AllAssetsToDownload)
+            {
+                var client = new WebClient();
+                client.DownloadFile(asset.DownloadURL, $"{tempPath}\\{asset.Name}");
+            }
+        }
 
-            // Download Github Version and store it in this variable.
-            GithubVersion = client.DownloadString("https://raw.githubusercontent.com/Nikolai558/NASR2SCT/main/tempLatestVersion.txt");
+        public static void UpdateCheck()
+        {
+            // Set our Repository Link Details
+            string owner = "Nikolai558";
+            string repo = "NASR2SCT";
 
-            // The downloaded info has a /n at the end of it. We only want the Version info with no \n
-            GithubVersion = GithubVersion.Split()[0];
+            // Set our full API Repository Link.
+            string latestReleaseURL = $"https://api.github.com/repos/{owner}/{repo}/releases/latest";
+
+            // Get the JSON Response back from the API Call
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(latestReleaseURL);
+            request.Accept = "application/vnd.github.v3+json";
+            request.UserAgent = "request";
+            request.AllowAutoRedirect = true;
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            // Create our Variables for what we get from the JSON API Call to Github
+            List<JObject> listOfAssests = new List<JObject>();
+
+            // Read the Response we get from API Call.
+            using (var reader = new StreamReader(response.GetResponseStream()))
+            {
+                // Get the Content from the response.
+                string content = reader.ReadToEnd();
+
+                // Parse the JSON response we get back.
+                var jsonobj = JObject.Parse(content);
+
+                // Assign our Temp Variables to our Latest release values. 
+                GithubVersion = jsonobj["tag_name"].ToString();
+                ReleaseBody = jsonobj["body"].ToString();
+
+                // Get all the Assets in this release
+                foreach (JObject asset in jsonobj["assets"])
+                {
+                    listOfAssests.Add(asset);
+                }
+            }
+
+            // Create our Assets Models.
+            foreach (JObject asset in listOfAssests)
+            {
+                AssetsModel downloadAsset = new AssetsModel() { Name = asset["name"].ToString(), DownloadURL = asset["browser_download_url"].ToString() };
+                AllAssetsToDownload.Add(downloadAsset);
+            }
         }
 
         /// <summary>

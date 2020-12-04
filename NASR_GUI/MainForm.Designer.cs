@@ -307,7 +307,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
-            this.Text = "NASR 2 SCT - V1.0.4";
+            this.Text = "NASR 2 SCT";
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.airacCycleGroupBox.ResumeLayout(false);
             this.airacCycleGroupBox.PerformLayout();
