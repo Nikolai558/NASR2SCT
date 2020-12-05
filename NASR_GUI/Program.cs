@@ -4,6 +4,7 @@ using Squirrel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -11,12 +12,16 @@ namespace NASR_GUI
 {
     static class Program
     {
+        public static readonly bool DebugMode = true; 
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            WebRequest.DefaultWebProxy = null;
+
             // !!! DEBUGING CONVERTER  !!!
             //string test = new GlobalConfig().CorrectLatLon("E170.00.00.000", false, true);
             //string test2 = new GlobalConfig().CorrectLatLon("E151.00.00.000", false, true);
@@ -73,7 +78,7 @@ namespace NASR_GUI
                     UpdateProgram();
 
                     // Restart the application to apply the update.
-                    Application.Restart();
+                    // Application.Restart();
                 }
                 else
                 {

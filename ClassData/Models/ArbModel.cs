@@ -23,5 +23,7 @@ namespace ClassData.Models
         public string Sequence { get; set; }
 
         public string Legal { get; set; }
+
+        public bool ToBeginingAfterThis { get; set; }
     }
 }

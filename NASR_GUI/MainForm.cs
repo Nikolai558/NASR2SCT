@@ -37,7 +37,6 @@ namespace NASR_GUI
             processingGroupBox.Enabled = true;
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
-
         }
 
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
@@ -137,8 +136,8 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
-            //GetFixData ParseFixes = new GetFixData();
-            //ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
+            GetFixData ParseFixes = new GetFixData();
+            ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
 
             GetArbData ParseArb = new GetArbData();
             ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
@@ -168,7 +167,6 @@ namespace NASR_GUI
 
             exitButton.Visible = true;
             exitButton.Enabled = true;
-
         }
 
         private void runAgainButton_Click(object sender, EventArgs e)

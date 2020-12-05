@@ -61,6 +61,12 @@ namespace ClassData.DataAccess
                     Sequence = line.Substring(390, 6).Trim(),
                     Legal = line.Substring(396, 1).Trim()
                 };
+
+                if (arb.Description.IndexOf("POINT OF BEGINNING", 0) != -1)
+                {
+                    arb.ToBeginingAfterThis = true;
+                }
+
                 allBoundaryPoints.Add(arb);
             }
 
@@ -76,6 +82,13 @@ namespace ClassData.DataAccess
                 if (point.Identifier == Boundary.Identifier && point.DecodeName == Boundary.Type)
                 {
                     Boundary.AllPoints.Add(point);
+
+                    if (point.ToBeginingAfterThis)
+                    {
+                        Boundary.AllPoints.Add(Boundary.AllPoints.First());
+                        allBoundarys.Add(Boundary);
+                        Boundary = new BoundryModel();
+                    }
                 }
                 else
                 {
@@ -91,7 +104,7 @@ namespace ClassData.DataAccess
                     Boundary.AllPoints.Add(point);
                 }
 
-                if (totalPoints == currentPointCount)
+                if (totalPoints == currentPointCount && Boundary.Identifier != null)
                 {
                     allBoundarys.Add(Boundary);
                 }
@@ -111,25 +124,19 @@ namespace ClassData.DataAccess
 
             StringBuilder lowArb = new StringBuilder();
             lowArb.AppendLine("[ARTCC LOW]");
-
+            
             foreach (BoundryModel boundry in allBoundarys)
             {
                 // HIGH ARTCC =       HIGH, FIR_ONLY, UTA
                 // LOW ARTCC =        LOW, CTA, BDRY
 
-                ArbModel firstPoint = new ArbModel();
                 ArbModel prevPoint = new ArbModel();
-                int currentCount = 0;
-                int totalCount = boundry.AllPoints.Count;
 
                 foreach (ArbModel arbPoint in boundry.AllPoints)
                 {
-                    currentCount += 1;
-
                     if (prevPoint.Identifier == null)
                     {
                         prevPoint = arbPoint;
-                        firstPoint = arbPoint;
                     }
                     else
                     {
@@ -145,26 +152,9 @@ namespace ClassData.DataAccess
                         {
                             throw new NotImplementedException();
                         }
+
                         prevPoint = arbPoint;
-
                     }
-
-                    if (currentCount == totalCount)
-                    {
-                        if (boundry.Type == "HIGH" || boundry.Type == "FIR ONLY" || boundry.Type == "UTA")
-                        {
-                            highArb.AppendLine($"{boundry.Identifier} {prevPoint.Lat} {prevPoint.Lon} {firstPoint.Lat} {firstPoint.Lon}; {prevPoint.Sequence} {firstPoint.Sequence} / {prevPoint.DecodeName} {firstPoint.DecodeName}");
-                        }
-                        else if (boundry.Type == "LOW" || boundry.Type == "CTA" || boundry.Type == "BDRY")
-                        {
-                            lowArb.AppendLine($"{boundry.Identifier} {prevPoint.Lat} {prevPoint.Lon} {firstPoint.Lat} {firstPoint.Lon}; {prevPoint.Sequence} {firstPoint.Sequence} / {prevPoint.DecodeName} {firstPoint.DecodeName}");
-                        }
-                        else
-                        {
-                            throw new NotImplementedException();
-                        }
-                    }
-
                 }
             }
 

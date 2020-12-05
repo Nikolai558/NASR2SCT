@@ -20,7 +20,7 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.2";
+        public static readonly string ProgramVersion = "0.5.3";
 
         public static string GithubVersion = "";
 
@@ -360,11 +360,13 @@ namespace NASARData
             // FAA URL that contains the effective dates for both Current and Next AIRAC Cycles.
             string url = "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/";
 
-            // Create web client to connect to the URL.
-            var client = new WebClient();
-
-            // Get the HTML version of the site.
-            var response = client.DownloadString(url);
+            string response;
+            using (var webClient = new System.Net.WebClient())
+            {
+                webClient.Proxy = null;
+                //webClient.Proxy = GlobalProxySelection.GetEmptyWebProxy();
+                response = webClient.DownloadString(url);
+            }
 
             // Trim the the White Space.
             response.Trim();
