@@ -114,8 +114,8 @@ namespace NASRData.DataAccess
                     };
 
                     // Set the Decimal Format for the Lat and Lon
-                    individualFixData.Lat_Dec = new GlobalConfig().createDecFormat(individualFixData.Lat);
-                    individualFixData.Lon_Dec = new GlobalConfig().createDecFormat(individualFixData.Lon);
+                    individualFixData.Lat_Dec = new GlobalConfig().createDecFormat(individualFixData.Lat, true);
+                    individualFixData.Lon_Dec = new GlobalConfig().createDecFormat(individualFixData.Lon, true);
 
                     // Add this FIX MODEL to the list of all Fixes.
                     allFixesInData.Add(individualFixData);

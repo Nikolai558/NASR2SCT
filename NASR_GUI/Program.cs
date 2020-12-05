@@ -4,6 +4,7 @@ using Squirrel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace NASR_GUI
@@ -16,14 +17,39 @@ namespace NASR_GUI
         [STAThread]
         static void Main()
         {
+            // !!! DEBUGING CONVERTER  !!!
+            //string test = new GlobalConfig().CorrectLatLon("E170.00.00.000", false, true);
+            //string test2 = new GlobalConfig().CorrectLatLon("E151.00.00.000", false, true);
+            //string test3 = new GlobalConfig().CorrectLatLon("E179.59.59.999", false, true);
+            //string test4 = new GlobalConfig().CorrectLatLon("E179.00.00.001", false, true);
+            //string test5 = new GlobalConfig().CorrectLatLon("E180.00.00.000", false, true);
+
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
             GlobalConfig.UpdateCheck();
 
-            // Check to see if Version's match.
-            if (GlobalConfig.ProgramVersion == GlobalConfig.GithubVersion)
-            {
-                List<string> msg = GlobalConfig.ReleaseBody.Split( new string[] { "##" }, StringSplitOptions.None).ToList();
+            // Check Current Program Against Github, if different ask user if they want to update.
+            CheckVersion();
 
+            // Set application settings.
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Start the application
+            Application.Run(new MainForm());
+        }
+
+        /// <summary>
+        /// Check the Program version against Github, if different ask the user if they want to update.
+        /// </summary>
+        private static void CheckVersion() 
+        {
+            // Check to see if Version's match.
+            if (GlobalConfig.ProgramVersion != GlobalConfig.GithubVersion)
+            {
+                // Complete Latest release message body.
+                List<string> msg = GlobalConfig.ReleaseBody.Split(new string[] { "##" }, StringSplitOptions.None).ToList();
+
+                // Don't grab the install instructions.
                 msg = msg.GetRange(2, msg.Count - 2);
 
                 // If they don't match, Tell the user about the new version on Github.
@@ -37,29 +63,28 @@ namespace NASR_GUI
 
                 if (dialogResult == DialogResult.Yes)
                 {
+                    // Create our Temp Directory so we can download assets from Github and store them here.
+                    GlobalConfig.createDirectories(true);
+
+                    new Thread(() => new Processing().ShowDialog()).Start();
+
                     // User DOES want to update. 
                     GlobalConfig.DownloadAssets();
                     UpdateProgram();
 
-                    DialogResult dialogResult1 = MessageBox.Show
-                    ($"Restar the program for update to kick in.\n", "Update Complete", MessageBoxButtons.OK);
+                    // Restart the application to apply the update.
+                    Application.Restart();
                 }
                 else
                 {
                     // User does not want to Update
                 }
-
             }
-
-            // Set application settings.
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-
-            // Start the application
-            Application.Run(new MainForm());
         }
 
+        /// <summary>
+        /// Use squirrel to update the program.
+        /// </summary>
         private static async void UpdateProgram() 
         {
             using (var updateManager = new UpdateManager($"{GlobalConfig.tempPath}"))

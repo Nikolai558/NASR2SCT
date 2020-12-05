@@ -137,11 +137,17 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
-            GetFixData ParseFixes = new GetFixData();
-            ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
+            //GetFixData ParseFixes = new GetFixData();
+            //ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
+
+            GetArbData ParseArb = new GetArbData();
+            ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
 
             GetAwyData ParseAWY = new GetAwyData();
             ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
+
+            GetAtsAwyData ParseAts = new GetAtsAwyData();
+            ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
 
             GetNavData ParseNDBs = new GetNavData();
             ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);

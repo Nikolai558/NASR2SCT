@@ -44,6 +44,7 @@ namespace ClassData.DataAccess
 
             WriteEramAirportsXML(effectiveDate);
             StoreWaypointsXMLData();
+            WriteRunwayData();
 
             DownloadWxStationData(effectiveDate);
             ParseWxStationData(color);
@@ -137,8 +138,8 @@ namespace ClassData.DataAccess
                     airport.Ctaf = line.Substring(988, 7).Trim(removeChars);
                     airport.Icao = line.Substring(1210, 7).Trim(removeChars);
                     airport.Lon = new GlobalConfig().CorrectLatLon(line.Substring(550, 15).Trim(removeChars), false, GlobalConfig.Convert);
-                    airport.Lat_Dec = new GlobalConfig().createDecFormat(airport.Lat);
-                    airport.Lon_Dec = new GlobalConfig().createDecFormat(airport.Lon);
+                    airport.Lat_Dec = new GlobalConfig().createDecFormat(airport.Lat, true);
+                    airport.Lon_Dec = new GlobalConfig().createDecFormat(airport.Lon, true);
                     airport.magVariation = line.Substring(586, 3).Trim();
 
                     // If Magnetic Variation is NOT empty Continue with the airport and runway building.
@@ -303,8 +304,8 @@ namespace ClassData.DataAccess
                         station.LonCorrect = new GlobalConfig().CorrectLatLon(station.Lon, false, GlobalConfig.Convert);
 
                         // Set the stations Decimal Verison of Lat and Lon
-                        station.Dec_Lat = new GlobalConfig().createDecFormat(station.LatCorrect);
-                        station.Dec_Lon = new GlobalConfig().createDecFormat(station.LonCorrect);
+                        station.Dec_Lat = new GlobalConfig().createDecFormat(station.LatCorrect, true);
+                        station.Dec_Lon = new GlobalConfig().createDecFormat(station.LonCorrect, true);
 
                         // Add the Wx Station Model to our List of ALL station Models.
                         allWxStationsInData.Add(station);
@@ -400,13 +401,13 @@ namespace ClassData.DataAccess
                             Width = runwayModel.RwyWidth,
                             StartLoc = new StartLoc
                             {
-                                Lon = new GlobalConfig().createDecFormat(runwayModel.BaseStartLon),
-                                Lat = new GlobalConfig().createDecFormat(runwayModel.BaseStartLat)
+                                Lon = new GlobalConfig().createDecFormat(runwayModel.BaseStartLon, true),
+                                Lat = new GlobalConfig().createDecFormat(runwayModel.BaseStartLat, true)
                             },
                             EndLoc = new EndLoc
                             {
-                                Lon = new GlobalConfig().createDecFormat(runwayModel.BaseEndLon),
-                                Lat = new GlobalConfig().createDecFormat(runwayModel.BaseEndLat)
+                                Lon = new GlobalConfig().createDecFormat(runwayModel.BaseEndLon, true),
+                                Lat = new GlobalConfig().createDecFormat(runwayModel.BaseEndLat, true)
                             }
                         };
 
@@ -419,13 +420,13 @@ namespace ClassData.DataAccess
                             Width = runwayModel.RwyWidth,
                             StartLoc = new StartLoc
                             {
-                                Lon = new GlobalConfig().createDecFormat(runwayModel.RecStartLon),
-                                Lat = new GlobalConfig().createDecFormat(runwayModel.RecStartLat)
+                                Lon = new GlobalConfig().createDecFormat(runwayModel.RecStartLon, true),
+                                Lat = new GlobalConfig().createDecFormat(runwayModel.RecStartLat, true)
                             },
                             EndLoc = new EndLoc
                             {
-                                Lon = new GlobalConfig().createDecFormat(runwayModel.RecEndLon),
-                                Lat = new GlobalConfig().createDecFormat(runwayModel.RecEndLat)
+                                Lon = new GlobalConfig().createDecFormat(runwayModel.RecEndLon, true),
+                                Lat = new GlobalConfig().createDecFormat(runwayModel.RecEndLat, true)
                             }
                         };
 
@@ -565,6 +566,68 @@ namespace ClassData.DataAccess
 
             // Write the String Builder to the file.
             File.WriteAllText(filePath, sb.ToString());
+        }
+
+        /// <summary>
+        /// Write the [RUNWAY] Sct File.
+        /// </summary>
+        private void WriteRunwayData() 
+        {
+            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\Runways.sct2";
+            string aptId;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("[RUNWAY]");
+
+            foreach (AptModel apt in allAptModels)
+            {
+                if (string.IsNullOrEmpty(apt.Icao)){aptId = apt.Id;} else {aptId = apt.Icao;}
+
+                foreach (RunwayModel runwayModel in apt.Runways)
+                {
+                    bool doNotUseThisRwy = false;
+
+                    List<string> rwyProperties = new List<string>()
+                    {
+                        runwayModel.RwyGroup,
+                        runwayModel.BaseRwy,
+                        runwayModel.RecRwy,
+                        runwayModel.RwyLength,
+                        runwayModel.RwyWidth,
+                        runwayModel.BaseStartLat,
+                        runwayModel.BaseStartLon,
+                        runwayModel.BaseEndLat,
+                        runwayModel.BaseEndLon,
+                        runwayModel.RecStartLat,
+                        runwayModel.RecStartLon,
+                        runwayModel.RecEndLat,
+                        runwayModel.RecEndLon,
+                        runwayModel.BaseRwyHdg,
+                        runwayModel.RecRwyHdg
+                    };
+
+                    // Loop through All the Properties
+                    foreach (string stringProperty in rwyProperties)
+                    {
+                        // Make sure it does NOT equal "" or Null.
+                        if (string.IsNullOrEmpty(stringProperty))
+                        {
+                            // If it does, tell our program to not use this runway data info. 
+                            doNotUseThisRwy = true;
+                            break;
+                        }
+                    }
+
+                    if (doNotUseThisRwy == false)
+                    {
+                        sb.AppendLine($"{runwayModel.BaseRwy.PadRight(4)}{runwayModel.RecRwy.PadRight(4)}{runwayModel.BaseRwyHdg.PadRight(4)}{runwayModel.RecRwyHdg.PadRight(4)}{runwayModel.BaseStartLat.PadRight(15)}{runwayModel.BaseStartLon.Substring(0,14).PadRight(15)}{runwayModel.BaseEndLat.PadRight(15)}{runwayModel.BaseEndLon.Substring(0, 14).PadRight(14)}; {aptId} - {apt.Name}");
+                    }
+                }
+            }
+
+            File.WriteAllText(filePath, sb.ToString());
+            File.AppendAllText(filePath, $"\n\n\n\n\n\n");
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
         }
 
         /// <summary>

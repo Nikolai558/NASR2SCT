@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -19,7 +20,7 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.1";
+        public static readonly string ProgramVersion = "0.5.2";
 
         public static string GithubVersion = "";
 
@@ -45,7 +46,7 @@ namespace NASARData
         public static bool Convert = false;
 
         // Temp path for the user. ie: C:\Users\nik\AppData\Local\Temp\NASR_TO_SCT
-        public static readonly string tempPath = $"{Path.GetTempPath()}NASR_TO_SCT";
+        public static readonly string tempPath = $"{Path.GetTempPath()}Nikolai558-NASR2SCT";
 
 
         public static void DownloadAssets() 
@@ -219,49 +220,13 @@ namespace NASARData
             // Check to see if Convert E is True and Check our Value's Declination to make sure it is an E Coord.
             if (ConvertEast && declination == "E")
             {
-                // Make sure our miliseconds does not have more then 3 digits.
-                if (milSeconds.Length >= 4)
-                {
-                    // if it does only gram the first three digits.
-                    milSeconds = milSeconds.Substring(0, 3);
-                }
+                double oldDecForm = double.Parse(createDecFormat(correctedValue, false));
 
-                // Do some math for all of our Variables.
-                degrees = ((179 - int.Parse(degrees)) + 179).ToString();
-                minutes = ((59 - int.Parse(minutes)) + 59).ToString();
-                seconds = ((59 - int.Parse(minutes)) + 59).ToString();
-                milSeconds = ((1000 - int.Parse(milSeconds)) + 1000).ToString();
-                
-                // set the declination to W
-                declination = "W";
+                double newDecForm = 180 - oldDecForm;
 
-                // Make sure our Variables are in the correct range. Loop 3 times to verify this. (i.e. Miliseconds can be no larger than 999)
-                for (int i = 0; i < 3; i++)
-                {
-                    // Check the length of Miliseconds.
-                    if (int.Parse(milSeconds) >= 1000)
-                    {
-                        milSeconds = (int.Parse(milSeconds) - 1000).ToString();
-                        seconds = (int.Parse(seconds) + 1).ToString();
-                    }
+                newDecForm = (newDecForm + 180) * -1;
 
-                    // Check the Length of Seconds
-                    if (int.Parse(seconds) >= 60)
-                    {
-                        seconds = (int.Parse(seconds) - 60).ToString();
-                        minutes = (int.Parse(minutes) + 1).ToString();
-                    }
-
-                    // Check the length of minutes
-                    if (int.Parse(minutes) >= 60)
-                    {
-                        minutes = (int.Parse(minutes) - 60).ToString();
-                        degrees = (int.Parse(degrees) + 1).ToString();
-                    }
-                }
-
-                // Set the corrected value
-                correctedValue = $"{declination}{degrees.PadLeft(3, '0')}.{minutes.PadRight(2, '0')}.{seconds.PadRight(2, '0')}.{milSeconds.PadRight(3, '0')}";
+                correctedValue = createDMS(newDecForm, false);
 
                 // Return the corrected value. 
                 return correctedValue;
@@ -276,12 +241,85 @@ namespace NASARData
 
         }
 
+        public string createDMS(double value, bool lat) 
+        {
+            
+            int degrees = 0;
+            decimal degreeFloat = 0;
+
+            int minutes = 0;
+            decimal minuteFloat = 0;
+
+            int seconds = 0;
+            decimal secondFloat = 0;
+
+            string miliseconds = "0";
+
+            string dms; 
+
+            degrees = int.Parse(value.ToString().Split('.')[0]);
+
+            if (value.ToString().Split('.').Count() > 1)
+            {
+                degreeFloat = decimal.Parse("0." + value.ToString().Split('.')[1]);
+            }
+
+            minutes = int.Parse((degreeFloat * 60).ToString().Split('.')[0]);
+
+            if ((degreeFloat * 60).ToString().Split('.').Count() > 1)
+            {
+                minuteFloat = decimal.Parse("0." + (degreeFloat * 60).ToString().Split('.')[1]);
+            }
+
+            seconds = int.Parse((minuteFloat * 60).ToString().Split('.')[0]);
+
+            if ((minuteFloat * 60).ToString().Split('.').Count() > 1)
+            {
+                secondFloat = decimal.Parse("0." + (minuteFloat * 60).ToString().Split('.')[1]);
+            }
+
+            secondFloat = Math.Round(secondFloat, 3);
+
+            if (secondFloat.ToString().Split('.').Count() > 1)
+            {
+                miliseconds = secondFloat.ToString().Split('.')[1];
+            }
+
+
+            if (lat)
+            {
+                if (degrees < 0)
+                {
+                    degrees = degrees * -1;
+                    dms = $"S{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                }
+                else
+                {
+                    dms = $"N{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                }
+            }
+            else
+            {
+                if (degrees < 0)
+                {
+                    degrees = degrees * -1;
+                    dms = $"W{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                }
+                else
+                {
+                    dms = $"E{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                }
+            }
+
+            return dms;
+        }
+
         /// <summary>
         /// Do some math to convert lat/lon to decimal format
         /// </summary>
         /// <param name="value">lat OR Lon</param>
         /// <returns>Decimal Format of the value past in.</returns>
-        public string createDecFormat(string value) 
+        public string createDecFormat(string value, bool roundSixPlaces) 
         {
             // Split the value at decimal points.
             string[] splitValue = value.Split('.');
@@ -304,8 +342,11 @@ namespace NASARData
                 decFormat = $"-{decFormat}";
             }
 
-            // Round the Decimal format to 6 places after the decimal.
-            decFormat = Math.Round(double.Parse(decFormat), 6).ToString();
+            if (roundSixPlaces)
+            {
+                // Round the Decimal format to 6 places after the decimal.
+                decFormat = Math.Round(double.Parse(decFormat), 6).ToString();
+            }
 
             // Return the Decimal Format.
             return decFormat;
@@ -345,6 +386,15 @@ namespace NASARData
         }
 
         /// <summary>
+        /// Create only the Temp Directory that we need
+        /// </summary>
+        /// <param name="onlyTempFile">OnlyTempDir Bool</param>
+        public static void createDirectories(bool onlyTempFile) 
+        {
+            Directory.CreateDirectory($"{tempPath}");
+        }
+
+        /// <summary>
         /// Write the Waypoints.xml File. NOTE: The Global Variable that contains all the waypoints has to be 
         /// completely filled in before we call this function!
         /// </summary>
@@ -381,7 +431,7 @@ namespace NASARData
         public static void WriteTestSctFile() 
         {
             // Write the file INFO section.
-            File.WriteAllText($"{outputDirectory}\\Test_Sct_File.sct2", $"[INFO]\nTEST_SECTOR\nTST_CTR\nXXXX\nN043.31.08.418\nW112.03.50.103\n60.043\n43.536\n- 11.8\n1.000\n\n\n\n\n");
+            File.WriteAllText($"{outputDirectory}\\Test_Sct_File.sct2", $"[INFO]\nTEST_SECTOR\nTST_CTR\nXXXX\nN043.31.08.418\nW112.03.50.103\n60.043\n43.536\n-11.8\n1.000\n\n\n\n\n");
         }
     }
 }

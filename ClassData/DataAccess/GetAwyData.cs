@@ -127,8 +127,8 @@ namespace ClassData.DataAccess
                         awyPoint.Lon = new GlobalConfig().CorrectLatLon(line.Substring(97, 14).Trim(), false, GlobalConfig.Convert);
 
                         // Set the Decimal Version of Lat and Lon
-                        awyPoint.Dec_Lat = new GlobalConfig().createDecFormat(awyPoint.Lat);
-                        awyPoint.Dec_Lon = new GlobalConfig().createDecFormat(awyPoint.Lon);
+                        awyPoint.Dec_Lat = new GlobalConfig().createDecFormat(awyPoint.Lat, true);
+                        awyPoint.Dec_Lon = new GlobalConfig().createDecFormat(awyPoint.Lon, true);
 
                         // Add this point to our List
                         allAWYPoints.Add(awyPoint);

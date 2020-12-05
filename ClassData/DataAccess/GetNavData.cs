@@ -114,8 +114,8 @@ namespace ClassData.DataAccess
                             };
 
                             // Get the Decimal Format for Lat Lon and set it in our Model.
-                            individualNDB.Dec_Lat = new GlobalConfig().createDecFormat(individualNDB.Lat);
-                            individualNDB.Dec_Lon = new GlobalConfig().createDecFormat(individualNDB.Lon);
+                            individualNDB.Dec_Lat = new GlobalConfig().createDecFormat(individualNDB.Lat, true);
+                            individualNDB.Dec_Lon = new GlobalConfig().createDecFormat(individualNDB.Lon, true);
 
                             // Add the NDB model we just created to our LIST of NDB Models
                             allNDBData.Add(individualNDB);
@@ -136,8 +136,8 @@ namespace ClassData.DataAccess
                             };
                             
                             // Get the Decimal Format for Lat Lon and set it in our Model.
-                            individualVOR.Dec_Lat = new GlobalConfig().createDecFormat(individualVOR.Lat);
-                            individualVOR.Dec_Lon = new GlobalConfig().createDecFormat(individualVOR.Lon);
+                            individualVOR.Dec_Lat = new GlobalConfig().createDecFormat(individualVOR.Lat, true);
+                            individualVOR.Dec_Lon = new GlobalConfig().createDecFormat(individualVOR.Lon, true);
 
                             // Add the VOR model we just created to our LIST of VOR Models.
                             allVORData.Add(individualVOR);
