@@ -1,7 +1,8 @@
-ARTCC BOUNDARIES:
--[ARTCC] - Leave blank for now
--[ARTCC HIGH] - Place High boundaries here
--[ARTC LOW] - Place Low boundaries here
+"GET AIRAC DATES"
+-Figure out why it takes so long.
 
-[GEO]
+"vERAM GEOMAP Outputs"
+-Need to get the data required and formats from Kyle.
+
+"[GEO]"
 -Create one-time AUTOCAD Parse of: https://www.ngdc.noaa.gov/mgg/shorelines/
