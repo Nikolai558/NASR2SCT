@@ -170,7 +170,7 @@ namespace ClassData.DataAccess
         private void WriteAwySctData()
         {
             // Set our File Path
-            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\ATS.sct2";
+            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[LOW AIRWAY].sct2";
 
             StringBuilder sb = new StringBuilder();
 
@@ -207,7 +207,7 @@ namespace ClassData.DataAccess
             }
                 File.WriteAllText(filePath, sb.ToString());
                 File.AppendAllText(filePath, $"\n\n\n\n\n\n");
-                File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
+                File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
 
         /// <summary>

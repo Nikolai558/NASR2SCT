@@ -2,12 +2,14 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace NASARData
@@ -20,7 +22,9 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.3";
+        public static readonly string ProgramVersion = "0.5.4";
+
+        public static readonly string testSectorFileName = $"TestSectorFile.sct2";
 
         public static string GithubVersion = "";
 
@@ -40,7 +44,8 @@ namespace NASARData
         public static string nextAiracDate;
 
         // Store the users Output directory choice. 
-        public static string outputDirectory;
+        public static string outputDirectory = null;
+        public static string outputDirBase;
 
         // Store the users Choice if they want to convert East Cordinates.
         public static bool Convert = false;
@@ -361,19 +366,103 @@ namespace NASARData
             string url = "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/";
 
             string response;
-            using (var webClient = new System.Net.WebClient())
+
+
+
+            //using (HttpClient client = new HttpClient())
+            //{
+            //    using (HttpRequestMessage request = new HttpRequestMessage())
+            //    {
+            //        request.Method = HttpMethod.Get;
+            //        request.RequestUri = new Uri(url, UriKind.Absolute);
+
+            //        using (HttpResponseMessage response = await client.SendAsync(request))
+            //        {
+            //            if (response.IsSuccessStatusCode)
+            //            {
+            //                if (response.Content != null)
+            //                {
+            //                    ThisResponse = await response.Content.ReadAsStringAsync();
+            //                    // write result to file
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+
+
+
+            //System.Net.WebClient myWebClient = new System.Net.WebClient();
+            //WebProxy myProxy = new WebProxy();
+            //myProxy.IsBypassed(new Uri(url));
+            //myWebClient.Proxy = myProxy;
+            //response = myWebClient.DownloadString(url);
+
+
+            //using (var httpClient = new HttpClient())
+            //{
+            //    using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/"))
+            //    {
+            //        var thissssssss = await httpClient.SendAsync(request);
+            //    }
+            //}
+            //WebClient client = new WebClient();
+
+            using (var client = new System.Net.WebClient())
             {
-                webClient.Proxy = null;
-                //webClient.Proxy = GlobalProxySelection.GetEmptyWebProxy();
-                response = webClient.DownloadString(url);
+                client.Proxy = null;
+                //client.Proxy = GlobalProxySelection.GetEmptyWebProxy();
+                response = client.DownloadString(url);
             }
 
+            // Create Web Client to connect to FAA
+            //var client = new WebClient();
+
+            //client.DownloadFileAsync("https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/", $"{GlobalConfig.tempPath}\\FAANASR.txt");
+
+            //response = client.DownloadString($"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/");
+
+            //client.DownloadFile($"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/", $"{GlobalConfig.tempPath}\\FAANASR.txt");
+
+
+            // Download the APT.ZIP file from FAA
+            //response = client.DownloadData($"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/").ToString();
+
             // Trim the the White Space.
+            //response = File.ReadAllText($"{GlobalConfig.tempPath}\\FAANASR.txt");
+
+            //Process cmd = new Process();
+            //cmd.StartInfo.FileName = "nikolai558-NASR2SCT.exe";
+            //cmd.StartInfo.RedirectStandardInput = true;
+            //cmd.StartInfo.RedirectStandardOutput = true;
+            //cmd.StartInfo.CreateNoWindow = true;
+            //cmd.StartInfo.UseShellExecute = false;
+            //cmd.Start();
+
+            //cmd.StandardInput.WriteLine("curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\"");
+            //cmd.StandardInput.Flush();
+            //cmd.StandardInput.Close();
+            //cmd.WaitForExit();
+            //response = cmd.StandardOutput.ReadToEnd();
+
+            //string command = "\"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\"";
+
+            //System.Diagnostics.Process process = new System.Diagnostics.Process();
+            //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            //startInfo.FileName = "cmd.exe";
+            //startInfo.Arguments = $"/C curl {command}";
+            //process.StartInfo = startInfo;
+            //process.Start();
+
+            //response = process.StandardOutput.ReadToEnd();
+
             response.Trim();
 
             // Find the two strings that contain the effective date and set our Global Variables.
             nextAiracDate = response.Substring(response.IndexOf("NASR_Subscription_") + 18, 10);
-            currentAiracDate = response.Substring( response.LastIndexOf("NASR_Subscription_") + 18, 10);
+            currentAiracDate = response.Substring(response.LastIndexOf("NASR_Subscription_") + 18, 10);
         }
 
         /// <summary>
@@ -381,6 +470,11 @@ namespace NASARData
         /// </summary>
         public static void createDirectories() 
         {
+            
+
+
+            Directory.CreateDirectory(outputDirectory);
+
             Directory.CreateDirectory($"{outputDirectory}\\ISR");
             Directory.CreateDirectory($"{outputDirectory}\\VRC");
             Directory.CreateDirectory($"{outputDirectory}\\VSTARS");
@@ -411,6 +505,88 @@ namespace NASARData
             writer.Close();
         }
 
+        public static void WriteNavXmlOutput() 
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("        <GeoMapObject Description=\"NAVAIDS\" TdmOnly=\"false\">");
+            sb.AppendLine("          <SymbolDefaults Bcg=\"13\" Filters=\"13\" Style=\"VOR\" Size=\"1\" />");
+            sb.AppendLine("          <Elements>");
+
+
+            string readFilePath = $"{outputDirectory}\\VERAM\\Waypoints.xml";
+            string saveFilePath = $"{ outputDirectory}\\VERAM\\NAVAID_GEOMAP.xml";
+
+            bool grabLocation = false;
+
+            foreach (string line in File.ReadAllLines(readFilePath))
+            {
+                if (line.Length > 13)
+                {
+
+                    if (line.Substring(3, 8) == "Waypoint")
+                    {
+                        if (line.Substring(18, 7) != "Airport" && line.Substring(18, 12) != "Intersection")
+                        {
+                            grabLocation = true;
+                        }
+                        else
+                        {
+                            grabLocation = false;
+                        }
+                    }
+                    else if (line.Substring(5, 8) == "Location" && grabLocation == true)
+                    {
+                        int locLength = line.Length - 17;
+                        List<string> latLonSplitValue = line.Substring(14, locLength).Split(' ').ToList();
+
+                        string printString = $"            <Element xsi:type=\"Symbol\" Filters=\"\" {latLonSplitValue[1]} {latLonSplitValue[0]} />";
+
+                        sb.AppendLine(printString);
+                    }
+                }
+            }
+
+            sb.AppendLine("          </Elements>");
+            sb.AppendLine("        </GeoMapObject>");
+
+            File.WriteAllText(saveFilePath, sb.ToString());
+        }
+
+        public static void WriteAptXmlOutput()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("        <GeoMapObject Description=\"APT\" TdmOnly=\"false\">");
+            sb.AppendLine("          <SymbolDefaults Bcg=\"10\" Filters=\"10\" Style=\"Airport\" Size=\"1\" />");
+            sb.AppendLine("          <Elements>");
+
+
+            string readFilePath = $"{outputDirectory}\\VERAM\\Airports.xml";
+            string saveFilePath = $"{ outputDirectory}\\VERAM\\AIRPORTS_GEOMAP.xml";
+
+            foreach (string line in File.ReadAllLines(readFilePath))
+            {
+                if (line.Length > 13)
+                {
+                    if (line.Substring(5, 8) == "Location")
+                    {
+                        int locLength = line.Length - 17;
+                        List<string> latLonSplitValue = line.Substring(14, locLength).Split(' ').ToList();
+
+                        string printString = $"            <Element xsi:type=\"Symbol\" Filters=\"\" Size=\"2\" {latLonSplitValue[1]} {latLonSplitValue[0]} />";
+
+                        sb.AppendLine(printString);
+                    }
+                }
+            }
+
+            sb.AppendLine("          </Elements>");
+            sb.AppendLine("        </GeoMapObject>");
+
+            File.WriteAllText(saveFilePath, sb.ToString());
+        }
+
         /// <summary>
         /// Add Coment to the end of the XML file for Kyle's Batch File
         /// </summary>
@@ -433,7 +609,7 @@ namespace NASARData
         public static void WriteTestSctFile() 
         {
             // Write the file INFO section.
-            File.WriteAllText($"{outputDirectory}\\Test_Sct_File.sct2", $"[INFO]\nTEST_SECTOR\nTST_CTR\nXXXX\nN043.31.08.418\nW112.03.50.103\n60.043\n43.536\n-11.8\n1.000\n\n\n\n\n");
+            File.WriteAllText($"{outputDirectory}\\{GlobalConfig.testSectorFileName}", $"[INFO]\nTEST_SECTOR\nTST_CTR\nXXXX\nN043.31.08.418\nW112.03.50.103\n60.043\n43.536\n-11.8\n1.000\n\n\n\n\n");
         }
     }
 }

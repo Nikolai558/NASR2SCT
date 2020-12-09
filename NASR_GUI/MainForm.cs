@@ -12,6 +12,7 @@ using ClassData;
 using NASRData.DataAccess;
 using ClassData.DataAccess;
 using System.Threading;
+using System.IO;
 
 namespace NASR_GUI
 {
@@ -57,16 +58,16 @@ namespace NASR_GUI
 
             outputDir.ShowDialog();
 
-            GlobalConfig.outputDirectory = outputDir.SelectedPath;
+            GlobalConfig.outputDirBase = outputDir.SelectedPath;
 
-            filePathLabel.Text = GlobalConfig.outputDirectory;
+            filePathLabel.Text = GlobalConfig.outputDirBase;
             filePathLabel.Visible = true;
             filePathLabel.MaximumSize = new Size(257, 82);
         }
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            if (GlobalConfig.outputDirectory == null || GlobalConfig.outputDirectory == "")
+            if (GlobalConfig.outputDirBase == null || GlobalConfig.outputDirBase == "")
             {
                 DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have chosen an output location.", "ERROR: NO Output Location", MessageBoxButtons.OK);
                 if (dialogResult == DialogResult.OK)
@@ -90,6 +91,29 @@ namespace NASR_GUI
                 {
                     return;
                 }
+            }
+
+            if (GlobalConfig.outputDirectory == null)
+            {
+                GlobalConfig.outputDirectory = $"{GlobalConfig.outputDirBase}\\NASR2SCT_Output";
+
+                if (Directory.Exists(GlobalConfig.outputDirectory))
+                {
+                    GlobalConfig.outputDirectory += $"-{DateTime.Now.ToString("MMddHHmmss")}";
+                }
+
+                GlobalConfig.outputDirectory += "\\";
+            }
+            else
+            {
+                GlobalConfig.outputDirectory = $"{GlobalConfig.outputDirBase}\\NASR2SCT_Output";
+
+                if (Directory.Exists(GlobalConfig.outputDirectory))
+                {
+                    GlobalConfig.outputDirectory += $"-{DateTime.Now.ToString("MMddHHmmss")}";
+                }
+
+                GlobalConfig.outputDirectory += "\\";
             }
 
             GlobalConfig.createDirectories();
@@ -136,26 +160,43 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
+            processingDataLabel.Text = "Processing Fixes, Please wait.";
+
             GetFixData ParseFixes = new GetFixData();
             ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
+
+            processingDataLabel.Text = "Processing Boundaries, Please wait.";
 
             GetArbData ParseArb = new GetArbData();
             ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
 
+            processingDataLabel.Text = "Processing Airways, Please wait.";
+
             GetAwyData ParseAWY = new GetAwyData();
             ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
+
+            processingDataLabel.Text = "Processing Alt Airways, Please wait.";
 
             GetAtsAwyData ParseAts = new GetAtsAwyData();
             ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
 
+            processingDataLabel.Text = "Processing NDB's, Please wait.";
+
             GetNavData ParseNDBs = new GetNavData();
             ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
+
+            processingDataLabel.Text = "Processing Airports, Please wait.";
 
             GetAptData ParseAPT = new GetAptData();
             ParseAPT.APTQuarterbackFunc(airacEffectiveDate, facilityID, "11579568");
 
+            processingDataLabel.Text = "Processing Waypoints XML, Please wait.";
+
             GlobalConfig.WriteWaypointsXML();
             GlobalConfig.AppendCommentToXML(airacEffectiveDate);
+
+            GlobalConfig.WriteNavXmlOutput();
+            GlobalConfig.WriteAptXmlOutput();
 
             processingDataLabel.Text = "Complete";
 

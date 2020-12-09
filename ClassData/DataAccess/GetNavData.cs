@@ -272,8 +272,8 @@ namespace ClassData.DataAccess
         private void WriteNAVSctData() 
         {
             // Variable for the full file path for our two types.
-            string NDBfilePath = $"{GlobalConfig.outputDirectory}\\VRC\\NDB.sct2";
-            string VORfilePath = $"{GlobalConfig.outputDirectory}\\VRC\\VOR.sct2";
+            string NDBfilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[NDB].sct2";
+            string VORfilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[VOR].sct2";
 
             // Create NDB String builder with all the required data.
             StringBuilder sb = new StringBuilder();
@@ -295,7 +295,7 @@ namespace ClassData.DataAccess
             File.AppendAllText(NDBfilePath, $"\n\n\n\n\n\n");
 
             // Add this file data to our Sector TEST file.
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(NDBfilePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(NDBfilePath));
 
             // Overide the previous NDB String Builder with a new one and create VOR String builder with all the required data.
             sb = new StringBuilder();
@@ -317,7 +317,7 @@ namespace ClassData.DataAccess
             File.AppendAllText(VORfilePath, $"\n\n\n\n\n\n");
 
             // Add this file data to our TEST sector File.
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(VORfilePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(VORfilePath));
         }
 
         /// <summary>

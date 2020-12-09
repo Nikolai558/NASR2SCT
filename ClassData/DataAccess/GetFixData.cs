@@ -170,7 +170,7 @@ namespace NASRData.DataAccess
         private void WriteFixSctData() 
         {
             // This is where the new SCT2 File will be saved to.
-            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\FIX.sct2";
+            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[FIXES].sct2";
 
             // String Builders are super effictient and FAST when manipulating strings in bulk.
             StringBuilder sb = new StringBuilder();
@@ -192,7 +192,7 @@ namespace NASRData.DataAccess
             File.AppendAllText(filePath, $"\n\n\n\n\n\n");
 
             // Add this file to our Test Sector File.
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
 
         /// <summary>

@@ -70,7 +70,7 @@ namespace NASR2SctConsole
                 $"\n       {GlobalConfig.outputDirectory.Split('\\').Last()}\\VRC" +
                 $"\n       {GlobalConfig.outputDirectory.Split('\\').Last()}\\VSTARS" +
                 $"\n       {GlobalConfig.outputDirectory.Split('\\').Last()}\\VERAM" +
-                $"\n       {GlobalConfig.outputDirectory.Split('\\').Last()}\\Test_Sct_File.sct2\n\n" +
+                $"\n       {GlobalConfig.outputDirectory.Split('\\').Last()}\\{GlobalConfig.testSectorFileName}\n\n" +
                 "\n * * * * * * * * * * * * * * * * * * * * * * * * " +
                 "\n  AUTHORS:\n" +
                 "\n          Kyle Sanders  (VATSIM CID 1187148)" +

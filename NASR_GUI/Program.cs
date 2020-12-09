@@ -1,4 +1,5 @@
-﻿using ClassData.Models;
+﻿using ClassData.DataAccess;
+using ClassData.Models;
 using NASARData;
 using Squirrel;
 using System;
@@ -64,7 +65,8 @@ namespace NASR_GUI
                     $"Your Program Version: {GlobalConfig.ProgramVersion}\n" +
                     $"Latest Release Version: {GlobalConfig.GithubVersion}\n\n" +
                     $"{string.Join(" ", msg)}\n\n" +
-                    $"https://github.com/Nikolai558/NASR2SCT/releases", "Update Available", MessageBoxButtons.YesNo);
+                    $"https://github.com/Nikolai558/NASR2SCT/releases" +
+                    $"\n\n Would you like to update now?", "Update Available", MessageBoxButtons.YesNo);
 
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -77,6 +79,10 @@ namespace NASR_GUI
                     GlobalConfig.DownloadAssets();
                     UpdateProgram();
 
+
+                    DialogResult exitDialogResult = MessageBox.Show($"Application will now exit, restart and you will be on the new version.", "Exiting Application", MessageBoxButtons.OK);
+
+                    Application.Exit();
                     // Restart the application to apply the update.
                     // Application.Restart();
                 }

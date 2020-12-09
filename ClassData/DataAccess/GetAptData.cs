@@ -22,6 +22,7 @@ namespace ClassData.DataAccess
         // File paths for files we download 
         private string zipFolder;
         private string unzipedFolder;
+        private string altWxStationPath;
 
         // List of all Weather Station Models
         private List<WxStationModel> allWxStationsInData = new List<WxStationModel>();
@@ -46,10 +47,87 @@ namespace ClassData.DataAccess
             StoreWaypointsXMLData();
             WriteRunwayData();
 
-            DownloadWxStationData(effectiveDate);
-            ParseWxStationData(color);
-            WriteWxStationSctData();
-            deleteUnneededWXDir();
+            //DownloadWxStationData(effectiveDate);
+            //ParseWxStationData(color);
+            //WriteWxStationSctData();
+            //deleteUnneededWXDir();
+
+
+            DownloadAltWxStation();
+            ParseAndWriteWxStation();
+            //WriteAltWxStation();
+            //DeleteUneededAltWxStationDir();
+        }
+
+        private void DeleteUneededAltWxStationDir()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ParseAndWriteWxStation()
+        {
+            string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS]";
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("[LABELS]");
+
+            List<string> countryCodes = new List<string> { "AS", "GU", "MP", "PR", "VI", "US" };
+            string id;
+            string final; 
+
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\altWxStation.txt"))
+            {
+                if (line != string.Empty && line[0] != '!' && line.Length > 80 && line.Substring(62, 1) == "X")
+                {
+                    if (countryCodes.Contains(line.Substring(81, 2)))
+                    {
+                        if (line.Substring(20, 9).Trim() != string.Empty)
+                        {
+                            if (line.Substring(26, 3).Trim() == string.Empty)
+                            {
+                                id = line.Substring(21, 4).Trim();
+                            }
+                            else
+                            {
+                                id = line.Substring(26, 3).Trim();
+                            }
+
+                            string lat = $"{line.Substring(39, 2).Trim()}.{line.Substring(42, 2).Trim()}.00.000{line.Substring(44, 1)}";
+                            string lon = $"{line.Substring(47, 3).Trim()}.{line.Substring(51, 2).Trim()}.00.000{line.Substring(53, 1)}";
+
+                            foreach (AptModel apt in allAptModels)
+                            {
+                                if (id == apt.Id)
+                                {
+                                    final = $"\"{line.Substring(20, 4)} {apt.Name.Replace('"', '-')}\" {new GlobalConfig().CorrectLatLon(lat, true, GlobalConfig.Convert)} {new GlobalConfig().CorrectLatLon(lon, false, GlobalConfig.Convert)} 11579568";
+
+                                    sb.AppendLine(final);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            File.WriteAllText(filepath, sb.ToString());
+
+            // Write some New lines to the end of the file.
+            File.AppendAllText(filepath, $"\n\n\n\n\n\n");
+
+            // Add this file to our TEST SECTOR FILE.
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
+        }
+
+        private void DownloadAltWxStation()
+        {
+            // Create Web Client to connect to FAA
+            var client = new WebClient();
+
+            // Download the APT.ZIP file from FAA
+            client.DownloadFile($"https://www.aviationweather.gov/docs/metar/stations.txt", $"{GlobalConfig.tempPath}\\altWxStation.txt");
+
+            altWxStationPath = $"{GlobalConfig.tempPath}\\altWxStation.txt";
         }
 
         /// <summary>
@@ -573,7 +651,7 @@ namespace ClassData.DataAccess
         /// </summary>
         private void WriteRunwayData() 
         {
-            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\Runways.sct2";
+            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[RUNWAY].sct2";
             string aptId;
 
             StringBuilder sb = new StringBuilder();
@@ -627,7 +705,7 @@ namespace ClassData.DataAccess
 
             File.WriteAllText(filePath, sb.ToString());
             File.AppendAllText(filePath, $"\n\n\n\n\n\n");
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
 
         /// <summary>
@@ -636,7 +714,7 @@ namespace ClassData.DataAccess
         private void WriteAptSctData()
         {
             // File path and file name of the file we are about to create.
-            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\APT.sct2";
+            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[AIRPORT].sct2";
 
             // Populate this new string builder with the Airport information for each airport model in our list.
             StringBuilder sb = new StringBuilder();
@@ -664,7 +742,7 @@ namespace ClassData.DataAccess
             File.AppendAllText(filePath, $"\n\n\n\n\n\n");
 
             // Add this file to our TEST SECTOR FILE.
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
 
         /// <summary>
@@ -673,7 +751,7 @@ namespace ClassData.DataAccess
         private void WriteWxStationSctData()
         {
             // File Path to the file we want to write to
-            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\WxStations.sct2";
+            string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
 
             // String Builder to store all the lines we want to write to the file.
             StringBuilder sb = new StringBuilder();
@@ -694,7 +772,7 @@ namespace ClassData.DataAccess
             File.AppendAllText(filePath, $"\n\n\n\n\n\n");
 
             // Add this file to our TEST SECTOR file.
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(filePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
 
         /// <summary>

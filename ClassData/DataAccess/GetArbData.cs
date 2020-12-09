@@ -114,8 +114,8 @@ namespace ClassData.DataAccess
         private void WriteArbSct() 
         {
             // File Path to the file we want to write to
-            string highFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\ArtccHigh.sct2";
-            string lowFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\ArtccLow.sct2";
+            string highFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[ARTCC HIGH].sct2";
+            string lowFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[ARTCC LOW].sct2";
 
 
             // String Builder to store all the lines we want to write to the file.
@@ -167,8 +167,8 @@ namespace ClassData.DataAccess
             File.AppendAllText(lowFilePath, $"\n\n\n\n\n\n");
 
             // Add this file to our TEST SECTOR file.
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(highFilePath));
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\Test_Sct_File.sct2", File.ReadAllText(lowFilePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(highFilePath));
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(lowFilePath));
         }
 
         private void DeleteDownloadDir() 
