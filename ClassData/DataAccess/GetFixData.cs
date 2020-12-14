@@ -21,10 +21,6 @@ namespace NASRData.DataAccess
         // This variable holds a LIST of FIX MODELS
         private List<FixModel> allFixesInData = new List<FixModel>();
 
-        // Need to keep track of these folders so we can clean up after ourselfs. ie. Delete them when we are done.
-        private string zipFolder;
-        private string unzipedFolder;
-
         /// <summary>
         /// Calls all the needed functions
         /// </summary>
@@ -35,7 +31,6 @@ namespace NASRData.DataAccess
             ParseFixData();
             WriteFixSctData();
             StoreXMLData();
-            deleteUnneededDir();
         }
 
         /// <summary>
@@ -44,32 +39,7 @@ namespace NASRData.DataAccess
         /// <param name="effectiveDate">Valid format is "YYYY-MM-DD"</param>
         private void DownloadFixData(string effectiveDate) 
         {
-            // Check to see if the TEMP Directory Exists
-            // TODO - Don't delete the TEMP Directory HERE! 
-            if (Directory.Exists(GlobalConfig.tempPath))
-            {
-                // This variable holds all information for the temp path ie. Directories and files.
-                DirectoryInfo di = new DirectoryInfo(GlobalConfig.tempPath);
-
-                // Loop through the Files in our TempPath
-                foreach (FileInfo file in di.EnumerateFiles())
-                {
-                    // Delete each file it finds inside of this directory. IE Temp Path
-                    file.Delete();
-                }
-
-                // Loop through the Directories in our TempPath
-                foreach (DirectoryInfo dir in di.EnumerateDirectories())
-                {
-                    // Delete the folder it finds.
-                    dir.Delete(true);
-                }
-            }
-            else
-            {
-                // The file does not exist, we need to create it. 
-                Directory.CreateDirectory(GlobalConfig.tempPath);
-            }
+            
 
             // Web Client used to connect to the FAA website.
             var client = new WebClient();
@@ -77,14 +47,8 @@ namespace NASRData.DataAccess
             // Download the Fix Data
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip", $"{GlobalConfig.tempPath}\\fixes.zip");
 
-            // INSTANTIATE AND ASSIGN our zipFolder Variable to the file we just downloaded.
-            zipFolder = $"{GlobalConfig.tempPath}\\fixes.zip";
-
             // Extract the ZIP file that we just downloaded.
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\fixes.zip", $"{GlobalConfig.tempPath}\\fixes");
-
-            // INSTANTIATE AND ASSIGN our unzipedFolder Variable to the file we just downloaded.
-            unzipedFolder = $"{GlobalConfig.tempPath}\\fixes";
         }
 
         /// <summary>
@@ -193,19 +157,6 @@ namespace NASRData.DataAccess
 
             // Add this file to our Test Sector File.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
-        }
-
-        /// <summary>
-        /// Probably an Un-needed function, however, its good to be explicit. 
-        /// We don't call this function until after our SCT file is created.
-        /// </summary>
-        private void deleteUnneededDir() 
-        {
-            // Delete our Zip folder for Fixes we downloaded from FAA
-            File.Delete(zipFolder);
-
-            // Delete our unziped folder and fix document.
-            Directory.Delete(unzipedFolder, true);
         }
     }
 }

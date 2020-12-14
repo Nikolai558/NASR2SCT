@@ -22,6 +22,11 @@ namespace NASR_GUI
         {
             InitializeComponent();
 
+            GlobalConfig.CheckTempDir();
+
+            // TODO - Make it so I dont have to change this each version.
+            // It should grab from the assembily info. 
+            this.Text = "NASR 2 SCT - V0.5.5";
 
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
@@ -160,37 +165,37 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
-            processingDataLabel.Text = "Processing Fixes, Please wait.";
-
+            processingDataLabel.Text = "Processing Fixes.";
+            
             GetFixData ParseFixes = new GetFixData();
             ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Boundaries, Please wait.";
+            processingDataLabel.Text = "Processing Boundaries.";
 
             GetArbData ParseArb = new GetArbData();
             ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Airways, Please wait.";
+            processingDataLabel.Text = "Processing Airways.";
 
             GetAwyData ParseAWY = new GetAwyData();
             ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Alt Airways, Please wait.";
+            processingDataLabel.Text = "Processing Alt Airways.";
 
             GetAtsAwyData ParseAts = new GetAtsAwyData();
             ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing NDB's, Please wait.";
+            processingDataLabel.Text = "Processing NDB's.";
 
             GetNavData ParseNDBs = new GetNavData();
             ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
 
-            processingDataLabel.Text = "Processing Airports, Please wait.";
+            processingDataLabel.Text = "Processing Airports.";
 
             GetAptData ParseAPT = new GetAptData();
             ParseAPT.APTQuarterbackFunc(airacEffectiveDate, facilityID, "11579568");
 
-            processingDataLabel.Text = "Processing Waypoints XML, Please wait.";
+            processingDataLabel.Text = "Processing Waypoints XML.";
 
             GlobalConfig.WriteWaypointsXML();
             GlobalConfig.AppendCommentToXML(airacEffectiveDate);
@@ -208,6 +213,8 @@ namespace NASR_GUI
 
             exitButton.Visible = true;
             exitButton.Enabled = true;
+
+            GlobalConfig.CheckTempDir();
         }
 
         private void runAgainButton_Click(object sender, EventArgs e)
@@ -246,7 +253,7 @@ namespace NASR_GUI
 
         private void getAiracDate() 
         {
-
+            //GlobalConfig.GetAiracDateFromFAA();
             var Worker = new BackgroundWorker();
             Worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             Worker.DoWork += Worker_DoWork;

@@ -20,10 +20,6 @@ namespace ClassData.DataAccess
         private List<NDBModel> allNDBData = new List<NDBModel>();
         private List<VORModel> allVORData = new List<VORModel>();
 
-        // Variables to keep track of the files/directories that we need to delete.
-        private string zipFolder;
-        private string unzipedFolder;
-
         /// <summary>
         /// Call all the related functions to get the NAV data from the FAA.
         /// </summary>
@@ -35,7 +31,6 @@ namespace ClassData.DataAccess
             StoreXMLData();
             WriteNAVSctData();
             WriteNavISR(Artcc);
-            deleteUnneededDir();
         }
 
         /// <summary>
@@ -50,14 +45,8 @@ namespace ClassData.DataAccess
             // Go to the FAA website and download the NAV zip folder.
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip", $"{GlobalConfig.tempPath}\\nav.zip");
             
-            // Set our ZipFolder File Path so we can delete it later.
-            zipFolder = $"{GlobalConfig.tempPath}\\nav.zip";
-
             // Extract the zip folder we downloaded.
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\nav.zip", $"{GlobalConfig.tempPath}\\nav");
-            
-            // Set our Unziped File path so we can delete it later.
-            unzipedFolder = $"{GlobalConfig.tempPath}\\nav";
         }
 
         /// <summary>
@@ -215,7 +204,7 @@ namespace ClassData.DataAccess
         private void WriteNavISR(string Artcc) 
         {
             // File path to save the ISR file
-            string filePath = $"{GlobalConfig.outputDirectory}\\ISR\\ISR_NAVAID.txt";
+            string filePath = $"{GlobalConfig.outputDirectory}\\ALIAS\\ISR_NAVAID.txt";
             
             // String builder to store all the Lines for the file
             StringBuilder sb = new StringBuilder();
@@ -318,18 +307,6 @@ namespace ClassData.DataAccess
 
             // Add this file data to our TEST sector File.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(VORfilePath));
-        }
-
-        /// <summary>
-        /// Again Probably useless function but never hurts to be explicit. This deletes the data we downloaded from the FAA.
-        /// </summary>
-        private void deleteUnneededDir() 
-        {
-            // Delete the Zip "File"
-            File.Delete(zipFolder);
-
-            // Delete the unziped folder and data.
-            Directory.Delete(unzipedFolder, true);
         }
     }
 }

@@ -16,16 +16,11 @@ namespace ClassData.DataAccess
         private List<ArbModel> allBoundaryPoints = new List<ArbModel>();
         private List<BoundryModel> allBoundarys = new List<BoundryModel>();
 
-        private string zipFolder;
-        private string unzipedFolder;
-
-
         public void ArbQuarterbacFunc(string effectiveDate) 
         {
             DownloadAptData(effectiveDate);
             ParseArb();
             WriteArbSct();
-            DeleteDownloadDir();
         }
 
         private void DownloadAptData(string effectiveDate)
@@ -36,14 +31,8 @@ namespace ClassData.DataAccess
             // Download the APT.ZIP file from FAA
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip", $"{GlobalConfig.tempPath}\\arb.zip");
 
-            // Store our path for the zip folder we just downloaded so we can delete later
-            zipFolder = $"{GlobalConfig.tempPath}\\arb.zip";
-
             // Unzip FAA apt.zip
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\arb.zip", $"{GlobalConfig.tempPath}\\arb");
-
-            // Store our path for the unziped folder so we can delete later.
-            unzipedFolder = $"{GlobalConfig.tempPath}\\arb";
         }
 
         private void ParseArb() 
@@ -169,15 +158,6 @@ namespace ClassData.DataAccess
             // Add this file to our TEST SECTOR file.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(highFilePath));
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(lowFilePath));
-        }
-
-        private void DeleteDownloadDir() 
-        {
-            // Delete our Zip folder for Airports we downloaded from FAA
-            File.Delete(zipFolder);
-
-            // Delete our unziped folder and Apt document.
-            Directory.Delete(unzipedFolder, true);
         }
     }
 }

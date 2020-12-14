@@ -19,9 +19,7 @@ namespace ClassData.DataAccess
         //// Create empty list to hold all of the Airways.
         List<AtsAirwayModel> allAtsAwy = new List<AtsAirwayModel>();
 
-        //// File paths for the data we download.
-        private string zipFolder;
-        private string unzipedFolder;
+        Dictionary<string, List<string>> awyFixes = new Dictionary<string, List<string>>();
 
         /// <summary>
         /// Calls All the needed functions.
@@ -32,7 +30,7 @@ namespace ClassData.DataAccess
             DownloadAwyData(effectiveDate);
             ParseAtsData();
             WriteAwySctData();
-            deleteUnneededDir();
+            WriteAwyAlias();
         }
 
         /// <summary>
@@ -47,14 +45,8 @@ namespace ClassData.DataAccess
             // Download the AWY Zip File
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip", $"{GlobalConfig.tempPath}\\atsAwy.zip");
 
-            // Set our Zip Folder File path that we just downloaded so we can delete it later.
-            zipFolder = $"{GlobalConfig.tempPath}\\atsAwy.zip";
-
             // Unzip the File we just downloaded
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\atsAwy.zip", $"{GlobalConfig.tempPath}\\atsAwy");
-
-            // Set our File path for the unziped version so we can delete it later.
-            unzipedFolder = $"{GlobalConfig.tempPath}\\atsAwy";
         }
 
         /// <summary>
@@ -164,6 +156,33 @@ namespace ClassData.DataAccess
             }
         }
 
+        private void WriteAwyAlias()
+        {
+            foreach (atsAwyPointModel pointModel in allAtsAwyPoints)
+            {
+
+                if (!awyFixes.ContainsKey(pointModel.AirwayId))
+                {
+                    awyFixes.Add(pointModel.AirwayId, new List<string>());
+                }
+
+                awyFixes[pointModel.AirwayId].Add(pointModel.PointId);
+            }
+
+            string awyAliasFilePath = $"{GlobalConfig.outputDirectory}\\ALIAS\\AWY_ALIAS.txt";
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string awyId in awyFixes.Keys)
+            {
+                string saveString = $".{awyId}F .FF ";
+                string allFixesToSave = string.Join(" ", awyFixes[awyId]);
+                saveString += allFixesToSave;
+                sb.AppendLine(saveString);
+            }
+
+            File.AppendAllText(awyAliasFilePath, sb.ToString());
+        }
+
         /// <summary>
         /// Write the AWY Sector File data to a file. this will be under [HIGH AIRWAYS]
         /// </summary>
@@ -208,18 +227,6 @@ namespace ClassData.DataAccess
                 File.WriteAllText(filePath, sb.ToString());
                 File.AppendAllText(filePath, $"\n\n\n\n\n\n");
                 File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
-        }
-
-        /// <summary>
-        /// Delete the Folders we downloaded.
-        /// </summary>
-        private void deleteUnneededDir()
-        {
-            // Delete Zip Folder
-            File.Delete(zipFolder);
-
-            // Delete the unziped folder.
-            Directory.Delete(unzipedFolder, true);
         }
     }
 }

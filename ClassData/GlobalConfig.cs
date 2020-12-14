@@ -22,9 +22,9 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.4";
+        public static readonly string ProgramVersion = "0.5.5";
 
-        public static readonly string testSectorFileName = $"TestSectorFile.sct2";
+        public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
         public static string GithubVersion = "";
 
@@ -60,6 +60,35 @@ namespace NASARData
             {
                 var client = new WebClient();
                 client.DownloadFile(asset.DownloadURL, $"{tempPath}\\{asset.Name}");
+            }
+        }
+
+        public static void CheckTempDir() 
+        {
+            // Check to see if the TEMP Directory Exists
+            if (Directory.Exists(tempPath))
+            {
+                // This variable holds all information for the temp path ie. Directories and files.
+                DirectoryInfo di = new DirectoryInfo(tempPath);
+
+                // Loop through the Files in our TempPath
+                foreach (FileInfo file in di.EnumerateFiles())
+                {
+                    // Delete each file it finds inside of this directory. IE Temp Path
+                    file.Delete();
+                }
+
+                // Loop through the Directories in our TempPath
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    // Delete the folder it finds.
+                    dir.Delete(true);
+                }
+            }
+            else
+            {
+                // The file does not exist, we need to create it. 
+                Directory.CreateDirectory(tempPath);
             }
         }
 
@@ -216,7 +245,18 @@ namespace NASARData
                 degrees = valueSplit[0];
                 minutes = valueSplit[1];
                 seconds = valueSplit[2];
-                milSeconds = valueSplit[3];
+
+                if (valueSplit[3].Length > 3)
+                {
+                    // If its greater then 3 we only want to keep the first three.
+                    milSeconds = valueSplit[3].Substring(0, 3);
+                }
+                else
+                {
+                    // our the length is less than or equal to three so just set it. 
+                    milSeconds = valueSplit[3];
+                }
+
 
                 // Set the Corrected Value
                 correctedValue = $"{declination}{degrees.PadLeft(3, '0')}.{minutes.PadRight(2, '0')}.{seconds.PadRight(2, '0')}.{milSeconds.PadRight(3, '0')}";
@@ -412,6 +452,7 @@ namespace NASARData
             using (var client = new System.Net.WebClient())
             {
                 client.Proxy = null;
+                
                 //client.Proxy = GlobalProxySelection.GetEmptyWebProxy();
                 response = client.DownloadString(url);
             }
@@ -475,7 +516,7 @@ namespace NASARData
 
             Directory.CreateDirectory(outputDirectory);
 
-            Directory.CreateDirectory($"{outputDirectory}\\ISR");
+            Directory.CreateDirectory($"{outputDirectory}\\ALIAS");
             Directory.CreateDirectory($"{outputDirectory}\\VRC");
             Directory.CreateDirectory($"{outputDirectory}\\VSTARS");
             Directory.CreateDirectory($"{outputDirectory}\\VERAM");

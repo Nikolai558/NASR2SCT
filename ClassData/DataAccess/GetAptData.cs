@@ -19,17 +19,8 @@ namespace ClassData.DataAccess
         // List of ALL Airport Models
         private List<AptModel> allAptModels = new List<AptModel>();
 
-        // File paths for files we download 
-        private string zipFolder;
-        private string unzipedFolder;
-        private string altWxStationPath;
-
         // List of all Weather Station Models
         private List<WxStationModel> allWxStationsInData = new List<WxStationModel>();
-
-        // File paths for Weather Station Files We downloaded.
-        private string WxzipFolder;
-        private string WxunzipedFolder;
 
         /// <summary>
         /// Call all the needed functions.
@@ -41,7 +32,6 @@ namespace ClassData.DataAccess
             ParseAptData();
             WriteAptISR(artcc);
             WriteAptSctData();
-            deleteUnneededDir();
 
             WriteEramAirportsXML(effectiveDate);
             StoreWaypointsXMLData();
@@ -50,23 +40,16 @@ namespace ClassData.DataAccess
             //DownloadWxStationData(effectiveDate);
             //ParseWxStationData(color);
             //WriteWxStationSctData();
-            //deleteUnneededWXDir();
-
 
             DownloadAltWxStation();
             ParseAndWriteWxStation();
+            WriteAptXmlOutput();
             //WriteAltWxStation();
-            //DeleteUneededAltWxStationDir();
-        }
-
-        private void DeleteUneededAltWxStationDir()
-        {
-            throw new NotImplementedException();
         }
 
         private void ParseAndWriteWxStation()
         {
-            string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS]";
+            string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("[LABELS]");
@@ -111,13 +94,48 @@ namespace ClassData.DataAccess
             }
 
             File.WriteAllText(filepath, sb.ToString());
-
-            // Write some New lines to the end of the file.
             File.AppendAllText(filepath, $"\n\n\n\n\n\n");
 
             // Add this file to our TEST SECTOR FILE.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
         }
+
+        public static void WriteAptXmlOutput()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("        <GeoMapObject Description=\"WX STATIONS\" TdmOnly=\"false\">");
+            sb.AppendLine("          <TextDefaults Bcg=\"9\" Filters=\"9\" Size=\"1\" Underline=\"false\" Opaque=\"false\" XOffset=\"3\" YOffset=\"0\" />");
+            sb.AppendLine("          <Elements>");
+
+            string readFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
+            string saveFilePath = $"{GlobalConfig.outputDirectory}\\VERAM\\WX_STATIONS_GEOMAP.xml";
+
+            foreach (string line in File.ReadAllLines(readFilePath))
+            {
+                if (line != string.Empty)
+                {
+                    if (line.Substring(0, 1) != " " && line.Substring(0, 1) != "[")
+                    {
+                        string split = line.Substring(line.LastIndexOf('"') + 2);
+
+                        List<string> splitValue = split.Split(' ').ToList();
+
+                        if (splitValue.Count >= 3)
+                        {
+                            string printString = $"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{new GlobalConfig().createDecFormat(splitValue[0], true)}\" Lon=\"{new GlobalConfig().createDecFormat(splitValue[1], true)}\" Lines={line.Substring(0, line.LastIndexOf('"') + 1)} />";
+                            sb.AppendLine(printString);
+                        }
+                    }
+                }
+            }
+
+            sb.AppendLine("          </Elements>");
+            sb.AppendLine("        </GeoMapObject>");
+
+            File.WriteAllText(saveFilePath, sb.ToString());
+        }
+
 
         private void DownloadAltWxStation()
         {
@@ -126,8 +144,6 @@ namespace ClassData.DataAccess
 
             // Download the APT.ZIP file from FAA
             client.DownloadFile($"https://www.aviationweather.gov/docs/metar/stations.txt", $"{GlobalConfig.tempPath}\\altWxStation.txt");
-
-            altWxStationPath = $"{GlobalConfig.tempPath}\\altWxStation.txt";
         }
 
         /// <summary>
@@ -142,14 +158,8 @@ namespace ClassData.DataAccess
             // Download the APT.ZIP file from FAA
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip", $"{GlobalConfig.tempPath}\\apt.zip");
 
-            // Store our path for the zip folder we just downloaded so we can delete later
-            zipFolder = $"{GlobalConfig.tempPath}\\apt.zip";
-
             // Unzip FAA apt.zip
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\apt.zip", $"{GlobalConfig.tempPath}\\apt");
-
-            // Store our path for the unziped folder so we can delete later.
-            unzipedFolder = $"{GlobalConfig.tempPath}\\apt";
         }
 
         /// <summary>
@@ -164,14 +174,8 @@ namespace ClassData.DataAccess
             // Download the Weather Stations Data
             client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/WXL.zip", $"{GlobalConfig.tempPath}\\wxStations.zip");
 
-            // INSTANTIATE AND ASSIGN our zipFolder Variable to the file we just downloaded.
-            WxzipFolder = $"{GlobalConfig.tempPath}\\wxStations.zip";
-
             // Extract the ZIP file that we just downloaded.
             ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\wxStations.zip", $"{GlobalConfig.tempPath}\\wxStations");
-
-            // INSTANTIATE AND ASSIGN our unzipedFolder Variable to the file we just downloaded.
-            WxunzipedFolder = $"{GlobalConfig.tempPath}\\wxStations";
         }
 
         /// <summary>
@@ -612,7 +616,7 @@ namespace ClassData.DataAccess
         private void WriteAptISR(string Artcc) 
         {
             // File path to save the ISR
-            string filePath = $"{GlobalConfig.outputDirectory}\\ISR\\ISR_APT.txt";
+            string filePath = $"{GlobalConfig.outputDirectory}\\ALIAS\\ISR_APT.txt";
 
             // String builder for all the ISR realitive information
             StringBuilder sb = new StringBuilder();
@@ -773,30 +777,6 @@ namespace ClassData.DataAccess
 
             // Add this file to our TEST SECTOR file.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
-        }
-
-        /// <summary>
-        /// Removes downloaded FAA data. 
-        /// </summary>
-        private void deleteUnneededDir()
-        {
-            // Delete our Zip folder for Airports we downloaded from FAA
-            File.Delete(zipFolder);
-
-            // Delete our unziped folder and Apt document.
-            Directory.Delete(unzipedFolder, true);
-        }
-
-        /// <summary>
-        /// Delete the WX Donloaded Files.
-        /// </summary>
-        private void deleteUnneededWXDir()
-        {
-            // Delete WX Zip Folder
-            File.Delete(WxzipFolder);
-
-            // Delete WX Unziped folder
-            Directory.Delete(WxunzipedFolder, true);
         }
     }
 }

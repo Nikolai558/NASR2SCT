@@ -21,15 +21,6 @@ namespace NASR_GUI
         [STAThread]
         static void Main()
         {
-            WebRequest.DefaultWebProxy = null;
-
-            // !!! DEBUGING CONVERTER  !!!
-            //string test = new GlobalConfig().CorrectLatLon("E170.00.00.000", false, true);
-            //string test2 = new GlobalConfig().CorrectLatLon("E151.00.00.000", false, true);
-            //string test3 = new GlobalConfig().CorrectLatLon("E179.59.59.999", false, true);
-            //string test4 = new GlobalConfig().CorrectLatLon("E179.00.00.001", false, true);
-            //string test5 = new GlobalConfig().CorrectLatLon("E180.00.00.000", false, true);
-
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
             GlobalConfig.UpdateCheck();
 
