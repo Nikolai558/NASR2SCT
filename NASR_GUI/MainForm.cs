@@ -165,44 +165,44 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
-            processingDataLabel.Text = "Processing Fixes.";
-            
+            processingDataLabel.Text = "Processing Fixes";
+            processingDataLabel.Refresh();
             GetFixData ParseFixes = new GetFixData();
             ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Boundaries.";
-
+            processingDataLabel.Text = "Processing Boundaries";
+            processingDataLabel.Refresh();
             GetArbData ParseArb = new GetArbData();
             ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Airways.";
-
+            processingDataLabel.Text = "Processing Airways";
+            processingDataLabel.Refresh();
             GetAwyData ParseAWY = new GetAwyData();
             ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Alt Airways.";
-
+            processingDataLabel.Text = "Processing Alt Airways";
+            processingDataLabel.Refresh();
             GetAtsAwyData ParseAts = new GetAtsAwyData();
             ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing NDB's.";
-
+            processingDataLabel.Text = "Processing NDB's";
+            processingDataLabel.Refresh();
             GetNavData ParseNDBs = new GetNavData();
             ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
 
-            processingDataLabel.Text = "Processing Airports.";
-
+            processingDataLabel.Text = "Processing Airports";
+            processingDataLabel.Refresh();
             GetAptData ParseAPT = new GetAptData();
             ParseAPT.APTQuarterbackFunc(airacEffectiveDate, facilityID, "11579568");
 
-            processingDataLabel.Text = "Processing Waypoints XML.";
-
+            processingDataLabel.Text = "Processing Waypoints XML";
+            processingDataLabel.Refresh();
             GlobalConfig.WriteWaypointsXML();
             GlobalConfig.AppendCommentToXML(airacEffectiveDate);
-
             GlobalConfig.WriteNavXmlOutput();
             GlobalConfig.WriteAptXmlOutput();
 
+            processingDataLabel.Refresh();
             processingDataLabel.Text = "Complete";
 
             processingGroupBox.Visible = true;
