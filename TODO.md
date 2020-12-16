@@ -13,5 +13,5 @@
   - Create Sid Alias commands and diagrams.
 
 - [GEO].sct2
-  -Create one-time AUTOCAD Parse of: https://www.ngdc.noaa.gov/mgg/shorelines/
+  - Create one-time AUTOCAD Parse of: https://www.ngdc.noaa.gov/mgg/shorelines/
 
