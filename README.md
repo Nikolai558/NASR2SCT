@@ -10,6 +10,7 @@
 - When appropriate, it will also create an In-Scope Reference (ISR) alias (.TXT) file for the data parsed.
 
 ### NOTES:
+- Startup time is significantly reduced if "CUrl" is installed on your machine.
 - DME Only stations are placed into the VOR list.
 - All Airways (LOW/HIGH) are placed into the same SCT File with a header of "HIGH AIRWAY". Seeing how the intent would never be to see all airways at the same time on the scope, but rather drawn as needed, it is acceptable to put them all under either the HIGH or LOW airways header.
 - Weather Stations will appear anywhere between 0.1 to 2.0 miles offset. Only stations that corrispond with an airport will be shown.
