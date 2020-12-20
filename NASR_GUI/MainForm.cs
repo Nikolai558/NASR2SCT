@@ -26,7 +26,7 @@ namespace NASR_GUI
 
             // TODO - Make it so I dont have to change this each version.
             // It should grab from the assembily info. 
-            this.Text = "NASR 2 SCT - V0.5.5";
+            this.Text = "NASR 2 SCT - V0.5.6";
 
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
@@ -165,6 +165,11 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
+            processingDataLabel.Text = "Processing SIDs and STARs";
+            processingDataLabel.Refresh();
+            GetStarDpData ParseStarDp = new GetStarDpData();
+            ParseStarDp.StarDpQuaterBackFunc(airacEffectiveDate);
+
             processingDataLabel.Text = "Processing Fixes";
             processingDataLabel.Refresh();
             GetFixData ParseFixes = new GetFixData();
@@ -176,14 +181,17 @@ namespace NASR_GUI
             ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
 
             processingDataLabel.Text = "Processing Airways";
+            GlobalConfig.CreateAwyGeomapHeadersAndEnding(true);
+
             processingDataLabel.Refresh();
             GetAwyData ParseAWY = new GetAwyData();
             ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
 
-            processingDataLabel.Text = "Processing Alt Airways";
+            processingDataLabel.Text = "Processing ATS Airways";
             processingDataLabel.Refresh();
             GetAtsAwyData ParseAts = new GetAtsAwyData();
             ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
+            GlobalConfig.CreateAwyGeomapHeadersAndEnding(false);
 
             processingDataLabel.Text = "Processing NDB's";
             processingDataLabel.Refresh();

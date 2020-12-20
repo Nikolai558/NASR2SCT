@@ -3,14 +3,15 @@
 - vERAM GEOPMAP Outputs
   - AWY_GEOMAP.xml
 
-- GET AIRAC DATES
-  - Figure out why it takes so long.
-
 - Program Update & Restart
   - Figure out why this is not working properly.
 
-- [SID].sct2
-  - Create Sid Alias commands and diagrams.
+- AWY & ATS Index changes (Feb 25, 2021)
+  - Get ready for the change. 
+
+- STARDP.txt
+  - Create Alias commands
+  - and Possibly diagrams.
 
 - [GEO].sct2
   - Create one-time AUTOCAD Parse of: https://www.ngdc.noaa.gov/mgg/shorelines/

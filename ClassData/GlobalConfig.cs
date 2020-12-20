@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using System.CodeDom.Compiler;
 
 namespace NASARData
 {
@@ -22,7 +23,7 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.5";
+        public static readonly string ProgramVersion = "0.5.6";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
@@ -32,6 +33,9 @@ namespace NASARData
 
         public static string ReleaseBody = "";
 
+        public static StringBuilder AwyGeoMap = new StringBuilder();
+        public static string AwyGeoMapFileName = "AWY_GEOMAP.xml";
+        
         // XML Serializer for our Waypoints.xml file.
         private static XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Waypoints");
         public static XmlSerializer WaypointSerializer = new XmlSerializer(typeof(Waypoint[]), xmlRootAttribute);
@@ -53,6 +57,21 @@ namespace NASARData
         // Temp path for the user. ie: C:\Users\nik\AppData\Local\Temp\NASR_TO_SCT
         public static readonly string tempPath = $"{Path.GetTempPath()}Nikolai558-NASR2SCT";
 
+        public static void CreateAwyGeomapHeadersAndEnding(bool CreateStart)
+        {
+            if (CreateStart)
+            {
+                AwyGeoMap.AppendLine("        <GeoMapObject Description=\"AIRWAYS\" TdmOnly=\"false\">");
+                AwyGeoMap.AppendLine("          <LineDefaults Bcg=\"4\" Filters=\"4\" Style=\"ShortDashed\" Thickness=\"1\" />");
+                AwyGeoMap.AppendLine("          <Elements>");
+            }
+            else
+            {
+                AwyGeoMap.AppendLine("          </Elements>");
+                AwyGeoMap.AppendLine("        </GeoMapObject>");
+                File.WriteAllText($"{outputDirectory}\\VERAM\\{AwyGeoMapFileName}", AwyGeoMap.ToString());
+            }
+        }
 
         public static void DownloadAssets() 
         {
@@ -397,6 +416,33 @@ namespace NASARData
             return decFormat;
         }
 
+        private static void CreateBatchFile() 
+        {
+            string filePath = $"{tempPath}\\getAiraccEff.bat";
+            string writeMe = "cd \"%temp%\\Nikolai558-NASR2SCT\"\n" +
+                "curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\">FAA_NASR.HTML";
+            File.WriteAllText(filePath, writeMe);
+        }
+
+        private static void ExecuteCommand()
+        {
+            int ExitCode;
+            ProcessStartInfo ProcessInfo;
+            Process Process;
+
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"{tempPath}\\getAiraccEff.bat");
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = false;
+
+            Process = Process.Start(ProcessInfo);
+            Process.WaitForExit();
+
+            ExitCode = Process.ExitCode;
+            Process.Close();
+
+            //MessageBox.Show("ExitCode: " + ExitCode.ToString(), "ExecuteCommand");
+        }
+
         /// <summary>
         /// Get the Airac Effective Dates and Set our Global Variables to it.
         /// </summary>
@@ -407,97 +453,25 @@ namespace NASARData
 
             string response;
 
+            CreateBatchFile();
+            
+            ExecuteCommand();
 
-
-            //using (HttpClient client = new HttpClient())
-            //{
-            //    using (HttpRequestMessage request = new HttpRequestMessage())
-            //    {
-            //        request.Method = HttpMethod.Get;
-            //        request.RequestUri = new Uri(url, UriKind.Absolute);
-
-            //        using (HttpResponseMessage response = await client.SendAsync(request))
-            //        {
-            //            if (response.IsSuccessStatusCode)
-            //            {
-            //                if (response.Content != null)
-            //                {
-            //                    ThisResponse = await response.Content.ReadAsStringAsync();
-            //                    // write result to file
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-
-
-
-            //System.Net.WebClient myWebClient = new System.Net.WebClient();
-            //WebProxy myProxy = new WebProxy();
-            //myProxy.IsBypassed(new Uri(url));
-            //myWebClient.Proxy = myProxy;
-            //response = myWebClient.DownloadString(url);
-
-
-            //using (var httpClient = new HttpClient())
-            //{
-            //    using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/"))
-            //    {
-            //        var thissssssss = await httpClient.SendAsync(request);
-            //    }
-            //}
-            //WebClient client = new WebClient();
-
-            using (var client = new System.Net.WebClient())
+            if (File.Exists($"{tempPath}\\FAA_NASR.HTML")  && File.ReadAllText($"{tempPath}\\FAA_NASR.HTML").Length > 10)
             {
-                client.Proxy = null;
-                
-                //client.Proxy = GlobalProxySelection.GetEmptyWebProxy();
-                response = client.DownloadString(url);
+                response = File.ReadAllText($"{tempPath}\\FAA_NASR.HTML");
             }
+            else
+            {
+                // If we get here the user does not have Curl, OR Curl returned a file that is not longer than 10 Characters.
+                using (var client = new System.Net.WebClient())
+                {
+                    client.Proxy = null;
 
-            // Create Web Client to connect to FAA
-            //var client = new WebClient();
-
-            //client.DownloadFileAsync("https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/", $"{GlobalConfig.tempPath}\\FAANASR.txt");
-
-            //response = client.DownloadString($"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/");
-
-            //client.DownloadFile($"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/", $"{GlobalConfig.tempPath}\\FAANASR.txt");
-
-
-            // Download the APT.ZIP file from FAA
-            //response = client.DownloadData($"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/").ToString();
-
-            // Trim the the White Space.
-            //response = File.ReadAllText($"{GlobalConfig.tempPath}\\FAANASR.txt");
-
-            //Process cmd = new Process();
-            //cmd.StartInfo.FileName = "nikolai558-NASR2SCT.exe";
-            //cmd.StartInfo.RedirectStandardInput = true;
-            //cmd.StartInfo.RedirectStandardOutput = true;
-            //cmd.StartInfo.CreateNoWindow = true;
-            //cmd.StartInfo.UseShellExecute = false;
-            //cmd.Start();
-
-            //cmd.StandardInput.WriteLine("curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\"");
-            //cmd.StandardInput.Flush();
-            //cmd.StandardInput.Close();
-            //cmd.WaitForExit();
-            //response = cmd.StandardOutput.ReadToEnd();
-
-            //string command = "\"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\"";
-
-            //System.Diagnostics.Process process = new System.Diagnostics.Process();
-            //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            //startInfo.FileName = "cmd.exe";
-            //startInfo.Arguments = $"/C curl {command}";
-            //process.StartInfo = startInfo;
-            //process.Start();
-
-            //response = process.StandardOutput.ReadToEnd();
+                    //client.Proxy = GlobalProxySelection.GetEmptyWebProxy();
+                    response = client.DownloadString(url);
+                }
+            }
 
             response.Trim();
 
@@ -520,6 +494,11 @@ namespace NASARData
             Directory.CreateDirectory($"{outputDirectory}\\VRC");
             Directory.CreateDirectory($"{outputDirectory}\\VSTARS");
             Directory.CreateDirectory($"{outputDirectory}\\VERAM");
+
+            Directory.CreateDirectory($"{GlobalConfig.outputDirectory}\\VRC\\[SID]");
+            Directory.CreateDirectory($"{GlobalConfig.outputDirectory}\\VRC\\[STAR]");
+
+
         }
 
         /// <summary>
