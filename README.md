@@ -4,18 +4,17 @@
 - Kyle Sanders - [Github Profile](https://github.com/KSanders7070)
 - Nikolas Boling - [Github Profile](https://github.com/Nikolai558)
 
-### THIS PROGRAM WILL:
-- Pull data from the FAA NASR site and create Sector Files (.SCT) for virtual Radar Clients such as VRC by MetaCraft. ALL of the data for the following VRC HEADERS will be craeted: AIRPORTS, ARTCC BOUNDARIES (Low and High), FIXES, AIRWAYS (Hight, Low, and ATS routes), LABELS (Weather Stations), NDBs, RUNWAYs, and VORs.
-- Create the VERAM and VSTARS Airports.xml and Waypoints.xml NAVDATA files. 
-- Create the following .XML GEOMAPS for clients like vERAM: AIRPORTS, NAVAIDS, AND WX STATIONS.
-- Create The Following Alias Commands (ISR=In-Scope Reference): Airway Alias, Airports ISR, NAVAID ISR, and STAR_DP_Fixes_Alias.
+### FUNCTION:
+Converts the FAA National Airspace System Resource (NASR) Data to formats that may be used by Virtual RADAR Clients on the VATSIM network for free up to 28 days prior to an AIRAC effective date.
+-Alias Files
+-SCT2 Files
+-GeoMaps
+-vERAM/vSTARS NAVDATA
 
-### NOTES:
-- Startup time is significantly reduced if "CUrl" is installed on your machine.
-- DME Only stations are placed into the VOR list.
-- All Airways (LOW/HIGH) are placed into the same SCT File with a header of "HIGH AIRWAY". Seeing how the intent would never be to see all airways at the same time on the scope, but rather drawn as needed, it is acceptable to put them all under either the HIGH or LOW airways header.
-- Weather Stations will appear anywhere between 0.1 to 2.0 miles offset. Only stations that corrispond with an airport will be shown.
+### INSTRUCTIONS:
+https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO05NOIJMeB4mbIbs3CY5pIOYtrFtqo8BfmlCFaJSFMSxI_ut/embed?
 
 ### REQUIREMENTS:
-- Windows OS only, (Will implement a MAC and Linux OS version Later)
-- If your selected "Project Folder" already has previously output files in it, be sure to remove these or rename them prior to running the program again, otherwise it will overwrite the current files.
+- Windows OS
+- .NET 4.7.2
+
