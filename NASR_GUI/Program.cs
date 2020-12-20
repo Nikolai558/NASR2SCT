@@ -117,7 +117,7 @@ namespace NASR_GUI
             ProcessStartInfo ProcessInfo;
             Process Process;
 
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"{GlobalConfig.tempPath}\\startNewVersion.bat");
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{GlobalConfig.tempPath}\\startNewVersion.bat\"");
             ProcessInfo.CreateNoWindow = true;
             ProcessInfo.UseShellExecute = false;
 
