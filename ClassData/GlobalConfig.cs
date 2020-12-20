@@ -23,7 +23,7 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.6";
+        public static readonly string ProgramVersion = "0.5.7";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
@@ -55,7 +55,7 @@ namespace NASARData
         public static bool Convert = false;
 
         // Temp path for the user. ie: C:\Users\nik\AppData\Local\Temp\NASR_TO_SCT
-        public static readonly string tempPath = $"{Path.GetTempPath()}Nikolai558-NASR2SCT";
+        public static readonly string tempPath = $"{Path.GetTempPath()}NASR2SCT";
 
         public static void CreateAwyGeomapHeadersAndEnding(bool CreateStart)
         {
@@ -419,7 +419,7 @@ namespace NASARData
         private static void CreateBatchFile() 
         {
             string filePath = $"{tempPath}\\getAiraccEff.bat";
-            string writeMe = "cd \"%temp%\\Nikolai558-NASR2SCT\"\n" +
+            string writeMe = $"cd \"{tempPath}\"\n" +
                 "curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\">FAA_NASR.HTML";
             File.WriteAllText(filePath, writeMe);
         }
@@ -430,7 +430,7 @@ namespace NASARData
             ProcessStartInfo ProcessInfo;
             Process Process;
 
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"{tempPath}\\getAiraccEff.bat");
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\n{tempPath}\\getAiraccEff.bat\n");
             ProcessInfo.CreateNoWindow = true;
             ProcessInfo.UseShellExecute = false;
 

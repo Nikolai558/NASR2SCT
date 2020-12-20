@@ -26,7 +26,7 @@ namespace NASR_GUI
 
             // TODO - Make it so I dont have to change this each version.
             // It should grab from the assembily info. 
-            this.Text = "NASR 2 SCT - V0.5.6";
+            this.Text = $"NASR 2 SCT - V{GlobalConfig.ProgramVersion}";
 
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
