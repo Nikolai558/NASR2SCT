@@ -4,6 +4,8 @@ using NASARData;
 using Squirrel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -13,8 +15,6 @@ namespace NASR_GUI
 {
     static class Program
     {
-        public static readonly bool DebugMode = true; 
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -33,6 +33,7 @@ namespace NASR_GUI
 
             // Start the application
             Application.Run(new MainForm());
+           
         }
 
         /// <summary>
@@ -68,12 +69,21 @@ namespace NASR_GUI
 
                     // User DOES want to update. 
                     GlobalConfig.DownloadAssets();
+                    
+                    
                     UpdateProgram();
 
 
-                    DialogResult exitDialogResult = MessageBox.Show($"Application will now exit, restart and you will be on the new version.", "Exiting Application", MessageBoxButtons.OK);
+                    //DialogResult exitDialogResult = MessageBox.Show($"Application will now exit, restart and you will be on the new version.", "Exiting Application", MessageBoxButtons.OK);
 
-                    Application.Exit();
+                    //DialogResult testDialogResult = MessageBox.Show($"Test", "test", MessageBoxButtons.OK);
+
+                    //Start = false;
+
+                    StartNewVersion();
+
+                    Environment.Exit(1);
+                    //Application.Exit();
                     // Restart the application to apply the update.
                     // Application.Restart();
                 }
@@ -93,6 +103,29 @@ namespace NASR_GUI
             {
                 var releaseEntry = await updateManager.UpdateApp();
             }
+        }
+
+
+        private static void StartNewVersion() 
+        {
+            string filePath = $"{GlobalConfig.tempPath}\\startNewVersion.bat";
+            string writeMe = $"start \"\" \"%userprofile%\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR_GUI.exe\"";
+            File.WriteAllText(filePath, writeMe);
+
+
+            int ExitCode;
+            ProcessStartInfo ProcessInfo;
+            Process Process;
+
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"{GlobalConfig.tempPath}\\startNewVersion.bat");
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = false;
+
+            Process = Process.Start(ProcessInfo);
+            Process.WaitForExit();
+
+            ExitCode = Process.ExitCode;
+            Process.Close();
         }
     }
 }

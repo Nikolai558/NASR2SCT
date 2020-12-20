@@ -36,9 +36,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -61,6 +58,7 @@
     <Compile Include="DataAccess\GetAwyData.cs" />
     <Compile Include="DataAccess\GetFixData.cs" />
     <Compile Include="DataAccess\GetNavData.cs" />
+    <Compile Include="DataAccess\GetStarDpData.cs" />
     <Compile Include="GlobalConfig.cs" />
     <Compile Include="Models\Airport.cs" />
     <Compile Include="Models\AirwayModel.cs" />
@@ -74,6 +72,7 @@
     <Compile Include="Models\FixModel.cs" />
     <Compile Include="Models\NDBModel.cs" />
     <Compile Include="Models\RunwayModel.cs" />
+    <Compile Include="Models\StarAndDpModel.cs" />
     <Compile Include="Models\VORModel.cs" />
     <Compile Include="Models\Waypoint.cs" />
     <Compile Include="Models\WxStationModel.cs" />

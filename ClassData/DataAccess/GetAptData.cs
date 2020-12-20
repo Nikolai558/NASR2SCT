@@ -37,6 +37,9 @@ namespace ClassData.DataAccess
             StoreWaypointsXMLData();
             WriteRunwayData();
 
+            // TODO - This does not work quite right.
+            //GetOffsetRwyText();
+
             //DownloadWxStationData(effectiveDate);
             //ParseWxStationData(color);
             //WriteWxStationSctData();
@@ -45,6 +48,79 @@ namespace ClassData.DataAccess
             ParseAndWriteWxStation();
             WriteAptXmlOutput();
             //WriteAltWxStation();
+        }
+
+        private void GetOffsetRwyText() 
+        {
+            
+
+            string saveFile = $"{GlobalConfig.outputDirectory}\\VRC\\[RWY_LABELS].sct2";
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("        <GeoMapObject Description=\"RWY LABELS\" TdmOnly=\"false\">");
+            sb.AppendLine("          <TextDefaults Bcg=\"20\" Filters=\"20\" Size=\"4\" Underline=\"false\" Opaque=\"true\" XOffset=\"0\" YOffset=\"0\" />");
+            sb.AppendLine("          <Elements>");
+
+
+            double earthRadius = double.Parse("6378137");
+            //double offset = 0.5735244;
+            double offset = 0.01911748;
+            foreach (AptModel apt in allAptModels)
+            {
+                double latOut = 0;
+                double lonOut = 0;
+
+                foreach (RunwayModel runway in apt.Runways)
+                {
+                    if (!string.IsNullOrEmpty(runway.BaseRwyHdg) && !string.IsNullOrEmpty(runway.BaseStartLat) && !string.IsNullOrEmpty(runway.BaseStartLon))
+                    {
+
+                        int heading = int.Parse(runway.BaseRwyHdg);
+                        double latIn = double.Parse(new GlobalConfig().createDecFormat(runway.BaseStartLat, true));
+                        double lonIn = double.Parse(new GlobalConfig().createDecFormat(runway.BaseStartLon, true));
+
+                        //double dn = 400;
+                        //double de = 400;
+
+                        //double dLat = dn / earthRadius;
+                        //double dLon = de / (earthRadius * Math.Cos(Math.PI * latIn / 180));
+
+                        //if (heading >= 90 && heading <= 270)
+                        //{
+                        //    latOut = (latIn + (dLat * -1) * 180 / Math.PI);
+                        //    lonOut = (lonIn + (dLon * -1) * 180 / Math.PI);
+                        //}
+                        //else
+                        //{
+                        //    latOut = (latIn + dLat * 180 / Math.PI);
+                        //    lonOut = (lonIn + dLon * 180 / Math.PI);
+                        //}
+
+                        double dLat = offset / earthRadius;
+                        //double dLon = offset / (earthRadius * Math.Cos(Math.PI * lonIn / 180));
+                        double dLon = offset / (earthRadius * Math.Cos(Math.PI * latIn / 180));
+                        //double dLon = offset / earthRadius;
+
+                        latOut = (latIn + dLat * 180 / Math.PI);
+                        lonOut = (lonIn + (dLon * -1) * 180 / Math.PI);
+
+                        if (latOut != 0 && lonOut != 0)
+                        {
+                            sb.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{Math.Round(latOut, 6)}\" Lon=\"{Math.Round(lonOut, 6)}\" Lines=\"{runway.BaseRwy}\" />");
+                            //sb.AppendLine($"\"{runway.BaseRwy}\" {runway.BaseStartLat} {runway.BaseStartLon} 11579568;{apt.Icao} - {apt.Id} {apt.Name} - NON CONVERTED");
+                            //sb.AppendLine($"\"{runway.BaseRwy}\" {new GlobalConfig().createDMS(latOut, true)} {new GlobalConfig().createDMS(lonOut, false)} 11579568;{apt.Icao} - {apt.Id} {apt.Name}");
+                        }
+                    }
+                }
+            }
+
+
+            sb.AppendLine("          </Elements>");
+            sb.AppendLine("        </GeoMapObject>");
+
+            File.WriteAllText(saveFile, sb.ToString());
+            File.AppendAllText(saveFile, $"\n\n\n\n\n\n");
+
         }
 
         private void ParseAndWriteWxStation()
