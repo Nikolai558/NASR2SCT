@@ -23,7 +23,7 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.5.7";
+        public static readonly string ProgramVersion = "0.6.1";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
@@ -430,7 +430,7 @@ namespace NASARData
             ProcessStartInfo ProcessInfo;
             Process Process;
 
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\n{tempPath}\\getAiraccEff.bat\n");
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{tempPath}\\getAiraccEff.bat\"");
             ProcessInfo.CreateNoWindow = true;
             ProcessInfo.UseShellExecute = false;
 

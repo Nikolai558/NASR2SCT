@@ -109,7 +109,7 @@ namespace NASR_GUI
         private static void StartNewVersion() 
         {
             string filePath = $"{GlobalConfig.tempPath}\\startNewVersion.bat";
-            string writeMe = $"start \"\" \"%userprofile%\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR_GUI.exe\"";
+            string writeMe = $"start \"\" \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\"";
             File.WriteAllText(filePath, writeMe);
 
 

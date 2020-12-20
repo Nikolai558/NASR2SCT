@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NASR_GUI")]
+[assembly: AssemblyTitle("NASR2SCT")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NASR_GUI")]
-[assembly: AssemblyCopyright("Copyright ©  Nikolas Boling, Kyle Sanders 2020")]
+[assembly: AssemblyProduct("NASR2SCT")]
+[assembly: AssemblyCopyright("Copyright ©  2020 Nikolas Boling, Kyle Sanders")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5.7")]
-[assembly: AssemblyFileVersion("0.5.7")]
+[assembly: AssemblyVersion("0.6.1")]
+[assembly: AssemblyFileVersion("0.6.1")]
