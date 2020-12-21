@@ -1,5 +1,10 @@
 # NASR2SCT
 
+![GitHub repo size](https://img.shields.io/github/repo-size/Nikolai558/NASR2SCT)
+![GitHub contributors](https://img.shields.io/github/contributors/Nikolai558/NASR2SCT)
+![GitHub stars](https://img.shields.io/github/stars/Nikolai558/NASR2SCT?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Nikolai558/NASR2SCT?style=social)
+
 ## Authors: 
 - Kyle Sanders - [Github Profile](https://github.com/KSanders7070)
 - Nikolas Boling - [Github Profile](https://github.com/Nikolai558)
