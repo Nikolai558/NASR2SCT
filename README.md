@@ -16,5 +16,5 @@ https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO
 
 ### REQUIREMENTS:
 - Windows OS
-- .NET 4.7.2
+- CUrl (recomended)
 
