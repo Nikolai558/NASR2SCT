@@ -48,10 +48,14 @@
             this.processingGroupBox = new System.Windows.Forms.GroupBox();
             this.exitButton = new System.Windows.Forms.Button();
             this.runAgainButton = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.instructionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
             this.startGroupBox.SuspendLayout();
             this.processingGroupBox.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // currentAiracSelection
@@ -208,7 +212,7 @@
             this.airacCycleGroupBox.Controls.Add(this.airacLabel);
             this.airacCycleGroupBox.Controls.Add(this.currentAiracSelection);
             this.airacCycleGroupBox.Controls.Add(this.nextAiracSelection);
-            this.airacCycleGroupBox.Location = new System.Drawing.Point(20, 12);
+            this.airacCycleGroupBox.Location = new System.Drawing.Point(20, 27);
             this.airacCycleGroupBox.Name = "airacCycleGroupBox";
             this.airacCycleGroupBox.Size = new System.Drawing.Size(452, 125);
             this.airacCycleGroupBox.TabIndex = 12;
@@ -220,7 +224,7 @@
             this.convertGroupBox.Controls.Add(this.convertYes);
             this.convertGroupBox.Controls.Add(this.convertNo);
             this.convertGroupBox.Controls.Add(this.convertDescriptionLabel);
-            this.convertGroupBox.Location = new System.Drawing.Point(20, 140);
+            this.convertGroupBox.Location = new System.Drawing.Point(20, 158);
             this.convertGroupBox.Name = "convertGroupBox";
             this.convertGroupBox.Size = new System.Drawing.Size(452, 237);
             this.convertGroupBox.TabIndex = 13;
@@ -233,7 +237,7 @@
             this.startGroupBox.Controls.Add(this.startButton);
             this.startGroupBox.Controls.Add(this.filePathLabel);
             this.startGroupBox.Controls.Add(this.chooseDirButton);
-            this.startGroupBox.Location = new System.Drawing.Point(491, 12);
+            this.startGroupBox.Location = new System.Drawing.Point(497, 27);
             this.startGroupBox.Name = "startGroupBox";
             this.startGroupBox.Size = new System.Drawing.Size(269, 365);
             this.startGroupBox.TabIndex = 14;
@@ -292,19 +296,54 @@
             this.runAgainButton.Visible = false;
             this.runAgainButton.Click += new System.EventHandler(this.runAgainButton_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.instructionsToolStripMenuItem,
+            this.creditsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(785, 24);
+            this.menuStrip1.TabIndex = 15;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // instructionsToolStripMenuItem
+            // 
+            this.instructionsToolStripMenuItem.Font = new System.Drawing.Font("Romantic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.instructionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.Control;
+            this.instructionsToolStripMenuItem.Name = "instructionsToolStripMenuItem";
+            this.instructionsToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
+            this.instructionsToolStripMenuItem.Text = "Instructions";
+            this.instructionsToolStripMenuItem.Click += new System.EventHandler(this.instructionsToolStripMenuItem_Click);
+            // 
+            // creditsToolStripMenuItem
+            // 
+            this.creditsToolStripMenuItem.Font = new System.Drawing.Font("Romantic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.creditsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.Control;
+            this.creditsToolStripMenuItem.Name = "creditsToolStripMenuItem";
+            this.creditsToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.creditsToolStripMenuItem.Text = "Credits";
+            this.creditsToolStripMenuItem.Click += new System.EventHandler(this.creditsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.ClientSize = new System.Drawing.Size(788, 390);
+            this.ClientSize = new System.Drawing.Size(785, 404);
             this.Controls.Add(this.processingGroupBox);
             this.Controls.Add(this.startGroupBox);
             this.Controls.Add(this.convertGroupBox);
             this.Controls.Add(this.airacCycleGroupBox);
+            this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Text = "NASR 2 SCT";
@@ -316,7 +355,10 @@
             this.startGroupBox.ResumeLayout(false);
             this.startGroupBox.PerformLayout();
             this.processingGroupBox.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -341,6 +383,9 @@
         private System.Windows.Forms.GroupBox processingGroupBox;
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Button runAgainButton;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem instructionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;
     }
 }
 

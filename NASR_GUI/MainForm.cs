@@ -149,7 +149,7 @@ namespace NASR_GUI
                 airacEffectiveDate = nextAiracSelection.Text;
             }
 
-            facilityID = facilityIdTextbox.Text;
+            facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
 
             airacCycleGroupBox.Enabled = false;
             airacCycleGroupBox.Visible = false;
@@ -317,6 +317,19 @@ namespace NASR_GUI
 
             startGroupBox.Enabled = true;
             startGroupBox.Visible = true;
+        }
+
+        private void instructionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            System.Diagnostics.Process.Start("https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO05NOIJMeB4mbIbs3CY5pIOYtrFtqo8BfmlCFaJSFMSxI_ut/embed?");
+
+        }
+
+        private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreditsForm frm = new CreditsForm();
+            frm.ShowDialog();
         }
     }
 }
