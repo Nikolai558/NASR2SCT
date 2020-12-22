@@ -347,6 +347,7 @@
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Text = "NASR 2 SCT";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.airacCycleGroupBox.ResumeLayout(false);
             this.airacCycleGroupBox.PerformLayout();

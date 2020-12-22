@@ -109,7 +109,7 @@ namespace NASR_GUI
         private static void StartNewVersion() 
         {
             string filePath = $"{GlobalConfig.tempPath}\\startNewVersion.bat";
-            string writeMe = $"ping 127.0.0.1 -n 3 >nul\n" +
+            string writeMe = $"ping 127.0.0.1 -n 5 >nul\n" +
                 $"start \"\" \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\"";
             File.WriteAllText(filePath, writeMe);
 

@@ -13,6 +13,7 @@ using NASRData.DataAccess;
 using ClassData.DataAccess;
 using System.Threading;
 using System.IO;
+using System.Drawing.Text;
 
 namespace NASR_GUI
 {
@@ -330,6 +331,15 @@ namespace NASR_GUI
         {
             CreditsForm frm = new CreditsForm();
             frm.ShowDialog();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+            var pfc = new PrivateFontCollection();
+            pfc.AddFontFile("Properties\\romantic.ttf");
+            instructionsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
         }
     }
 }
