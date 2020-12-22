@@ -109,8 +109,18 @@ namespace NASR_GUI
         private static void StartNewVersion() 
         {
             string filePath = $"{GlobalConfig.tempPath}\\startNewVersion.bat";
-            string writeMe = $"ping 127.0.0.1 -n 3 >nul\n" +
-                $"start \"\" \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\"";
+            string writeMe =
+                "SET /A COUNT=0\n\n" +
+                ":CHK\n" +
+                $"IF EXIST \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\" goto FOUND\n" +
+                "SET /A COUNT=%COUNT% + 1\n" +
+                "IF %COUNT% GEQ 6 GOTO FOUND\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "GOTO CHK\n\n" +
+                ":FOUND\n" +
+                $"start \"\" \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\"\n";
+
+
             File.WriteAllText(filePath, writeMe);
 
 
