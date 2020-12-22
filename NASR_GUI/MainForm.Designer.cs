@@ -98,7 +98,7 @@
             this.airacLabel.Name = "airacLabel";
             this.airacLabel.Size = new System.Drawing.Size(296, 25);
             this.airacLabel.TabIndex = 2;
-            this.airacLabel.Text = "Which AIRAC Cylce do you want? ";
+            this.airacLabel.Text = "Which AIRAC Cycle do you want? ";
             // 
             // facilityIDLabel
             // 
@@ -261,7 +261,7 @@
             this.processingGroupBox.Controls.Add(this.runAgainButton);
             this.processingGroupBox.Controls.Add(this.processingDataLabel);
             this.processingGroupBox.Enabled = false;
-            this.processingGroupBox.Location = new System.Drawing.Point(116, 125);
+            this.processingGroupBox.Location = new System.Drawing.Point(114, 132);
             this.processingGroupBox.Name = "processingGroupBox";
             this.processingGroupBox.Size = new System.Drawing.Size(557, 140);
             this.processingGroupBox.TabIndex = 3;

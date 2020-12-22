@@ -166,7 +166,7 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
-            processingDataLabel.Text = "Processing SIDs and STARs";
+            processingDataLabel.Text = "Processing DPs and STARs";
             processingDataLabel.Refresh();
             GetStarDpData ParseStarDp = new GetStarDpData();
             ParseStarDp.StarDpQuaterBackFunc(airacEffectiveDate);
@@ -194,7 +194,7 @@ namespace NASR_GUI
             ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
             GlobalConfig.CreateAwyGeomapHeadersAndEnding(false);
 
-            processingDataLabel.Text = "Processing NDB's";
+            processingDataLabel.Text = "Processing NDBs";
             processingDataLabel.Refresh();
             GetNavData ParseNDBs = new GetNavData();
             ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
