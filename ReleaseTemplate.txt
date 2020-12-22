@@ -1,0 +1,17 @@
+0.6.8
+
+Release Candidate V-0.6.8
+
+## Instructions to install:
+1. Download the zip file named "NASR2SCT-0.6.8.zip"
+2. Unzip the file
+3. Keep all files inside it together. 
+4. Run the Setup.exe
+
+## Change log
+- Fixed bug #40
+	- Now able to move screen after user clicks start.
+
+## Authors:
+Kyle Sanders - [Github Profile](https://github.com/KSanders7070)
+Nikolas Boling - [Github Profile](https://github.com/Nikolai558)

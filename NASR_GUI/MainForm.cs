@@ -14,6 +14,7 @@ using ClassData.DataAccess;
 using System.Threading;
 using System.IO;
 using System.Drawing.Text;
+using System.Reflection;
 
 namespace NASR_GUI
 {
@@ -129,8 +130,6 @@ namespace NASR_GUI
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
 
-            string airacEffectiveDate = "";
-            string facilityID;
 
             if (convertYes.Checked)
             {
@@ -140,17 +139,6 @@ namespace NASR_GUI
             {
                 GlobalConfig.Convert = false;
             }
-
-            if (currentAiracSelection.Checked)
-            {
-                airacEffectiveDate = currentAiracSelection.Text;
-            }
-            else if (nextAiracSelection.Checked)
-            {
-                airacEffectiveDate = nextAiracSelection.Text;
-            }
-
-            facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
 
             airacCycleGroupBox.Enabled = false;
             airacCycleGroupBox.Visible = false;
@@ -166,62 +154,7 @@ namespace NASR_GUI
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
 
-            processingDataLabel.Text = "Processing DPs and STARs";
-            processingDataLabel.Refresh();
-            GetStarDpData ParseStarDp = new GetStarDpData();
-            ParseStarDp.StarDpQuaterBackFunc(airacEffectiveDate);
-
-            processingDataLabel.Text = "Processing Fixes";
-            processingDataLabel.Refresh();
-            GetFixData ParseFixes = new GetFixData();
-            ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
-
-            processingDataLabel.Text = "Processing Boundaries";
-            processingDataLabel.Refresh();
-            GetArbData ParseArb = new GetArbData();
-            ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
-
-            processingDataLabel.Text = "Processing Airways";
-            GlobalConfig.CreateAwyGeomapHeadersAndEnding(true);
-
-            processingDataLabel.Refresh();
-            GetAwyData ParseAWY = new GetAwyData();
-            ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
-
-            processingDataLabel.Text = "Processing ATS Airways";
-            processingDataLabel.Refresh();
-            GetAtsAwyData ParseAts = new GetAtsAwyData();
-            ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
-            GlobalConfig.CreateAwyGeomapHeadersAndEnding(false);
-
-            processingDataLabel.Text = "Processing NDBs";
-            processingDataLabel.Refresh();
-            GetNavData ParseNDBs = new GetNavData();
-            ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
-
-            processingDataLabel.Text = "Processing Airports";
-            processingDataLabel.Refresh();
-            GetAptData ParseAPT = new GetAptData();
-            ParseAPT.APTQuarterbackFunc(airacEffectiveDate, facilityID, "11579568");
-
-            processingDataLabel.Text = "Processing Waypoints XML";
-            processingDataLabel.Refresh();
-            GlobalConfig.WriteWaypointsXML();
-            GlobalConfig.AppendCommentToXML(airacEffectiveDate);
-            GlobalConfig.WriteNavXmlOutput();
-            GlobalConfig.WriteAptXmlOutput();
-
-            processingDataLabel.Refresh();
-            processingDataLabel.Text = "Complete";
-
-            processingGroupBox.Visible = true;
-            processingGroupBox.Enabled = true;
-
-            runAgainButton.Visible = true;
-            runAgainButton.Enabled = true;
-
-            exitButton.Visible = true;
-            exitButton.Enabled = true;
+            startParsing();
 
             GlobalConfig.CheckTempDir();
         }
@@ -260,8 +193,128 @@ namespace NASR_GUI
             Application.Exit();
         }
 
+        private delegate void SetControlPropertyThreadSafeDelegate(Control control, string propertyName, object propertyValue);
+
+        public static void SetControlPropertyThreadSafe(
+            Control control,
+            string propertyName,
+            object propertyValue)
+        {
+            if (control.InvokeRequired)
+            {
+                control.Invoke(new SetControlPropertyThreadSafeDelegate
+                (SetControlPropertyThreadSafe),
+                new object[] { control, propertyName, propertyValue });
+            }
+            else
+            {
+                control.GetType().InvokeMember(
+                    propertyName,
+                    BindingFlags.SetProperty,
+                    null,
+                    control,
+                    new object[] { propertyValue });
+            }
+        }
+
+        private void startParsing() 
+        {
+            var worker = new BackgroundWorker();
+            worker.RunWorkerCompleted += Worker_StartParsingCompleted;
+            worker.DoWork += Worker_StartParsingDoWork;
+
+            worker.RunWorkerAsync();
+        }
+
+        private void Worker_StartParsingDoWork(object sender, DoWorkEventArgs e)
+        {
+            string facilityID;
+            string airacEffectiveDate = "";
+
+            if (currentAiracSelection.Checked)
+            {
+                airacEffectiveDate = currentAiracSelection.Text;
+            }
+            else if (nextAiracSelection.Checked)
+            {
+                airacEffectiveDate = nextAiracSelection.Text;
+            }
+
+            facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing DPs and STARs");
+            //processingDataLabel.Text = "Processing DPs and STARs";
+            //processingDataLabel.Refresh();
+            GetStarDpData ParseStarDp = new GetStarDpData();
+            ParseStarDp.StarDpQuaterBackFunc(airacEffectiveDate);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Fixes");
+            //processingDataLabel.Text = "Processing Fixes";
+            //processingDataLabel.Refresh();
+            GetFixData ParseFixes = new GetFixData();
+            ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Boundaries");
+            //processingDataLabel.Text = "Processing Boundaries";
+            //processingDataLabel.Refresh();
+            GetArbData ParseArb = new GetArbData();
+            ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airways");
+            //processingDataLabel.Text = "Processing Airways";
+            GlobalConfig.CreateAwyGeomapHeadersAndEnding(true);
+
+            //processingDataLabel.Refresh();
+            GetAwyData ParseAWY = new GetAwyData();
+            ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing ATS Airways");
+            //processingDataLabel.Text = "Processing ATS Airways";
+            //processingDataLabel.Refresh();
+            GetAtsAwyData ParseAts = new GetAtsAwyData();
+            ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
+            GlobalConfig.CreateAwyGeomapHeadersAndEnding(false);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing NDBs");
+            //processingDataLabel.Text = "Processing NDBs";
+            //processingDataLabel.Refresh();
+            GetNavData ParseNDBs = new GetNavData();
+            ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
+            //processingDataLabel.Text = "Processing Airports";
+            //processingDataLabel.Refresh();
+            GetAptData ParseAPT = new GetAptData();
+            ParseAPT.APTQuarterbackFunc(airacEffectiveDate, facilityID, "11579568");
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Waypoints XML");
+            //processingDataLabel.Text = "Processing Waypoints XML";
+            //processingDataLabel.Refresh();
+            GlobalConfig.WriteWaypointsXML();
+            GlobalConfig.AppendCommentToXML(airacEffectiveDate);
+            GlobalConfig.WriteNavXmlOutput();
+            GlobalConfig.WriteAptXmlOutput();
+        }
+
+        private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            processingDataLabel.Text = "Complete";
+            processingDataLabel.Refresh();
+
+            processingGroupBox.Visible = true;
+            processingGroupBox.Enabled = true;
+
+            runAgainButton.Visible = true;
+            runAgainButton.Enabled = true;
+
+            exitButton.Visible = true;
+            exitButton.Enabled = true;
+        }
+
         private void getAiracDate() 
         {
+            GlobalConfig.CheckTempDir();
+
             //GlobalConfig.GetAiracDateFromFAA();
             var Worker = new BackgroundWorker();
             Worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
