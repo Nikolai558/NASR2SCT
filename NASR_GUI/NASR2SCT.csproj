@@ -90,6 +90,12 @@
     <Compile Include="CreditsForm.Designer.cs">
       <DependentUpon>CreditsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MetaNotFoundForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MetaNotFoundForm.Designer.cs">
+      <DependentUpon>MetaNotFoundForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Processing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaNotFoundForm.resx">
+      <DependentUpon>MetaNotFoundForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Processing.resx">
       <DependentUpon>Processing.cs</DependentUpon>

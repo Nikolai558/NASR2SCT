@@ -39,8 +39,6 @@ namespace NASRData.DataAccess
         /// <param name="effectiveDate">Valid format is "YYYY-MM-DD"</param>
         private void DownloadFixData(string effectiveDate) 
         {
-            
-
             // Web Client used to connect to the FAA website.
             var client = new WebClient();
 

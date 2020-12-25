@@ -5,6 +5,7 @@ using Squirrel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -21,15 +22,15 @@ namespace NASR_GUI
         [STAThread]
         static void Main()
         {
+            // Set application settings.
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
             GlobalConfig.UpdateCheck();
 
             // Check Current Program Against Github, if different ask user if they want to update.
             CheckVersion();
-
-            // Set application settings.
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
 
             // Start the application
             Application.Run(new MainForm());
@@ -44,48 +45,40 @@ namespace NASR_GUI
             // Check to see if Version's match.
             if (GlobalConfig.ProgramVersion != GlobalConfig.GithubVersion)
             {
-                // Complete Latest release message body.
-                List<string> msg = GlobalConfig.ReleaseBody.Split(new string[] { "##" }, StringSplitOptions.None).ToList();
+                Processing processForm = new Processing();
+                processForm.Size = new Size(600, 600);
+                processForm.ChangeTitle("Update Available");
+                processForm.ChangeUpdatePanel(new Point(12, 52));
+                processForm.ChangeUpdatePanel(new Size(560, 370));
+                processForm.ChangeProcessingLabel(new Point(5, 5));
+                processForm.DisplayMessages(true);
+                processForm.ShowDialog();
 
-                // Don't grab the install instructions.
-                msg = msg.GetRange(2, msg.Count - 2);
-
-                // If they don't match, Tell the user about the new version on Github.
-                DialogResult dialogResult = MessageBox.Show
-                    (
-                    $"There is a new version released on Github\n" +
-                    $"Your Program Version: {GlobalConfig.ProgramVersion}\n" +
-                    $"Latest Release Version: {GlobalConfig.GithubVersion}\n\n" +
-                    $"{string.Join(" ", msg)}\n\n" +
-                    $"https://github.com/Nikolai558/NASR2SCT/releases" +
-                    $"\n\n Would you like to update now?", "Update Available", MessageBoxButtons.YesNo);
-
-                if (dialogResult == DialogResult.Yes)
+                if (GlobalConfig.updateProgram)
                 {
                     // Create our Temp Directory so we can download assets from Github and store them here.
                     GlobalConfig.createDirectories(true);
 
-                    new Thread(() => new Processing().ShowDialog()).Start();
+                    processForm = new Processing();
+                    processForm.Size = new Size(359, 194);
+                    processForm.ChangeTitle("Downloading and Installing Update");
+                    processForm.ChangeUpdatePanel(new Point(12, 12));
+                    processForm.ChangeUpdatePanel(new Size(319, 131));
+                    processForm.ChangeProcessingLabel("Processing Update");
+                    processForm.ChangeProcessingLabel(new Point(45, 49));
+
+                    new Thread(() => processForm.ShowDialog()).Start();
+                    //new Thread(() => new Processing().ShowDialog()).Start();
 
                     // User DOES want to update. 
                     GlobalConfig.DownloadAssets();
                     
-                    
                     UpdateProgram();
 
-
-                    //DialogResult exitDialogResult = MessageBox.Show($"Application will now exit, restart and you will be on the new version.", "Exiting Application", MessageBoxButtons.OK);
-
-                    //DialogResult testDialogResult = MessageBox.Show($"Test", "test", MessageBoxButtons.OK);
-
-                    //Start = false;
 
                     StartNewVersion();
 
                     Environment.Exit(1);
-                    //Application.Exit();
-                    // Restart the application to apply the update.
-                    // Application.Restart();
                 }
                 else
                 {

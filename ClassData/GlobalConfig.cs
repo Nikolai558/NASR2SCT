@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.CodeDom.Compiler;
+using ClassData.Models.MetaFileModels;
 
 namespace NASARData
 {
@@ -22,10 +23,15 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
+        public static string airacEffectiveDate = "";
+        
+
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.6.8";
+        public static readonly string ProgramVersion = "0.6.9";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
+
+        public static bool updateProgram = false;
 
         public static string GithubVersion = "";
 
@@ -56,6 +62,35 @@ namespace NASARData
 
         // Temp path for the user. ie: C:\Users\nik\AppData\Local\Temp\NASR_TO_SCT
         public static readonly string tempPath = $"{Path.GetTempPath()}NASR2SCT";
+
+        public static bool GetMetaUrlResponse() 
+        {
+            string nextUrl = $"https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[nextAiracDate]}/xml_data/d-tpp_Metafile.xml";
+            //string testUrl = $"https://aeronav.faa.gov/d-tpp/2201/xml_data/d-tpp_Metafile.xml";
+
+
+            HttpStatusCode result = default(HttpStatusCode);
+
+            try
+            {
+                var request = HttpWebRequest.Create(nextUrl);
+                request.Method = "HEAD";
+                using (var response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response != null)
+                    {
+                        result = response.StatusCode;
+                        response.Close();
+                    }
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+           
+        }
 
         public static void CreateAwyGeomapHeadersAndEnding(bool CreateStart)
         {
