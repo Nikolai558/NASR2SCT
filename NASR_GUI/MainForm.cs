@@ -253,13 +253,13 @@ namespace NASR_GUI
 
             if (nextAiracSelection.Checked == true && nextAiracAvailable == true)
             {
-                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recals");
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recalls");
                 GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
                 ParseMeta.QuarterbackFunc();
             }
             else if (currentAiracSelection.Checked == true)
             {
-                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recals");
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recalls");
                 GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
                 ParseMeta.QuarterbackFunc();
             }
@@ -420,6 +420,9 @@ namespace NASR_GUI
             pfc.AddFontFile("Properties\\romantic.ttf");
             instructionsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            changeLogToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+
+
         }
 
         private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
