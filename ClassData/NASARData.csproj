@@ -59,6 +59,7 @@
     <Compile Include="DataAccess\GetArbData.cs" />
     <Compile Include="DataAccess\GetAtsAwyData.cs" />
     <Compile Include="DataAccess\GetAwyData.cs" />
+    <Compile Include="DataAccess\GetFaaMetaFileData.cs" />
     <Compile Include="DataAccess\GetFixData.cs" />
     <Compile Include="DataAccess\GetNavData.cs" />
     <Compile Include="DataAccess\GetStarDpData.cs" />
@@ -73,6 +74,8 @@
     <Compile Include="Models\AptModel.cs" />
     <Compile Include="Models\BoundryModel.cs" />
     <Compile Include="Models\FixModel.cs" />
+    <Compile Include="Models\MetaFileModels\MetaAirportModel.cs" />
+    <Compile Include="Models\MetaFileModels\MetaRecordModel.cs" />
     <Compile Include="Models\NDBModel.cs" />
     <Compile Include="Models\RunwayModel.cs" />
     <Compile Include="Models\StarAndDpModel.cs" />

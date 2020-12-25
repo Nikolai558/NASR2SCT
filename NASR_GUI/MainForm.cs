@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NASARData;
 using ClassData;
-using NASRData.DataAccess;
-using ClassData.DataAccess;
 using System.Threading;
 using System.IO;
 using System.Drawing.Text;
 using System.Reflection;
+using ClassData.DataAccess;
+using NASRData.DataAccess;
 
 namespace NASR_GUI
 {
@@ -127,6 +127,7 @@ namespace NASR_GUI
 
             GlobalConfig.WriteTestSctFile();
 
+            menuStrip1.Visible = false;
             chooseDirButton.Enabled = false;
             startButton.Enabled = false;
 
@@ -303,6 +304,8 @@ namespace NASR_GUI
 
             processingGroupBox.Visible = true;
             processingGroupBox.Enabled = true;
+            
+            menuStrip1.Visible = true;
 
             runAgainButton.Visible = true;
             runAgainButton.Enabled = true;
@@ -328,6 +331,9 @@ namespace NASR_GUI
             getAiracDate();
             currentAiracSelection.Text = GlobalConfig.currentAiracDate;
             nextAiracSelection.Text = GlobalConfig.nextAiracDate;
+
+            // Disable the Facility ID for Now, Might want it later, If so comment out the below line.
+            facilityIdTextbox.Enabled = false;
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -393,6 +399,11 @@ namespace NASR_GUI
             pfc.AddFontFile("Properties\\romantic.ttf");
             instructionsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+        }
+
+        private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Nikolai558/NASR2SCT/blob/development/ChangeLog.md");
         }
     }
 }

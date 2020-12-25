@@ -23,9 +23,11 @@ namespace NASARData
     public class GlobalConfig
     {
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.6.8";
+        public static readonly string ProgramVersion = "0.6.9";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
+
+        public static bool updateProgram = false;
 
         public static string GithubVersion = "";
 
