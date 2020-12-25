@@ -26,15 +26,6 @@ namespace NASR_GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //GlobalConfig.CheckTempDir();
-
-            GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
-            ParseMeta.QuarterbackFunc();
-
-            //string debugStop = "";
-
-
-
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
             GlobalConfig.UpdateCheck();
 

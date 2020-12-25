@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Processing));
             this.processingLabel = new System.Windows.Forms.Label();
             this.updatePanel = new System.Windows.Forms.Panel();
             this.githubMessagelabel = new System.Windows.Forms.Label();
@@ -165,7 +166,11 @@
             this.Controls.Add(this.updatePanel);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Processing";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Processing Data";
             this.updatePanel.ResumeLayout(false);
             this.updatePanel.PerformLayout();

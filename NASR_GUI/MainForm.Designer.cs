@@ -62,6 +62,7 @@
             // currentAiracSelection
             // 
             this.currentAiracSelection.AutoSize = true;
+            this.currentAiracSelection.Checked = true;
             this.currentAiracSelection.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.currentAiracSelection.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.currentAiracSelection.Location = new System.Drawing.Point(91, 68);
@@ -77,7 +78,6 @@
             // nextAiracSelection
             // 
             this.nextAiracSelection.AutoSize = true;
-            this.nextAiracSelection.Checked = true;
             this.nextAiracSelection.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.nextAiracSelection.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nextAiracSelection.Location = new System.Drawing.Point(232, 68);
@@ -85,10 +85,10 @@
             this.nextAiracSelection.Name = "nextAiracSelection";
             this.nextAiracSelection.Size = new System.Drawing.Size(107, 25);
             this.nextAiracSelection.TabIndex = 1;
-            this.nextAiracSelection.TabStop = true;
             this.nextAiracSelection.Text = "Next AIRAC";
             this.nextAiracSelection.UseVisualStyleBackColor = true;
             this.nextAiracSelection.CheckedChanged += new System.EventHandler(this.nextAiracSelection_CheckedChanged);
+            this.nextAiracSelection.Click += new System.EventHandler(this.nextAiracSelection_Click);
             // 
             // airacLabel
             // 
@@ -357,7 +357,9 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(6);
+            this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NASR 2 SCT";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);

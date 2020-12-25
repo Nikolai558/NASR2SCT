@@ -16,18 +16,16 @@ namespace ClassData.DataAccess
     public class GetFaaMetaFileData
     {
         // TODO - Get the Airac Cycle from Database
-        public static string AiracCycle { get; set; } = "2014";
+        public static string AiracCycle { get; private set; } = AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate];
 
         public static string DownloadUrl { get; private set; } = $"https://aeronav.faa.gov/d-tpp/{AiracCycle}/xml_data/d-tpp_Metafile.xml";
 
-        private readonly string filePath = $"{GlobalConfig.tempPath}\\{AiracCycle}_FAA_Meta.xml";
+        private static readonly string filePath = $"{GlobalConfig.tempPath}\\{AiracCycle}_FAA_Meta.xml";
+        
         private List<MetaAirportModel> AllAirports = new List<MetaAirportModel>();
-
 
         public void QuarterbackFunc() 
         {
-            // TODO - Call this function
-
             if (!File.Exists(filePath))
             {
                 DownloadMetaFile();
@@ -35,7 +33,7 @@ namespace ClassData.DataAccess
             ParseMetaFile();
         }
 
-        private void DownloadMetaFile() 
+        private static void DownloadMetaFile() 
         {
             var client = new WebClient();
             client.DownloadFile(DownloadUrl, filePath);
@@ -119,6 +117,10 @@ namespace ClassData.DataAccess
                                     {
                                         aliasCommandSB.AppendLine($".{apt.AptIdent}APDC .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.ChartName}");
                                     }
+                                    else if (record.ChartCode == "TM" || record.ChartCode == "DVA")
+                                    {
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{str}C .OPENURL {debugUrl}{record.PdfName}#nameddest=({apt.AptIdent})  ; {apt.AirportName}-{record.ChartName}");
+                                    }
                                     else if (record.ChartCode == "STAR" || record.ChartCode == "DP" || record.ChartCode == "ODP" && !string.IsNullOrEmpty(str))
                                     {
                                         aliasCommandSB.AppendLine($".{str}{count}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.ChartName}");
@@ -150,6 +152,10 @@ namespace ClassData.DataAccess
                                     {
                                         aliasCommandSB.AppendLine($".{apt.AptIdent}APDC .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.ChartName}");
                                     }
+                                    else if (record.ChartCode == "MIN")
+                                    {
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{str}C .OPENURL {debugUrl}{record.PdfName}#nameddest=({apt.AptIdent})  ; {apt.AirportName}-{record.ChartName}");
+                                    }
                                     else if (record.ChartCode == "STAR" || record.ChartCode == "DP" || record.ChartCode == "ODP" && !string.IsNullOrEmpty(str))
                                     {
                                         aliasCommandSB.AppendLine($".{str}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.ChartName}");
@@ -168,7 +174,7 @@ namespace ClassData.DataAccess
                 AllAirports.Add(apt);
             }
 
-            File.WriteAllText($"{GlobalConfig.tempPath}\\All_AliasCMD_Test.txt", aliasCommandSB.ToString());
+            File.WriteAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\FAA_CHART_RECALL.txt", aliasCommandSB.ToString());
         }
     }
 }

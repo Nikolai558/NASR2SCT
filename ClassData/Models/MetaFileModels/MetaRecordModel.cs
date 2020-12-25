@@ -88,7 +88,8 @@ namespace ClassData.Models.MetaFileModels
                 }
                 else if (ChartName == "ALTERNATE MINIMUMS")
                 {
-                    AliasCommand +=  "/AM";
+                    AliasCommand +=  "/";
+                    //AliasCommand +=  "/AM";
                 }
                 else if (ChartName == "DIVERSE VECTOR AREA")
                 {
@@ -106,8 +107,6 @@ namespace ClassData.Models.MetaFileModels
             }
             else if (ChartCode == "IAP")
             {
-
-
                 if (ChartName.IndexOf(@" OR ") != -1)
                 {
                     string runwayTempVar;
@@ -952,7 +951,7 @@ namespace ClassData.Models.MetaFileModels
                 }
                 else if (ChartName.IndexOf("LOC/NDB ") != -1)
                 {
-                    AliasCommand += "/NOTIMPLEMENTING";
+                    AliasCommand += "/";
 
                 }
                 else if (ChartName.IndexOf("NDB ") != -1 || ChartName.IndexOf("NDB-") != -1)
@@ -1443,17 +1442,425 @@ namespace ClassData.Models.MetaFileModels
                 }
                 else if (ChartName.IndexOf("VOR ") != -1 || ChartName.IndexOf("VOR-") != -1)
                 {
-                    AliasCommand += "/VOR_TEST";
+                    string output = "/O";
 
+                    if (ChartName.IndexOf("VOR ") != -1)
+                    {
+
+                        if (ChartName.IndexOf("COPTER") != -1)
+                        {
+                            return;
+                        }
+
+
+                        if (ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ').Count() == 3)
+                        {
+                            output += ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ')[1];
+
+                            if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                            {
+                                output += ChartName.Substring(ChartName.IndexOf("RWY")).Split(' ')[1][1];
+                            }
+                            else
+                            {
+                                string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                                int tempCount = 0;
+                                if (tempVar.Split('/').Count() > 1)
+                                {
+                                    string rwyLastDigit = "";
+                                    foreach (string designator in tempVar.Split('/'))
+                                    {
+                                        if (string.IsNullOrEmpty(designator))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (tempCount == 0)
+                                        {
+                                            output += designator.Substring(designator.Length - 2);
+                                            rwyLastDigit = designator[designator.Length - 2].ToString();
+                                            tempCount += 1;
+                                        }
+                                        else
+                                        {
+                                            output += $"/O{rwyLastDigit}{designator}";
+                                        }
+                                    }
+                                }
+                            }
+
+                            AliasCommand += output;
+                        }
+                        else
+                        {
+                            if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                            {
+                                output += ChartName.Substring(ChartName.IndexOf("RWY")).Split(' ')[1];
+                            }
+                            else
+                            {
+                                string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                                int tempCount = 0;
+                                if (tempVar.Split('/').Count() > 1)
+                                {
+                                    string rwyLastDigit = "";
+                                    foreach (string designator in tempVar.Split('/'))
+                                    {
+                                        if (string.IsNullOrEmpty(designator))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (tempCount == 0)
+                                        {
+                                            output += designator.Substring(designator.Length - 2);
+                                            rwyLastDigit = designator[designator.Length - 2].ToString();
+                                            tempCount += 1;
+                                        }
+                                        else
+                                        {
+                                            output += $"/O{rwyLastDigit}{designator}";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    output += tempVar.Substring(tempVar.Length - 2);
+                                }
+                            }
+
+                            AliasCommand += output;
+                        }
+                    }
+                    else
+                    {
+                        if (ChartName.IndexOf("RWY") == -1)
+                        {
+                            output += ChartName.Split('-')[1];
+                            AliasCommand += output;
+                            return;
+                        }
+
+                        if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                        {
+                            output += ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1];
+                        }
+                        else
+                        {
+                            string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                            int tempCount = 0;
+                            if (tempVar.Split('/').Count() > 1)
+                            {
+                                string rwyLastDigit = "";
+                                foreach (string designator in tempVar.Split('/'))
+                                {
+                                    if (string.IsNullOrEmpty(designator))
+                                    {
+                                        continue;
+                                    }
+
+                                    if (tempCount == 0)
+                                    {
+                                        output += designator.Substring(designator.Length - 2);
+                                        rwyLastDigit = designator[designator.Length - 2].ToString();
+                                        tempCount += 1;
+                                    }
+                                    else
+                                    {
+                                        output += $"/O{rwyLastDigit}{designator}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                output += tempVar.Substring(tempVar.Length - 2);
+                            }
+                            AliasCommand += output;
+                        }
+                    }
                 }
                 else if (ChartName.IndexOf("VOR/DME ") != -1 || ChartName.IndexOf("VOR/DME-") != -1)
                 {
-                    AliasCommand += "/VOR_DME_TEST";
+                    string output = "/F";
+
+                    if (ChartName.IndexOf("VOR/DME ") != -1)
+                    {
+                        if (ChartName.IndexOf("COPTER") != -1)
+                        {
+                            return;
+                        }
+
+                        if (ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ').Count() == 3)
+                        {
+                            output += ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ')[1];
+
+                            if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                            {
+                                output += ChartName.Substring(ChartName.IndexOf("RWY")).Split(' ')[1][1];
+                            }
+                            else
+                            {
+                                string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                                int tempCount = 0;
+                                if (tempVar.Split('/').Count() > 1)
+                                {
+                                    string rwyLastDigit = "";
+                                    foreach (string designator in tempVar.Split('/'))
+                                    {
+                                        if (string.IsNullOrEmpty(designator))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (tempCount == 0)
+                                        {
+                                            output += designator.Substring(designator.Length - 2);
+                                            rwyLastDigit = designator[designator.Length - 2].ToString();
+                                            tempCount += 1;
+                                        }
+                                        else
+                                        {
+                                            output += $"/F{rwyLastDigit}{designator}";
+                                        }
+                                    }
+                                }
+                            }
+
+                            AliasCommand += output;
+                        }
+                        else
+                        {
+                            if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                            {
+                                output += ChartName.Substring(ChartName.IndexOf("RWY")).Split(' ')[1];
+                            }
+                            else
+                            {
+                                string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                                int tempCount = 0;
+                                if (tempVar.Split('/').Count() > 1)
+                                {
+                                    string rwyLastDigit = "";
+                                    foreach (string designator in tempVar.Split('/'))
+                                    {
+                                        if (string.IsNullOrEmpty(designator))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (tempCount == 0)
+                                        {
+                                            output += designator.Substring(designator.Length - 2);
+                                            rwyLastDigit = designator[designator.Length - 2].ToString();
+                                            tempCount += 1;
+                                        }
+                                        else
+                                        {
+                                            output += $"/F{rwyLastDigit}{designator}";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    output += tempVar.Substring(tempVar.Length - 2);
+                                }
+                            }
+
+                            AliasCommand += output;
+                        }
+                    }
+                    else
+                    {
+                        if (ChartName.IndexOf("RWY") == -1)
+                        {
+                            output += ChartName.Split('-')[1];
+                            AliasCommand += output;
+                            return;
+                        }
+
+                        if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                        {
+                            output += ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1];
+                        }
+                        else
+                        {
+                            string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                            int tempCount = 0;
+                            if (tempVar.Split('/').Count() > 1)
+                            {
+                                string rwyLastDigit = "";
+                                foreach (string designator in tempVar.Split('/'))
+                                {
+                                    if (string.IsNullOrEmpty(designator))
+                                    {
+                                        continue;
+                                    }
+
+                                    if (tempCount == 0)
+                                    {
+                                        output += designator.Substring(designator.Length - 2);
+                                        rwyLastDigit = designator[designator.Length - 2].ToString();
+                                        tempCount += 1;
+                                    }
+                                    else
+                                    {
+                                        output += $"/F{rwyLastDigit}{designator}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                output += tempVar.Substring(tempVar.Length - 2);
+                            }
+                            AliasCommand += output;
+                        }
+                    }
 
                 }
                 else if (ChartName.IndexOf("NDB/DME ") != -1 || ChartName.IndexOf("NDB/DME-") != -1)
                 {
-                    AliasCommand += "/NDB_DME_TEST";
+                    string output = "/B";
+
+                    if (ChartName.IndexOf("NDB/DME ") != -1)
+                    {
+                        if (ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ').Count() == 3)
+                        {
+                            output += ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ')[1];
+
+                            if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                            {
+                                output += ChartName.Substring(ChartName.IndexOf("RWY")).Split(' ')[1][1];
+                            }
+                            else
+                            {
+                                string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                                int tempCount = 0;
+                                if (tempVar.Split('/').Count() > 1)
+                                {
+                                    string rwyLastDigit = "";
+                                    foreach (string designator in tempVar.Split('/'))
+                                    {
+                                        if (string.IsNullOrEmpty(designator))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (tempCount == 0)
+                                        {
+                                            output += designator.Substring(designator.Length - 2);
+                                            rwyLastDigit = designator[designator.Length - 2].ToString();
+                                            tempCount += 1;
+                                        }
+                                        else
+                                        {
+                                            output += $"/B{rwyLastDigit}{designator}";
+                                        }
+                                    }
+                                }
+                            }
+
+                            AliasCommand += output;
+                        }
+                        else
+                        {
+                            if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                            {
+                                output += ChartName.Substring(ChartName.IndexOf("RWY")).Split(' ')[1];
+                            }
+                            else
+                            {
+                                string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                                int tempCount = 0;
+                                if (tempVar.Split('/').Count() > 1)
+                                {
+                                    string rwyLastDigit = "";
+                                    foreach (string designator in tempVar.Split('/'))
+                                    {
+                                        if (string.IsNullOrEmpty(designator))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (tempCount == 0)
+                                        {
+                                            output += designator.Substring(designator.Length - 2);
+                                            rwyLastDigit = designator[designator.Length - 2].ToString();
+                                            tempCount += 1;
+                                        }
+                                        else
+                                        {
+                                            output += $"/B{rwyLastDigit}{designator}";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    output += tempVar.Substring(tempVar.Length - 2);
+                                }
+                            }
+
+                            AliasCommand += output;
+                        }
+                    }
+                    else
+                    {
+                        if (ChartName.IndexOf("RWY") == -1)
+                        {
+                            output += ChartName.Split('-')[1];
+                            AliasCommand += output;
+                            return;
+                        }
+
+                        if (char.IsDigit(ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1]))
+                        {
+                            output += ChartName.Substring(ChartName.IndexOf("RWY"))[ChartName.Substring(ChartName.IndexOf("RWY")).Length - 1];
+                        }
+                        else
+                        {
+                            string tempVar = ChartName.Substring(ChartName.IndexOf("RWY"));
+
+                            int tempCount = 0;
+                            if (tempVar.Split('/').Count() > 1)
+                            {
+                                string rwyLastDigit = "";
+                                foreach (string designator in tempVar.Split('/'))
+                                {
+                                    if (string.IsNullOrEmpty(designator))
+                                    {
+                                        continue;
+                                    }
+
+                                    if (tempCount == 0)
+                                    {
+                                        output += designator.Substring(designator.Length - 2);
+                                        rwyLastDigit = designator[designator.Length - 2].ToString();
+                                        tempCount += 1;
+                                    }
+                                    else
+                                    {
+                                        output += $"/B{rwyLastDigit}{designator}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                output += tempVar.Substring(tempVar.Length - 2);
+                            }
+                            AliasCommand += output;
+                        }
+                    }
+                }
+                else if (ChartName.IndexOf("GLS ") != -1)
+                {
+                    AliasCommand += "/";
                 }
                 else
                 {
@@ -1469,7 +1876,7 @@ namespace ClassData.Models.MetaFileModels
                 else
                 {
                     // The DP Does not have a Computer Code.
-                    AliasCommand += "/DPCOMPERROR";
+                    AliasCommand += "/";
                 }
             }
             else if (ChartCode == "ODP")
@@ -1481,7 +1888,7 @@ namespace ClassData.Models.MetaFileModels
                 else
                 {
                     // The ODP does not have a Computer Code.
-                    AliasCommand += "/ODPCOMPERROR";
+                    AliasCommand += "/";
                 }
             }
             else if (ChartCode == "HOT")
@@ -1497,7 +1904,7 @@ namespace ClassData.Models.MetaFileModels
                 else
                 {
                     // The Star does not have a Computer Code.
-                    AliasCommand += "/STARCOMPERROR";
+                    AliasCommand += "/";
                 }
             }
             else if (ChartCode == "APD")
@@ -1510,7 +1917,8 @@ namespace ClassData.Models.MetaFileModels
             }
             else if (ChartCode == "DAU")
             {
-                AliasCommand += "/DAU";
+                //AliasCommand += "/DAU";
+                AliasCommand += "/";
             }
             else
             {

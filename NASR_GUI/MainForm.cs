@@ -15,11 +15,14 @@ using System.Drawing.Text;
 using System.Reflection;
 using ClassData.DataAccess;
 using NASRData.DataAccess;
+using System.Net;
 
 namespace NASR_GUI
 {
     public partial class MainForm : Form
     {
+        private bool nextAiracAvailable;
+
         public MainForm()
         {
             InitializeComponent();
@@ -129,7 +132,7 @@ namespace NASR_GUI
 
             menuStrip1.Visible = false;
             chooseDirButton.Enabled = false;
-            startButton.Enabled = false;
+            //startButton.Enabled = false;
 
 
             if (convertYes.Checked)
@@ -230,15 +233,14 @@ namespace NASR_GUI
         private void Worker_StartParsingDoWork(object sender, DoWorkEventArgs e)
         {
             string facilityID;
-            string airacEffectiveDate = "";
 
             if (currentAiracSelection.Checked)
             {
-                airacEffectiveDate = currentAiracSelection.Text;
+                GlobalConfig.airacEffectiveDate = currentAiracSelection.Text;
             }
             else if (nextAiracSelection.Checked)
             {
-                airacEffectiveDate = nextAiracSelection.Text;
+                GlobalConfig.airacEffectiveDate = nextAiracSelection.Text;
             }
 
             facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
@@ -247,19 +249,37 @@ namespace NASR_GUI
             //processingDataLabel.Text = "Processing DPs and STARs";
             //processingDataLabel.Refresh();
             GetStarDpData ParseStarDp = new GetStarDpData();
-            ParseStarDp.StarDpQuaterBackFunc(airacEffectiveDate);
+            ParseStarDp.StarDpQuaterBackFunc(GlobalConfig.airacEffectiveDate);
+
+            if (nextAiracSelection.Checked == true && nextAiracAvailable == true)
+            {
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recals");
+                GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
+                ParseMeta.QuarterbackFunc();
+            }
+            else if (currentAiracSelection.Checked == true)
+            {
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recals");
+                GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
+                ParseMeta.QuarterbackFunc();
+            }
+            else
+            {
+                // Don't Parse Meta File
+            }
+            
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Fixes");
             //processingDataLabel.Text = "Processing Fixes";
             //processingDataLabel.Refresh();
             GetFixData ParseFixes = new GetFixData();
-            ParseFixes.FixQuarterbackFunc(airacEffectiveDate);
+            ParseFixes.FixQuarterbackFunc(GlobalConfig.airacEffectiveDate);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Boundaries");
             //processingDataLabel.Text = "Processing Boundaries";
             //processingDataLabel.Refresh();
             GetArbData ParseArb = new GetArbData();
-            ParseArb.ArbQuarterbacFunc(airacEffectiveDate);
+            ParseArb.ArbQuarterbacFunc(GlobalConfig.airacEffectiveDate);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airways");
             //processingDataLabel.Text = "Processing Airways";
@@ -267,32 +287,32 @@ namespace NASR_GUI
 
             //processingDataLabel.Refresh();
             GetAwyData ParseAWY = new GetAwyData();
-            ParseAWY.AWYQuarterbackFunc(airacEffectiveDate);
+            ParseAWY.AWYQuarterbackFunc(GlobalConfig.airacEffectiveDate);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing ATS Airways");
             //processingDataLabel.Text = "Processing ATS Airways";
             //processingDataLabel.Refresh();
             GetAtsAwyData ParseAts = new GetAtsAwyData();
-            ParseAts.AWYQuarterbackFunc(airacEffectiveDate);
+            ParseAts.AWYQuarterbackFunc(GlobalConfig.airacEffectiveDate);
             GlobalConfig.CreateAwyGeomapHeadersAndEnding(false);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing NDBs");
             //processingDataLabel.Text = "Processing NDBs";
             //processingDataLabel.Refresh();
             GetNavData ParseNDBs = new GetNavData();
-            ParseNDBs.NAVQuarterbackFunc(airacEffectiveDate, facilityID);
+            ParseNDBs.NAVQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
             //processingDataLabel.Text = "Processing Airports";
             //processingDataLabel.Refresh();
             GetAptData ParseAPT = new GetAptData();
-            ParseAPT.APTQuarterbackFunc(airacEffectiveDate, facilityID, "11579568");
+            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID, "11579568");
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Waypoints XML");
             //processingDataLabel.Text = "Processing Waypoints XML";
             //processingDataLabel.Refresh();
             GlobalConfig.WriteWaypointsXML();
-            GlobalConfig.AppendCommentToXML(airacEffectiveDate);
+            GlobalConfig.AppendCommentToXML(GlobalConfig.airacEffectiveDate);
             GlobalConfig.WriteNavXmlOutput();
             GlobalConfig.WriteAptXmlOutput();
         }
@@ -334,6 +354,8 @@ namespace NASR_GUI
 
             // Disable the Facility ID for Now, Might want it later, If so comment out the below line.
             facilityIdTextbox.Enabled = false;
+
+
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -342,15 +364,14 @@ namespace NASR_GUI
             {
                 GlobalConfig.GetAiracDateFromFAA();
             }
+            // Check to see if Meta file for Next Airac is available.
+            nextAiracAvailable = GlobalConfig.GetMetaUrlResponse();
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             currentAiracSelection.Text = GlobalConfig.currentAiracDate;
             nextAiracSelection.Text = GlobalConfig.nextAiracDate;
-
-            currentAiracSelection.Checked = false;
-            nextAiracSelection.Checked = true;
 
             processingGroupBox.Visible = false;
             processingGroupBox.Enabled = false;
@@ -404,6 +425,19 @@ namespace NASR_GUI
         private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/Nikolai558/NASR2SCT/blob/development/ChangeLog.md");
+        }
+
+        private void nextAiracSelection_Click(object sender, EventArgs e)
+        {
+
+            if (!nextAiracAvailable)
+            {
+                //nextAiracSelection.Checked = false;
+                //currentAiracSelection.Checked = true;
+
+                MetaNotFoundForm frm = new MetaNotFoundForm();
+                frm.ShowDialog();
+            }
         }
     }
 }
