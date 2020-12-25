@@ -2,6 +2,13 @@
 
 ---
 ## Pre-V1.0.0
+- ## Version 0.6.9
+  - New update available screen.
+  - Facility ID input box is disabled until more functionality is available.
+  - Added change log menu.
+  - FAA Chart Recall Alias Commands now included with output data.
+  - Program will start in the center of Users Current screen.
+  - Update screen, Credits Screen, and Main Screen does not allow Maximizing windows.
 
 - ## Version 0.6.8
   - Fixed bug #40
