@@ -1,13 +1,17 @@
-0.7.0
+0.7.1
 
-Release Candidate V-0.7.0
+Release Candidate V-0.7.1
 
 ## Instructions to install:
-1. Download the zip file named "NASR2SCT-0.7.0.zip"
+1. Download the zip file named "NASR2SCT-0.7.1.zip"
 2. Unzip the file
 3. Keep all files inside it together. 
 4. Run the Setup.exe
 
 ## Change log:
-- Spelling Correction
-- "Change Log" Menu Font Fixed.
+- Bug #55 Chart Recall with RNP and L/R/C Designator Fixed
+- Outputs Apt Text GeoMap #58
+- Outputs Nav Text GeoMap #59
+- Draw fix commands are now Airport Specific #57
+- Draw line diagrams are now Airport Specific
+- Chart Recall are now Airport Specific #57

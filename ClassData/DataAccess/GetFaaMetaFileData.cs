@@ -16,7 +16,10 @@ namespace ClassData.DataAccess
     public class GetFaaMetaFileData
     {
         // TODO - Get the Airac Cycle from Database
-        public static string AiracCycle { get; private set; } = AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate];
+
+        public static string AiracCycle { get; private set; } = "2014";
+
+        // public static string AiracCycle { get; private set; } = AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate];
 
         public static string DownloadUrl { get; private set; } = $"https://aeronav.faa.gov/d-tpp/{AiracCycle}/xml_data/d-tpp_Metafile.xml";
 
@@ -83,7 +86,7 @@ namespace ClassData.DataAccess
                         AmdtNum = recordData.Element("amdtnum").Value,
                         AmdtDate = recordData.Element("amdtdate").Value
                     };
-                    record.CreateAliasComand();
+                    record.CreateAliasComand(apt.AptIdent);
                     apt.Records.Add(record);
 
                     if (

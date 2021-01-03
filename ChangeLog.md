@@ -2,6 +2,10 @@
 
 ---
 ## Pre-V1.0.0
+- ## Version 0.7.0
+  - Spelling Correction
+  - "Change Log" Menu Font Fixed.
+
 - ## Version 0.6.9
   - New update available screen.
   - Facility ID input box is disabled until more functionality is available.
