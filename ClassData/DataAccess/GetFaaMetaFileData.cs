@@ -178,6 +178,8 @@ namespace ClassData.DataAccess
             }
 
             File.WriteAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\FAA_CHART_RECALL.txt", aliasCommandSB.ToString());
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", aliasCommandSB.ToString());
+
         }
     }
 }

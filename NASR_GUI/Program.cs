@@ -27,6 +27,8 @@ namespace NASR_GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            GlobalConfig.CheckTempDir();
+
             //GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
             //ParseMeta.QuarterbackFunc();
 

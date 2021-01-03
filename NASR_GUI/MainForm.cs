@@ -314,11 +314,13 @@ namespace NASR_GUI
             GlobalConfig.WriteWaypointsXML();
             GlobalConfig.AppendCommentToXML(GlobalConfig.airacEffectiveDate);
             GlobalConfig.WriteNavXmlOutput();
-            GlobalConfig.WriteAptXmlOutput();
+            //GlobalConfig.WriteAptXmlOutput();
         }
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            GlobalConfig.CheckTempDir();
+
             processingDataLabel.Text = "Complete";
             processingDataLabel.Refresh();
 
