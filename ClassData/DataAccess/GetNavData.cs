@@ -235,7 +235,16 @@ namespace ClassData.DataAccess
                 // Add both the .NAV{ID} and .NAV{Name} to the String builder.
                 sb.AppendLine($".NAV{ndb.Id} .MSG {Artcc}_ISR *** {ndb.Id} {ndb.Freq} {ndb.Name} {ndb.Type}");
                 sb.AppendLine($".NAV{shortName} .MSG {Artcc}_ISR *** {ndb.Id} {ndb.Freq} {ndb.Name} {ndb.Type}");
-                navTextGeoMap.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{ndb.Dec_Lat}\" Lon=\"{ndb.Dec_Lon}\" Lines=\"{ndb.Id} {ndb.Name} {ndb.Type}\" />");
+
+                string tempAptName = ndb.Name;
+                List<char> badChar = new List<char>() { '&', '"' };
+
+                foreach (char bad in badChar)
+                {
+                    tempAptName = tempAptName.Replace(bad, '-');
+                }
+
+                navTextGeoMap.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{ndb.Dec_Lat}\" Lon=\"{ndb.Dec_Lon}\" Lines=\"{ndb.Id} {tempAptName} {ndb.Type}\" />");
             }
 
             // Loop through all of the VOR's we have
@@ -257,7 +266,15 @@ namespace ClassData.DataAccess
                 // Add both the .NAV{ID} and .NAV{Name} to the String builder.
                 sb.AppendLine($".NAV{vor.Id} .MSG {Artcc}_ISR *** {vor.Id} {vor.Freq} {vor.Name} {vor.Type}");
                 sb.AppendLine($".NAV{shortName} .MSG {Artcc}_ISR *** {vor.Id} {vor.Freq} {vor.Name} {vor.Type}");
-                navTextGeoMap.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{vor.Dec_Lat}\" Lon=\"{vor.Dec_Lon}\" Lines=\"{vor.Id} {vor.Name} {vor.Type}\" />");
+
+                string tempAptName = vor.Name;
+                List<char> badChar = new List<char>() { '&', '"' };
+
+                foreach (char bad in badChar)
+                {
+                    tempAptName = tempAptName.Replace(bad, '-');
+                }
+                navTextGeoMap.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{vor.Dec_Lat}\" Lon=\"{vor.Dec_Lon}\" Lines=\"{vor.Id} {tempAptName} {vor.Type}\" />");
 
             }
 
@@ -268,6 +285,9 @@ namespace ClassData.DataAccess
 
             // Write the string builder to the file. Both the NDB and VOR commands are inside ONE string builder.
             File.WriteAllText(filePath, sb.ToString());
+
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sb.ToString());
+
         }
 
         /// <summary>

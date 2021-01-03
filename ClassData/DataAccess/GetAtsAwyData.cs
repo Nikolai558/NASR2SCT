@@ -181,6 +181,8 @@ namespace ClassData.DataAccess
             }
 
             File.AppendAllText(awyAliasFilePath, sb.ToString());
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sb.ToString());
+
         }
 
         /// <summary>

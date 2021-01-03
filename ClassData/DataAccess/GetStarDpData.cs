@@ -213,7 +213,8 @@ namespace ClassData.DataAccess
                 int lineCount = 0;
                 bool addAllEndingPoints = false;
 
-                List<string> airports = new List<string>();
+                List<string> allAirportsInProcedure = new List<string>();
+                List<int> pointIndex = new List<int>();
 
                 foreach (StarAndDpModel indvData in procedures[procSeqNumber])
                 {
@@ -234,9 +235,17 @@ namespace ClassData.DataAccess
 
                     if (indvData.PointCode == "AA")
                     {
-                        if (!airports.Contains(indvData.PointId))
+                        if (!allAirportsInProcedure.Contains(indvData.PointId))
                         {
-                            airports.Add(indvData.PointId.Trim());
+                            allAirportsInProcedure.Add(indvData.PointId.Trim());
+                        }
+
+                        foreach (int index in pointIndex)
+                        {
+                            if (!procedures[procSeqNumber][index].AirpotsThisPointServes.Contains(indvData.PointId))
+                            {
+                                procedures[procSeqNumber][index].AirpotsThisPointServes.Add(indvData.PointId);
+                            }
                         }
 
                         if (!aliasCommands.ContainsKey($".{indvData.PointId.Trim()}{currentComputerCode}F"))
@@ -256,6 +265,11 @@ namespace ClassData.DataAccess
                                     {
                                         isDuplicatePointId = false;
                                     }
+                                }
+
+                                if (aliasCommands[$".{indvData.PointId.Trim()}{currentComputerCode}F"].Count == 0)
+                                {
+                                    isDuplicatePointId = false;
                                 }
 
                                 if (!isDuplicatePointId)
@@ -301,17 +315,26 @@ namespace ClassData.DataAccess
                         {
                             activePoints = new List<StarAndDpModel>();
                             clearPoints = false;
+
+                            pointIndex = new List<int>();
                         }
 
                         activePoints.Add(indvData);
+                        pointIndex.Add(lineCount - 1);
                     }
 
                     if (addAllEndingPoints)
                     {
-                        foreach (string apt in airports)
+
+                        foreach (string apt in allAirportsInProcedure)
                         {
                             foreach (StarAndDpModel point in activePoints)
                             {
+                                if (!point.AirpotsThisPointServes.Contains(apt))
+                                {
+                                    point.AirpotsThisPointServes.Add(apt);
+                                }
+
                                 foreach (StarAndDpModel aliasPoint in aliasCommands[$".{apt}{currentComputerCode}F"])
                                 {
                                     if (aliasPoint.PointId == point.PointId)
@@ -333,13 +356,6 @@ namespace ClassData.DataAccess
                             }
                         }
                     }
-
-                    
-                }
-
-                foreach (StarAndDpModel starAndDpModel in procedures[procSeqNumber])
-                {
-                    starAndDpModel.AirpotsThisPointServes = airports;
                 }
             }
 
@@ -359,6 +375,8 @@ namespace ClassData.DataAccess
             }
 
             File.WriteAllText(saveFilePath, sb.ToString());
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sb.ToString());
+
         }
 
         private void WriteSctDiagrams()
@@ -700,6 +718,7 @@ namespace ClassData.DataAccess
                 if (sbAlias.ToString().Split('.')[2].Length > 3)
                 {
                     File.AppendAllText(aliasFilePath, sbAlias.ToString() + "\n");
+                    File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sbAlias.ToString() + "\n");
                 }
             }
 

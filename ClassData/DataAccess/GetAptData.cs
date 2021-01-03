@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace ClassData.DataAccess
@@ -16,6 +17,8 @@ namespace ClassData.DataAccess
     /// </summary>
     public class GetAptData
     {
+        //List<Airport> allAptForXML = new List<Airport>();
+
         // List of ALL Airport Models
         private List<AptModel> allAptModels = new List<AptModel>();
 
@@ -37,6 +40,7 @@ namespace ClassData.DataAccess
             StoreWaypointsXMLData();
             WriteRunwayData();
 
+            WriteAptGeoMap();
             WriteAptTextGeoMap();
 
             // TODO - This does not work quite right.
@@ -52,6 +56,31 @@ namespace ClassData.DataAccess
             //WriteAltWxStation();
         }
 
+        public void WriteAptGeoMap()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("        <GeoMapObject Description=\"APT\" TdmOnly=\"false\">");
+            sb.AppendLine("          <SymbolDefaults Bcg=\"10\" Filters=\"10\" Style=\"Airport\" Size=\"1\" />");
+            sb.AppendLine("          <Elements>");
+
+
+            string saveFilePath = $"{GlobalConfig.outputDirectory}\\VERAM\\AIRPORTS_GEOMAP.xml";
+
+            foreach (AptModel apt in allAptModels)
+            {
+                if (apt.Status == "O")
+                {
+                    sb.AppendLine($"            <Element xsi:type=\"Symbol\" Filters=\"\" Size=\"2\" Lat=\"{ apt.Lat_Dec}\" Lon=\"{ apt.Lon_Dec}\" />");
+                }
+            }
+
+            sb.AppendLine("          </Elements>");
+            sb.AppendLine("        </GeoMapObject>");
+
+            File.WriteAllText(saveFilePath, sb.ToString());
+        }
+
         private void WriteAptTextGeoMap() 
         {
             string saveFilePath = $"{GlobalConfig.outputDirectory}\\vERAM\\AIRPORT_TEXT_GEOMAP.xml";
@@ -65,6 +94,8 @@ namespace ClassData.DataAccess
             {
                 string id;
 
+                List<char> badChar = new List<char>() { '&', '"' };
+
                 if (string.IsNullOrEmpty(apt.Icao))
                 {
                     id = apt.Id;
@@ -74,7 +105,18 @@ namespace ClassData.DataAccess
                     id = apt.Icao;
                 }
 
-                sb.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{apt.Lat_Dec}\" Lon=\"{apt.Lon_Dec}\" Lines=\"{id} {apt.Name}\" />");
+
+                string tempAptName = apt.Name;
+
+                foreach (char bad in badChar)
+                {
+                    tempAptName = tempAptName.Replace(bad, '-');
+                }
+
+                if (apt.Status == "O")
+                {
+                    sb.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{apt.Lat_Dec}\" Lon=\"{apt.Lon_Dec}\" Lines=\"{id} {tempAptName}\" />");
+                }
             }
 
             sb.AppendLine("          </Elements>");
@@ -515,6 +557,7 @@ namespace ClassData.DataAccess
             string filePath = $"{GlobalConfig.outputDirectory}\\VERAM\\Airports.xml";
 
             // Create an Empty list for our Airports in the format we need.
+
             List<Airport> allAptForXML = new List<Airport>();
 
             // Using the XML Serializer - this creates and gets the Serializer ready to use.
@@ -646,12 +689,13 @@ namespace ClassData.DataAccess
                     }
                 };
 
-                // Make sure we have 1 or more runways in our list and also make sure Mag Variation is not empty.
+                //Make sure we have 1 or more runways in our list and also make sure Mag Variation is not empty.
                 if (rwysTempVar.Count >= 1 && aptXMLFormat.MagVar != "")
                 {
                     // Add our Complete Airport information to our list of Airport Models for XML.
                     allAptForXML.Add(aptXMLFormat);
                 }
+
             }
 
             // We have to convert our List into an Array.
@@ -757,6 +801,8 @@ namespace ClassData.DataAccess
 
             // Write the String Builder to the file.
             File.WriteAllText(filePath, sb.ToString());
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sb.ToString());
+
         }
 
         /// <summary>
