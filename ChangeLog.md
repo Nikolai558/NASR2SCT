@@ -1,7 +1,7 @@
 
 ## Pre-V1.0.0
 ---
-## Version 0.7.2:
+- ## Version 0.7.2:
   - DP and STAR line draw correctly for the individual Airport. #63
   - '&' and '"' are replaced with a '-' in GeoMap Text Files. #61
   - TestAliasFile.txt located in ALIAS output folder has all output alias files combined. 
