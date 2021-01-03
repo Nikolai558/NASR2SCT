@@ -2,6 +2,15 @@
 
 ---
 ## Pre-V1.0.0
+- ## Version 0.7.1
+  - Bug #55 Chart Recall with RNP and L/R/C Designator Fixed
+  - Outputs Apt Text GeoMap #58
+  - Outputs Nav Text GeoMap #59
+  - Draw fix commands are now Airport Specific #57
+  - Draw line diagrams are now Airport Specific 
+      (known issue: individual airport diagrams will draw ALL lines, instead of what is associated with that airport)
+  - Chart Recall are now Airport Specific #57
+
 - ## Version 0.7.0
   - Spelling Correction
   - "Change Log" Menu Font Fixed.
