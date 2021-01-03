@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -25,6 +26,9 @@ namespace NASR_GUI
             // Set application settings.
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            //GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
+            //ParseMeta.QuarterbackFunc();
 
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
             GlobalConfig.UpdateCheck();
@@ -72,11 +76,25 @@ namespace NASR_GUI
 
                     // User DOES want to update. 
                     GlobalConfig.DownloadAssets();
-                    
+
+                    //ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\NASR2SCT-{GlobalConfig.GithubVersion}.zip", $"{GlobalConfig.tempPath}\\program");
+
+
                     UpdateProgram();
 
-
                     StartNewVersion();
+
+
+
+
+                    //if (File.Exists($"{GlobalConfig.tempPath}\\Setup.exe"))
+                    //{
+
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show(" ", "Antivirus removed my files!", MessageBoxButtons.OK);
+                    //}
 
                     Environment.Exit(1);
                 }
@@ -92,7 +110,12 @@ namespace NASR_GUI
         /// </summary>
         private static async void UpdateProgram() 
         {
+            //var updateManager = new UpdateManager($"{GlobalConfig.tempPath}");
+            //var releaseEntry = await updateManager.UpdateApp();
+
+
             using (var updateManager = new UpdateManager($"{GlobalConfig.tempPath}"))
+            //using (var updateManager = new UpdateManager($"{GlobalConfig.tempPath}\\program\\NASR2SCT-{GlobalConfig.GithubVersion}"))
             {
                 var releaseEntry = await updateManager.UpdateApp();
             }

@@ -37,6 +37,8 @@ namespace ClassData.DataAccess
             StoreWaypointsXMLData();
             WriteRunwayData();
 
+            WriteAptTextGeoMap();
+
             // TODO - This does not work quite right.
             //GetOffsetRwyText();
 
@@ -46,8 +48,39 @@ namespace ClassData.DataAccess
 
             DownloadAltWxStation();
             ParseAndWriteWxStation();
-            WriteAptXmlOutput();
+            WriteWxXmlOutput();
             //WriteAltWxStation();
+        }
+
+        private void WriteAptTextGeoMap() 
+        {
+            string saveFilePath = $"{GlobalConfig.outputDirectory}\\vERAM\\AIRPORT_TEXT_GEOMAP.xml";
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("        <GeoMapObject Description=\"AIRPORT TEXT\" TdmOnly=\"true\">");
+            sb.AppendLine("          <TextDefaults Bcg=\"10\" Filters=\"10\" Size=\"1\" Underline=\"false\" Opaque=\"false\" XOffset=\"12\" YOffset=\"0\" />");
+            sb.AppendLine("          <Elements>");
+
+            foreach (AptModel apt in allAptModels)
+            {
+                string id;
+
+                if (string.IsNullOrEmpty(apt.Icao))
+                {
+                    id = apt.Id;
+                }
+                else
+                {
+                    id = apt.Icao;
+                }
+
+                sb.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{apt.Lat_Dec}\" Lon=\"{apt.Lon_Dec}\" Lines=\"{id} {apt.Name}\" />");
+            }
+
+            sb.AppendLine("          </Elements>");
+            sb.AppendLine("        </GeoMapObject>");
+
+            File.WriteAllText(saveFilePath, sb.ToString());
         }
 
         private void GetOffsetRwyText() 
@@ -176,7 +209,7 @@ namespace ClassData.DataAccess
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
         }
 
-        public static void WriteAptXmlOutput()
+        public static void WriteWxXmlOutput()
         {
             StringBuilder sb = new StringBuilder();
 

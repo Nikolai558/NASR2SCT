@@ -27,7 +27,7 @@ namespace NASARData
         
 
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.7.0";
+        public static readonly string ProgramVersion = "0.7.1";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
@@ -562,6 +562,13 @@ namespace NASARData
 
         public static void WriteNavXmlOutput() 
         {
+            //StringBuilder navTextGeoMap = new StringBuilder();
+            //navTextGeoMap.AppendLine("        <GeoMapObject Description=\"NAVAID TEXT\" TdmOnly=\"true\">");
+            //navTextGeoMap.AppendLine("          <TextDefaults Bcg=\"13\" Filters=\"13\" Size=\"1\" Underline=\"false\" Opaque=\"false\" XOffset=\"12\" YOffset=\"0\" />");
+            //navTextGeoMap.AppendLine("          <Elements>");
+
+
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("        <GeoMapObject Description=\"NAVAIDS\" TdmOnly=\"false\">");
@@ -599,6 +606,9 @@ namespace NASARData
 
                         sb.AppendLine(printString);
                     }
+
+                    //navTextGeoMap.AppendLine($"");
+
                 }
             }
 

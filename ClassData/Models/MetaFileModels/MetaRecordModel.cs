@@ -77,7 +77,7 @@ namespace ClassData.Models.MetaFileModels
 
         public string AliasCommand { get; private set; }
 
-        public void CreateAliasComand() 
+        public void CreateAliasComand(string AptIata) 
         {
 
             if (ChartCode == "MIN")
@@ -134,7 +134,7 @@ namespace ClassData.Models.MetaFileModels
                             tempRecordModel.ChartName += " " + runwayTempVar;
                         }
 
-                        tempRecordModel.CreateAliasComand();
+                        tempRecordModel.CreateAliasComand(AptIata);
                         AliasCommand += tempRecordModel.AliasCommand;
                     }
                 }
@@ -1160,6 +1160,10 @@ namespace ClassData.Models.MetaFileModels
                                     }
                                 }
                             }
+                            else
+                            {
+                                output += tempVar.Substring(tempVar.Length - 2, 2);
+                            }
                         }
 
                         AliasCommand += output;
@@ -1871,7 +1875,7 @@ namespace ClassData.Models.MetaFileModels
             {
                 if (!string.IsNullOrEmpty(Faanfd18))
                 {
-                    AliasCommand += $"/{Faanfd18.Split('.')[0].Substring(0, Faanfd18.Split('.')[0].Length - 1)}";
+                    AliasCommand += $"/{AptIata}{Faanfd18.Split('.')[0].Substring(0, Faanfd18.Split('.')[0].Length - 1)}";
                 }
                 else
                 {
@@ -1899,7 +1903,7 @@ namespace ClassData.Models.MetaFileModels
             {
                 if (!string.IsNullOrEmpty(Faanfd18))
                 {
-                    AliasCommand += $"/{Faanfd18.Split('.')[1].Substring(0, Faanfd18.Split('.')[1].Length - 1)}";
+                    AliasCommand += $"/{AptIata}{Faanfd18.Split('.')[1].Substring(0, Faanfd18.Split('.')[1].Length - 1)}";
                 }
                 else
                 {

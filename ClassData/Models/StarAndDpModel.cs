@@ -42,6 +42,8 @@ namespace ClassData.Models
 
         public string Lon { get { return $"{Lon_E_W}{Lon_Deg}.{Lon_Min}.{Lon_Sec}.{Lon_MS}"; } }
 
+        public List<string> AirpotsThisPointServes { get; set; } = new List<string>();
+
 
     }
 }
