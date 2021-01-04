@@ -6,7 +6,7 @@
   - '&' and '"' are replaced with a '-' in GeoMap Text Files. #61
   - TestAliasFile.txt located in ALIAS output folder has all output alias files combined. 
   - Clean up Temp Folder right after program starts and finishes #62
-  - Only Operational Airports are drawn with AIRPORT_TEXT_GEMAP and AIRPORT_TEXT_GEOMAP. #64
+  - Only Operational Airports are drawn with AIRPORT_TEXT_GEMAP and AIRPORT_GEOMAP. #64
 
 - ## Version 0.7.1
   - Bug #55 Chart Recall with RNP and L/R/C Designator Fixed
