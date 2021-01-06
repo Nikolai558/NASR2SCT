@@ -82,11 +82,13 @@ namespace NASR_GUI
                     //ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\NASR2SCT-{GlobalConfig.GithubVersion}.zip", $"{GlobalConfig.tempPath}\\program");
 
 
-                    UpdateProgram();
+                    //// This is incharge of calling squirrel to patch update the program. 
+                    //UpdateProgram();
 
-                    StartNewVersion();
+                    //// this is needed to open the program after squirrel is done with it.
+                    //StartNewVersion();
 
-
+                    CallSetupExe();
 
 
                     //if (File.Exists($"{GlobalConfig.tempPath}\\Setup.exe"))
@@ -106,6 +108,23 @@ namespace NASR_GUI
                 }
             }
         }
+
+        private static void CallSetupExe() 
+        {
+            int ExitCode;
+            ProcessStartInfo ProcessInfo;
+            Process Process;
+
+            ProcessInfo = new ProcessStartInfo("NASR2SCTSETUP.exe", "/c " + $"\"{GlobalConfig.tempPath}\\Setup.exe\"");
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = false;
+
+            Process = Process.Start(ProcessInfo);
+            Process.WaitForExit();
+
+            ExitCode = Process.ExitCode;
+            Process.Close();
+        } 
 
         /// <summary>
         /// Use squirrel to update the program.

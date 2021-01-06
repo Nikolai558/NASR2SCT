@@ -27,7 +27,7 @@ namespace NASARData
         
 
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.7.2";
+        public static readonly string ProgramVersion = "0.7.5";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
