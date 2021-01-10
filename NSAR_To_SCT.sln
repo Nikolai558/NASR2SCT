@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NASR2SctConsole", "TestCons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NASR2SCT", "NASR_GUI\NASR2SCT.csproj", "{93EEFE04-D668-4FAD-911F-C6C8B30FAE66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FAACIFP18", "FAACIFP18\FAACIFP18.csproj", "{30638A77-0B8E-4F3D-B3D9-A1A73E98E769}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NASRTests", "NASRTests\NASRTests.csproj", "{783DC140-9E4B-46C8-9DB9-6046448DB60A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{93EEFE04-D668-4FAD-911F-C6C8B30FAE66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93EEFE04-D668-4FAD-911F-C6C8B30FAE66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93EEFE04-D668-4FAD-911F-C6C8B30FAE66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30638A77-0B8E-4F3D-B3D9-A1A73E98E769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30638A77-0B8E-4F3D-B3D9-A1A73E98E769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30638A77-0B8E-4F3D-B3D9-A1A73E98E769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30638A77-0B8E-4F3D-B3D9-A1A73E98E769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{783DC140-9E4B-46C8-9DB9-6046448DB60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783DC140-9E4B-46C8-9DB9-6046448DB60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783DC140-9E4B-46C8-9DB9-6046448DB60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783DC140-9E4B-46C8-9DB9-6046448DB60A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
