@@ -29,7 +29,6 @@ namespace NASR_GUI
 
             GlobalConfig.CheckTempDir();
 
-            // TODO - Make it so I dont have to change this each version.
             // It should grab from the assembily info. 
             this.Text = $"NASR 2 SCT - V{GlobalConfig.ProgramVersion}";
 
@@ -159,7 +158,6 @@ namespace NASR_GUI
             processingDataLabel.Enabled = true;
 
             startParsing();
-
             GlobalConfig.CheckTempDir();
         }
 

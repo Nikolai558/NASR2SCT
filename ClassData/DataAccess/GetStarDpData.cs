@@ -585,10 +585,6 @@ namespace ClassData.DataAccess
 
             //combinedData.AppendLine($"{"ALL_STARs".PadRight(26, ' ')}N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000");
 
-            // TODO - This is wrong fix it in a second
-            //sb.AppendLine("[SID]");
-            //sb.AppendLine("[STAR]");
-
             StringBuilder individualData;
             StringBuilder aliasComand;
 
