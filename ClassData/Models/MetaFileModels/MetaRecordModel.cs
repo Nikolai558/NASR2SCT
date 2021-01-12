@@ -109,6 +109,7 @@ namespace ClassData.Models.MetaFileModels
             {
                 if (ChartName.IndexOf(@" OR ") != -1)
                 {
+
                     string runwayTempVar;
 
                     if (ChartName.IndexOf("RWY") == -1)
@@ -202,6 +203,10 @@ namespace ClassData.Models.MetaFileModels
                                             output += $"/I{rwyLastDigit}{designator}";
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    output += tempVar.Substring(tempVar.Length - 2);
                                 }
                             }
 
@@ -349,6 +354,10 @@ namespace ClassData.Models.MetaFileModels
                                             output += $"/L{rwyLastDigit}{designator}";
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    output += tempVar.Substring(tempVar.Length - 2, 2);
                                 }
                             }
 

@@ -43,9 +43,6 @@ namespace ClassData.DataAccess
             WriteAptGeoMap();
             WriteAptTextGeoMap();
 
-            // TODO - This does not work quite right.
-            //GetOffsetRwyText();
-
             //DownloadWxStationData(effectiveDate);
             //ParseWxStationData(color);
             //WriteWxStationSctData();
@@ -286,7 +283,6 @@ namespace ClassData.DataAccess
 
             File.WriteAllText(saveFilePath, sb.ToString());
         }
-
 
         private void DownloadAltWxStation()
         {

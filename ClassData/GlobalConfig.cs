@@ -27,7 +27,7 @@ namespace NASARData
         
 
         // Current version of the program.
-        public static readonly string ProgramVersion = "0.7.2";
+        public static readonly string ProgramVersion = "0.7.3";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
@@ -117,10 +117,18 @@ namespace NASARData
             }
         }
 
+        public static void CheckTempDir(bool onlyCreateTempFolder)
+        {
+            if (!Directory.Exists(tempPath))
+            {
+                Directory.CreateDirectory(tempPath);
+            }
+        }
+
         public static void CheckTempDir() 
         {
             // Check to see if the TEMP Directory Exists
-            if (Directory.Exists(tempPath))
+            if (Directory.Exists(tempPath) && !updateProgram)
             {
                 // This variable holds all information for the temp path ie. Directories and files.
                 DirectoryInfo di = new DirectoryInfo(tempPath);

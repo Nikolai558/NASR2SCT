@@ -27,7 +27,7 @@ namespace NASR_GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            GlobalConfig.CheckTempDir();
+            GlobalConfig.CheckTempDir(true);
 
             //GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
             //ParseMeta.QuarterbackFunc();
@@ -37,6 +37,8 @@ namespace NASR_GUI
 
             // Check Current Program Against Github, if different ask user if they want to update.
             CheckVersion();
+
+            GlobalConfig.CheckTempDir();
 
             // Start the application
             Application.Run(new MainForm());
@@ -63,18 +65,24 @@ namespace NASR_GUI
                 if (GlobalConfig.updateProgram)
                 {
                     // Create our Temp Directory so we can download assets from Github and store them here.
-                    GlobalConfig.createDirectories(true);
 
-                    processForm = new Processing();
-                    processForm.Size = new Size(359, 194);
-                    processForm.ChangeTitle("Downloading and Installing Update");
-                    processForm.ChangeUpdatePanel(new Point(12, 12));
-                    processForm.ChangeUpdatePanel(new Size(319, 131));
-                    processForm.ChangeProcessingLabel("Processing Update");
-                    processForm.ChangeProcessingLabel(new Point(45, 49));
+                    /////////////////////////// TESTING - Checking to see if this is our problem code with the auto updater ///////////////////////////////////
 
-                    new Thread(() => processForm.ShowDialog()).Start();
+                    //GlobalConfig.createDirectories(true);
+
+                    //processForm = new Processing();
+                    //processForm.Size = new Size(359, 194);
+                    //processForm.ChangeTitle("Downloading and Installing Update");
+                    //processForm.ChangeUpdatePanel(new Point(12, 12));
+                    //processForm.ChangeUpdatePanel(new Size(319, 131));
+                    //processForm.ChangeProcessingLabel("Processing Update");
+                    //processForm.ChangeProcessingLabel(new Point(45, 49));
+
+                    //new Thread(() => processForm.ShowDialog()).Start();
                     //new Thread(() => new Processing().ShowDialog()).Start();
+
+                    /////////////////////////// END TESTING - Checking to see if this is our problem code with the auto updater ///////////////////////////////////
+
 
                     // User DOES want to update. 
                     GlobalConfig.DownloadAssets();
@@ -82,11 +90,13 @@ namespace NASR_GUI
                     //ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\NASR2SCT-{GlobalConfig.GithubVersion}.zip", $"{GlobalConfig.tempPath}\\program");
 
 
+                    //// This is incharge of calling squirrel to patch update the program. 
                     UpdateProgram();
 
+                    //// this is needed to open the program after squirrel is done with it.
                     StartNewVersion();
 
-
+                    //CallSetupExe();
 
 
                     //if (File.Exists($"{GlobalConfig.tempPath}\\Setup.exe"))
@@ -106,6 +116,66 @@ namespace NASR_GUI
                 }
             }
         }
+
+        private static void CallSetupExe()
+        {
+            string batchFileOne =
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "cd \"%temp%\\NASR2SCT\"\n" +
+                "SET /A COUNT=0\n" +
+                ":CHK\n" +
+                "IF EXIST \"second.bat\" goto FOUND\n" +
+                "SET /A COUNT=%COUNT% + 1\n" +
+                "IF %COUNT% GEQ 6 GOTO FOUND\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "GOTO CHK\n" +
+                ":FOUND\n" +
+                "START \"\" \"second.bat\"\n";
+
+            string batchFileTwo =
+                "@echo off\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "cd \"%temp%\\NASR2SCT\"\n" +
+                "SET /A COUNT=0\n" +
+                ":CHK\n" +
+                "IF EXIST \"Setup.exe\" goto FOUND\n" +
+                "SET /A COUNT=%COUNT% + 1\n" +
+                "IF %COUNT% GEQ 6 GOTO FOUND\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "GOTO CHK\n" +
+                ":FOUND\n" +
+                "START \"\" \"Setup.exe\"\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "cd \"%userprofile%\\AppData\\Local\\NASR2SCT\"\n" +
+                "SET /A COUNT2=0\n" +
+                ":CHK2\n" +
+                "IF EXIST \"NASR2SCT.exe\" goto FOUND2\n" +
+                "SET /A COUNT2=%COUNT2% + 1\n" +
+                "IF %COUNT2% GEQ 12 GOTO FOUND2\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "GOTO CHK2\n" +
+                ":FOUND2\n" +
+                "START \"\" \"NASR2SCT.exe\"\n";
+
+            File.WriteAllText($"{GlobalConfig.tempPath}\\first.bat", batchFileOne);
+            File.WriteAllText($"{GlobalConfig.tempPath}\\second.bat", batchFileTwo);
+
+
+
+            int ExitCode;
+            ProcessStartInfo ProcessInfo;
+            Process Process;
+
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{GlobalConfig.tempPath}\\first.bat\"");
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = false;
+
+            Process = Process.Start(ProcessInfo);
+            Process.WaitForExit();
+
+            ExitCode = Process.ExitCode;
+            Process.Close();
+        } 
 
         /// <summary>
         /// Use squirrel to update the program.
