@@ -1,6 +1,10 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.7.3:
+  - Fixed bug #67: Chart Recall Alias Commands
+  - "Processing Update" Screen Will no longer show. (attempting to fix auto updater)
+
 - ## Version 0.7.2:
   - DP and STAR line draw correctly for the individual Airport. #63
   - '&' and '"' are replaced with a '-' in GeoMap Text Files. #61
