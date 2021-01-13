@@ -93,10 +93,10 @@ namespace ClassData.DataAccess
                     
 
                     atsPoint.Name = line.Substring(25, 40).Trim();
-                    atsPoint.Lat = new GlobalConfig().CorrectLatLon(line.Substring(109, 14).Trim(), true, GlobalConfig.Convert);
-                    atsPoint.Lon = new GlobalConfig().CorrectLatLon(line.Substring(123, 14).Trim(), false, GlobalConfig.Convert);
-                    atsPoint.Dec_Lat = new GlobalConfig().createDecFormat(atsPoint.Lat, true);
-                    atsPoint.Dec_Lon = new GlobalConfig().createDecFormat(atsPoint.Lon, true);
+                    atsPoint.Lat = GlobalConfig.CorrectLatLon(line.Substring(109, 14).Trim(), true, GlobalConfig.Convert);
+                    atsPoint.Lon = GlobalConfig.CorrectLatLon(line.Substring(123, 14).Trim(), false, GlobalConfig.Convert);
+                    atsPoint.Dec_Lat = GlobalConfig.createDecFormat(atsPoint.Lat, true);
+                    atsPoint.Dec_Lon = GlobalConfig.createDecFormat(atsPoint.Lon, true);
 
                     if (line.Substring(65, 25).Trim() == "NDB")
                     {

@@ -27,8 +27,6 @@ namespace NASR_GUI
         {
             InitializeComponent();
 
-            GlobalConfig.CheckTempDir();
-
             // It should grab from the assembily info. 
             this.Text = $"NASR 2 SCT - V{GlobalConfig.ProgramVersion}";
 
@@ -158,7 +156,6 @@ namespace NASR_GUI
             processingDataLabel.Enabled = true;
 
             startParsing();
-            GlobalConfig.CheckTempDir();
         }
 
         private void runAgainButton_Click(object sender, EventArgs e)
@@ -247,7 +244,7 @@ namespace NASR_GUI
             //processingDataLabel.Text = "Processing DPs and STARs";
             //processingDataLabel.Refresh();
             GetStarDpData ParseStarDp = new GetStarDpData();
-            ParseStarDp.StarDpQuaterBackFunc(GlobalConfig.airacEffectiveDate);
+            //ParseStarDp.StarDpQuaterBackFunc(GlobalConfig.airacEffectiveDate);
 
             if (nextAiracSelection.Checked == true && nextAiracAvailable == true)
             {
@@ -317,8 +314,6 @@ namespace NASR_GUI
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            GlobalConfig.CheckTempDir();
-
             processingDataLabel.Text = "Complete";
             processingDataLabel.Refresh();
 
@@ -336,8 +331,6 @@ namespace NASR_GUI
 
         private void getAiracDate() 
         {
-            GlobalConfig.CheckTempDir();
-
             //GlobalConfig.GetAiracDateFromFAA();
             var Worker = new BackgroundWorker();
             Worker.RunWorkerCompleted += Worker_RunWorkerCompleted;

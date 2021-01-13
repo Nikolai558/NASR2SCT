@@ -38,8 +38,6 @@ namespace NASR_GUI
             // Check Current Program Against Github, if different ask user if they want to update.
             CheckVersion();
 
-            GlobalConfig.CheckTempDir();
-
             // Start the application
             Application.Run(new MainForm());
            

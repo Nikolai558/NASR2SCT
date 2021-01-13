@@ -44,8 +44,8 @@ namespace ClassData.DataAccess
                     Identifier = line.Substring(0, 4).Trim(),
                     CenterName = line.Substring(12, 40).Trim(),
                     DecodeName = line.Substring(52, 10).Trim(),
-                    Lat = new GlobalConfig().CorrectLatLon(line.Substring(62, 14).Trim(), true, GlobalConfig.Convert),
-                    Lon = new GlobalConfig().CorrectLatLon(line.Substring(76, 14).Trim(), false, GlobalConfig.Convert),
+                    Lat = GlobalConfig.CorrectLatLon(line.Substring(62, 14).Trim(), true, GlobalConfig.Convert),
+                    Lon = GlobalConfig.CorrectLatLon(line.Substring(76, 14).Trim(), false, GlobalConfig.Convert),
                     Description = line.Substring(90, 300).Trim(),
                     Sequence = line.Substring(390, 6).Trim(),
                     Legal = line.Substring(396, 1).Trim()

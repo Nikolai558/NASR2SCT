@@ -23,17 +23,15 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
-        public static string airacEffectiveDate = "";
-        
-
-        // Current version of the program.
         public static readonly string ProgramVersion = "0.7.3";
+
+        public static string GithubVersion = "";
+
+        public static string airacEffectiveDate = "";
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
         public static bool updateProgram = false;
-
-        public static string GithubVersion = "";
 
         public static List<AssetsModel> AllAssetsToDownload = new List<AssetsModel>();
 
@@ -68,7 +66,6 @@ namespace NASARData
             string nextUrl = $"https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[nextAiracDate]}/xml_data/d-tpp_Metafile.xml";
             //string testUrl = $"https://aeronav.faa.gov/d-tpp/2201/xml_data/d-tpp_Metafile.xml";
 
-
             HttpStatusCode result = default(HttpStatusCode);
 
             try
@@ -85,11 +82,10 @@ namespace NASARData
                 }
                 return true;
             }
-            catch (Exception)
+            catch (WebException)
             {
                 return false;
             }
-           
         }
 
         public static void CreateAwyGeomapHeadersAndEnding(bool CreateStart)
@@ -125,34 +121,34 @@ namespace NASARData
             }
         }
 
-        public static void CheckTempDir() 
-        {
-            // Check to see if the TEMP Directory Exists
-            if (Directory.Exists(tempPath) && !updateProgram)
-            {
-                // This variable holds all information for the temp path ie. Directories and files.
-                DirectoryInfo di = new DirectoryInfo(tempPath);
+        //public static void CheckTempDir() 
+        //{
+        //    // Check to see if the TEMP Directory Exists
+        //    if (Directory.Exists(tempPath) && !updateProgram)
+        //    {
+        //        // This variable holds all information for the temp path ie. Directories and files.
+        //        DirectoryInfo di = new DirectoryInfo(tempPath);
 
-                // Loop through the Files in our TempPath
-                foreach (FileInfo file in di.EnumerateFiles())
-                {
-                    // Delete each file it finds inside of this directory. IE Temp Path
-                    file.Delete();
-                }
+        //        // Loop through the Files in our TempPath
+        //        foreach (FileInfo file in di.EnumerateFiles())
+        //        {
+        //            // Delete each file it finds inside of this directory. IE Temp Path
+        //            file.Delete();
+        //        }
 
-                // Loop through the Directories in our TempPath
-                foreach (DirectoryInfo dir in di.EnumerateDirectories())
-                {
-                    // Delete the folder it finds.
-                    dir.Delete(true);
-                }
-            }
-            else
-            {
-                // The file does not exist, we need to create it. 
-                Directory.CreateDirectory(tempPath);
-            }
-        }
+        //        // Loop through the Directories in our TempPath
+        //        foreach (DirectoryInfo dir in di.EnumerateDirectories())
+        //        {
+        //            // Delete the folder it finds.
+        //            dir.Delete(true);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // The file does not exist, we need to create it. 
+        //        Directory.CreateDirectory(tempPath);
+        //    }
+        //}
 
         public static void UpdateCheck()
         {
@@ -208,7 +204,7 @@ namespace NASARData
         /// <param name="Lat">Is this value a Lat, if so Put true</param>
         /// <param name="ConvertEast">Do you need ALL East Coords converted, if so put true.</param>
         /// <returns>standard [N-S-E-W]000.00.00.000 lat/lon format</returns>
-        public string CorrectLatLon(string value, bool Lat, bool ConvertEast) 
+        public static string CorrectLatLon(string value, bool Lat, bool ConvertEast) 
         {
             // Valid format is N000.00.00.000 W000.00.000
             string correctedValue = "";
@@ -348,7 +344,7 @@ namespace NASARData
 
         }
 
-        public string createDMS(double value, bool lat) 
+        public static string createDMS(double value, bool lat) 
         {
             
             int degrees = 0;
@@ -426,7 +422,7 @@ namespace NASARData
         /// </summary>
         /// <param name="value">lat OR Lon</param>
         /// <returns>Decimal Format of the value past in.</returns>
-        public string createDecFormat(string value, bool roundSixPlaces) 
+        public static string createDecFormat(string value, bool roundSixPlaces) 
         {
             // Split the value at decimal points.
             string[] splitValue = value.Split('.');
@@ -459,7 +455,7 @@ namespace NASARData
             return decFormat;
         }
 
-        private static void CreateBatchFile() 
+        private static void CreateCurlBatchFile() 
         {
             string filePath = $"{tempPath}\\getAiraccEff.bat";
             string writeMe = $"cd \"{tempPath}\"\n" +
@@ -467,7 +463,7 @@ namespace NASARData
             File.WriteAllText(filePath, writeMe);
         }
 
-        private static void ExecuteCommand()
+        private static void ExecuteCurlBatchFile()
         {
             int ExitCode;
             ProcessStartInfo ProcessInfo;
@@ -482,8 +478,6 @@ namespace NASARData
 
             ExitCode = Process.ExitCode;
             Process.Close();
-
-            //MessageBox.Show("ExitCode: " + ExitCode.ToString(), "ExecuteCommand");
         }
 
         /// <summary>
@@ -496,9 +490,9 @@ namespace NASARData
 
             string response;
 
-            CreateBatchFile();
+            CreateCurlBatchFile();
             
-            ExecuteCommand();
+            ExecuteCurlBatchFile();
 
             if (File.Exists($"{tempPath}\\FAA_NASR.HTML")  && File.ReadAllText($"{tempPath}\\FAA_NASR.HTML").Length > 10)
             {
@@ -528,29 +522,13 @@ namespace NASARData
         /// </summary>
         public static void createDirectories() 
         {
-            
-
-
             Directory.CreateDirectory(outputDirectory);
-
             Directory.CreateDirectory($"{outputDirectory}\\ALIAS");
             Directory.CreateDirectory($"{outputDirectory}\\VRC");
             Directory.CreateDirectory($"{outputDirectory}\\VSTARS");
             Directory.CreateDirectory($"{outputDirectory}\\VERAM");
-
             Directory.CreateDirectory($"{GlobalConfig.outputDirectory}\\VRC\\[SID]");
             Directory.CreateDirectory($"{GlobalConfig.outputDirectory}\\VRC\\[STAR]");
-
-
-        }
-
-        /// <summary>
-        /// Create only the Temp Directory that we need
-        /// </summary>
-        /// <param name="onlyTempFile">OnlyTempDir Bool</param>
-        public static void createDirectories(bool onlyTempFile) 
-        {
-            Directory.CreateDirectory($"{tempPath}");
         }
 
         /// <summary>
@@ -570,19 +548,11 @@ namespace NASARData
 
         public static void WriteNavXmlOutput() 
         {
-            //StringBuilder navTextGeoMap = new StringBuilder();
-            //navTextGeoMap.AppendLine("        <GeoMapObject Description=\"NAVAID TEXT\" TdmOnly=\"true\">");
-            //navTextGeoMap.AppendLine("          <TextDefaults Bcg=\"13\" Filters=\"13\" Size=\"1\" Underline=\"false\" Opaque=\"false\" XOffset=\"12\" YOffset=\"0\" />");
-            //navTextGeoMap.AppendLine("          <Elements>");
-
-
-
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("        <GeoMapObject Description=\"NAVAIDS\" TdmOnly=\"false\">");
             sb.AppendLine("          <SymbolDefaults Bcg=\"13\" Filters=\"13\" Style=\"VOR\" Size=\"1\" />");
             sb.AppendLine("          <Elements>");
-
 
             string readFilePath = $"{outputDirectory}\\VERAM\\Waypoints.xml";
             string saveFilePath = $"{ outputDirectory}\\VERAM\\NAVAID_GEOMAP.xml";
@@ -593,7 +563,6 @@ namespace NASARData
             {
                 if (line.Length > 13)
                 {
-
                     if (line.Substring(3, 8) == "Waypoint")
                     {
                         if (line.Substring(18, 7) != "Airport" && line.Substring(18, 12) != "Intersection")
@@ -614,9 +583,6 @@ namespace NASARData
 
                         sb.AppendLine(printString);
                     }
-
-                    //navTextGeoMap.AppendLine($"");
-
                 }
             }
 
@@ -626,39 +592,39 @@ namespace NASARData
             File.WriteAllText(saveFilePath, sb.ToString());
         }
 
-        public static void WriteAptXmlOutput()
-        {
-            StringBuilder sb = new StringBuilder();
+        //public static void WriteAptXmlOutput()
+        //{
+        //    StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("        <GeoMapObject Description=\"APT\" TdmOnly=\"false\">");
-            sb.AppendLine("          <SymbolDefaults Bcg=\"10\" Filters=\"10\" Style=\"Airport\" Size=\"1\" />");
-            sb.AppendLine("          <Elements>");
+        //    sb.AppendLine("        <GeoMapObject Description=\"APT\" TdmOnly=\"false\">");
+        //    sb.AppendLine("          <SymbolDefaults Bcg=\"10\" Filters=\"10\" Style=\"Airport\" Size=\"1\" />");
+        //    sb.AppendLine("          <Elements>");
 
 
-            string readFilePath = $"{outputDirectory}\\VERAM\\Airports.xml";
-            string saveFilePath = $"{ outputDirectory}\\VERAM\\AIRPORTS_GEOMAP.xml";
+        //    string readFilePath = $"{outputDirectory}\\VERAM\\Airports.xml";
+        //    string saveFilePath = $"{ outputDirectory}\\VERAM\\AIRPORTS_GEOMAP.xml";
 
-            foreach (string line in File.ReadAllLines(readFilePath))
-            {
-                if (line.Length > 13)
-                {
-                    if (line.Substring(5, 8) == "Location")
-                    {
-                        int locLength = line.Length - 17;
-                        List<string> latLonSplitValue = line.Substring(14, locLength).Split(' ').ToList();
+        //    foreach (string line in File.ReadAllLines(readFilePath))
+        //    {
+        //        if (line.Length > 13)
+        //        {
+        //            if (line.Substring(5, 8) == "Location")
+        //            {
+        //                int locLength = line.Length - 17;
+        //                List<string> latLonSplitValue = line.Substring(14, locLength).Split(' ').ToList();
 
-                        string printString = $"            <Element xsi:type=\"Symbol\" Filters=\"\" Size=\"2\" {latLonSplitValue[1]} {latLonSplitValue[0]} />";
+        //                string printString = $"            <Element xsi:type=\"Symbol\" Filters=\"\" Size=\"2\" {latLonSplitValue[1]} {latLonSplitValue[0]} />";
 
-                        sb.AppendLine(printString);
-                    }
-                }
-            }
+        //                sb.AppendLine(printString);
+        //            }
+        //        }
+        //    }
 
-            sb.AppendLine("          </Elements>");
-            sb.AppendLine("        </GeoMapObject>");
+        //    sb.AppendLine("          </Elements>");
+        //    sb.AppendLine("        </GeoMapObject>");
 
-            File.WriteAllText(saveFilePath, sb.ToString());
-        }
+        //    File.WriteAllText(saveFilePath, sb.ToString());
+        //}
 
         /// <summary>
         /// Add Coment to the end of the XML file for Kyle's Batch File

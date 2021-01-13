@@ -115,12 +115,12 @@ namespace ClassData.DataAccess
                     if (awyPoint.Name.IndexOf("BORDER",0 , awyPoint.Name.Length) == -1)
                     {
                         // Set the Lat Lon
-                        awyPoint.Lat = new GlobalConfig().CorrectLatLon(line.Substring(83, 14).Trim(), true, GlobalConfig.Convert);
-                        awyPoint.Lon = new GlobalConfig().CorrectLatLon(line.Substring(97, 14).Trim(), false, GlobalConfig.Convert);
+                        awyPoint.Lat = GlobalConfig.CorrectLatLon(line.Substring(83, 14).Trim(), true, GlobalConfig.Convert);
+                        awyPoint.Lon = GlobalConfig.CorrectLatLon(line.Substring(97, 14).Trim(), false, GlobalConfig.Convert);
 
                         // Set the Decimal Version of Lat and Lon
-                        awyPoint.Dec_Lat = new GlobalConfig().createDecFormat(awyPoint.Lat, true);
-                        awyPoint.Dec_Lon = new GlobalConfig().createDecFormat(awyPoint.Lon, true);
+                        awyPoint.Dec_Lat = GlobalConfig.createDecFormat(awyPoint.Lat, true);
+                        awyPoint.Dec_Lon = GlobalConfig.createDecFormat(awyPoint.Lon, true);
 
                         // Add this point to our List
                         allAWYPoints.Add(awyPoint);

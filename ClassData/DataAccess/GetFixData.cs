@@ -67,8 +67,8 @@ namespace NASRData.DataAccess
                     FixModel individualFixData = new FixModel
                     {
                         Id = line.Substring(4, 5).Trim(removeChars),
-                        Lat = new GlobalConfig().CorrectLatLon(line.Substring(66, 14).Trim(removeChars),true, GlobalConfig.Convert),
-                        Lon = new GlobalConfig().CorrectLatLon(line.Substring(80, 14).Trim(removeChars),false, GlobalConfig.Convert),
+                        Lat = GlobalConfig.CorrectLatLon(line.Substring(66, 14).Trim(removeChars),true, GlobalConfig.Convert),
+                        Lon = GlobalConfig.CorrectLatLon(line.Substring(80, 14).Trim(removeChars),false, GlobalConfig.Convert),
                         Catagory = line.Substring(94, 3).Trim(removeChars),
                         Use = line.Substring(213, 15).Trim(removeChars),
                         HiArtcc = line.Substring(233, 4).Trim(removeChars),
@@ -76,8 +76,8 @@ namespace NASRData.DataAccess
                     };
 
                     // Set the Decimal Format for the Lat and Lon
-                    individualFixData.Lat_Dec = new GlobalConfig().createDecFormat(individualFixData.Lat, true);
-                    individualFixData.Lon_Dec = new GlobalConfig().createDecFormat(individualFixData.Lon, true);
+                    individualFixData.Lat_Dec = GlobalConfig.createDecFormat(individualFixData.Lat, true);
+                    individualFixData.Lon_Dec = GlobalConfig.createDecFormat(individualFixData.Lon, true);
 
                     // Add this FIX MODEL to the list of all Fixes.
                     allFixesInData.Add(individualFixData);

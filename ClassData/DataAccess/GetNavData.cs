@@ -98,13 +98,13 @@ namespace ClassData.DataAccess
                                 Type = line.Substring(8, 20).Trim(removeChars),
                                 Name = line.Substring(42, 30).Trim(removeChars),
                                 Freq = line.Substring(533, 6).Trim(removeChars),
-                                Lat = new GlobalConfig().CorrectLatLon(line.Substring(371, 14).Trim(removeChars),true, GlobalConfig.Convert),
-                                Lon = new GlobalConfig().CorrectLatLon(line.Substring(396, 14).Trim(removeChars),false, GlobalConfig.Convert)
+                                Lat = GlobalConfig.CorrectLatLon(line.Substring(371, 14).Trim(removeChars),true, GlobalConfig.Convert),
+                                Lon = GlobalConfig.CorrectLatLon(line.Substring(396, 14).Trim(removeChars),false, GlobalConfig.Convert)
                             };
 
                             // Get the Decimal Format for Lat Lon and set it in our Model.
-                            individualNDB.Dec_Lat = new GlobalConfig().createDecFormat(individualNDB.Lat, true);
-                            individualNDB.Dec_Lon = new GlobalConfig().createDecFormat(individualNDB.Lon, true);
+                            individualNDB.Dec_Lat = GlobalConfig.createDecFormat(individualNDB.Lat, true);
+                            individualNDB.Dec_Lon = GlobalConfig.createDecFormat(individualNDB.Lon, true);
 
                             // Add the NDB model we just created to our LIST of NDB Models
                             allNDBData.Add(individualNDB);
@@ -120,13 +120,13 @@ namespace ClassData.DataAccess
                                 Type = line.Substring(8, 20).Trim(removeChars),
                                 Name = line.Substring(42, 30).Trim(removeChars),
                                 Freq = line.Substring(533, 6).Trim(removeChars),
-                                Lat = new GlobalConfig().CorrectLatLon(line.Substring(371, 14).Trim(removeChars),true, GlobalConfig.Convert),
-                                Lon = new GlobalConfig().CorrectLatLon(line.Substring(396, 14).Trim(removeChars),false, GlobalConfig.Convert)
+                                Lat = GlobalConfig.CorrectLatLon(line.Substring(371, 14).Trim(removeChars),true, GlobalConfig.Convert),
+                                Lon = GlobalConfig.CorrectLatLon(line.Substring(396, 14).Trim(removeChars),false, GlobalConfig.Convert)
                             };
                             
                             // Get the Decimal Format for Lat Lon and set it in our Model.
-                            individualVOR.Dec_Lat = new GlobalConfig().createDecFormat(individualVOR.Lat, true);
-                            individualVOR.Dec_Lon = new GlobalConfig().createDecFormat(individualVOR.Lon, true);
+                            individualVOR.Dec_Lat = GlobalConfig.createDecFormat(individualVOR.Lat, true);
+                            individualVOR.Dec_Lon = GlobalConfig.createDecFormat(individualVOR.Lon, true);
 
                             // Add the VOR model we just created to our LIST of VOR Models.
                             allVORData.Add(individualVOR);

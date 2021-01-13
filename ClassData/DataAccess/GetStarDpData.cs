@@ -99,8 +99,6 @@ namespace ClassData.DataAccess
             allStarGeoMaps.AppendLine("          <LineDefaults Bcg=\"18\" Filters=\"18\" Style=\"Solid\" Thickness=\"1\" />");
             allStarGeoMaps.AppendLine("          <Elements>");
 
-            GlobalConfig Gb = new GlobalConfig();
-
             bool newSeq;
             foreach (string procKey in procedures.Keys)
             {
@@ -146,11 +144,11 @@ namespace ClassData.DataAccess
                     {
                         if (point.Type == "S")
                         {
-                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.createDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.createDecFormat(point.Lon, true)}\" />");
                         }
                         else
                         {
-                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.createDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.createDecFormat(point.Lon, true)}\" />");
                         }
 
                         prevPoint = point;
@@ -588,8 +586,6 @@ namespace ClassData.DataAccess
             StringBuilder individualData;
             StringBuilder aliasComand;
 
-            GlobalConfig Gb = new GlobalConfig();
-
             bool newSeq;
             foreach (string procKey in procedures.Keys)
             {
@@ -647,12 +643,12 @@ namespace ClassData.DataAccess
                         {
                             combinedDataStar.AppendLine($"                          {prevPoint.Lat} {prevPoint.Lon} {point.Lat} {point.Lon}; {prevPoint.PointId} {point.PointId}");
 
-                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.createDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.createDecFormat(point.Lon, true)}\" />");
                         }
                         else
                         {
                             combinedDataDp.AppendLine($"                          {prevPoint.Lat} {prevPoint.Lon} {point.Lat} {point.Lon}; {prevPoint.PointId} {point.PointId}");
-                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.createDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.createDecFormat(point.Lon, true)}\" />");
 
 
                         }
