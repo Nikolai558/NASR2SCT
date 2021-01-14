@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace ClassData.DataAccess
 {
     /// <summary>
-    /// Download, Unzip, Parse, and Make SCT2 File for FAA NAV data.
+    /// Parse, and Make SCT2 File for FAA NAV data.
     /// </summary>
     public class GetNavData
     {
@@ -26,34 +26,17 @@ namespace ClassData.DataAccess
         /// <param name="effectiveDate">Format: YYYY-MM-DD"</param>
         public void NAVQuarterbackFunc(string effectiveDate, string Artcc) 
         {
-            DownloadNAVData(effectiveDate);
-            ParseNAVData();
+            ParseNAVData(effectiveDate);
             StoreXMLData();
             WriteNAVSctData();
             WriteNavISR(Artcc);
         }
 
         /// <summary>
-        /// Download and Unzip the NAV data from FAA
-        /// </summary>
-        /// <param name="effectiveDate">Format: YYYY-MM-DD"</param>
-        private void DownloadNAVData(string effectiveDate) 
-        {
-            // Create a web client to download the data.
-            var client = new WebClient();
-
-            // Go to the FAA website and download the NAV zip folder.
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip", $"{GlobalConfig.tempPath}\\nav.zip");
-            
-            // Extract the zip folder we downloaded.
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\nav.zip", $"{GlobalConfig.tempPath}\\nav");
-        }
-
-        /// <summary>
         /// Parse through the NAV data.
         /// This data contains two data types, NDB and VOR
         /// </summary>
-        private void ParseNAVData() 
+        private void ParseNAVData(string effectiveDate) 
         {
             // FAA Provides data for ALL types of NDB and VOR, we only need certain types. Exclude the one we are on if it has any of these.
             List<string> excludeTypes = new List<string>{ "VOT", "FAN MARKER", "CONSOLAN", "MARINE NDB", "DECOMMISSIONED", "MARINE NDB/DME"};
@@ -66,7 +49,7 @@ namespace ClassData.DataAccess
             char[] removeChars = { ' ', '.' };
 
             // Read the NAV.txt file, Loop through all the lines in Nav.txt
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\nav\\NAV.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_NAV\\NAV.txt"))
             {
                 // Bool to tell our program if it is to exclude this current line. To start we set it to false.
                 bool exclude = false;
@@ -103,8 +86,8 @@ namespace ClassData.DataAccess
                             };
 
                             // Get the Decimal Format for Lat Lon and set it in our Model.
-                            individualNDB.Dec_Lat = GlobalConfig.createDecFormat(individualNDB.Lat, true);
-                            individualNDB.Dec_Lon = GlobalConfig.createDecFormat(individualNDB.Lon, true);
+                            individualNDB.Dec_Lat = GlobalConfig.CreateDecFormat(individualNDB.Lat, true);
+                            individualNDB.Dec_Lon = GlobalConfig.CreateDecFormat(individualNDB.Lon, true);
 
                             // Add the NDB model we just created to our LIST of NDB Models
                             allNDBData.Add(individualNDB);
@@ -125,8 +108,8 @@ namespace ClassData.DataAccess
                             };
                             
                             // Get the Decimal Format for Lat Lon and set it in our Model.
-                            individualVOR.Dec_Lat = GlobalConfig.createDecFormat(individualVOR.Lat, true);
-                            individualVOR.Dec_Lon = GlobalConfig.createDecFormat(individualVOR.Lon, true);
+                            individualVOR.Dec_Lat = GlobalConfig.CreateDecFormat(individualVOR.Lat, true);
+                            individualVOR.Dec_Lon = GlobalConfig.CreateDecFormat(individualVOR.Lon, true);
 
                             // Add the VOR model we just created to our LIST of VOR Models.
                             allVORData.Add(individualVOR);

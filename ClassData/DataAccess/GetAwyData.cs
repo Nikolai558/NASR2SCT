@@ -10,7 +10,7 @@ using System.Text;
 namespace ClassData.DataAccess
 {
     /// <summary>
-    /// Download, Parse, Create SCT, Create XML for Airway Data.
+    /// Create SCT, Create XML for Airway Data.
     /// </summary>
     public class GetAwyData
     {
@@ -28,38 +28,21 @@ namespace ClassData.DataAccess
         /// <param name="effectiveDate">Format: YYYY-MM-DD</param>
         public void AWYQuarterbackFunc(string effectiveDate) 
         {
-            DownloadAwyData(effectiveDate);
-            ParseAwyData();
+            ParseAwyData(effectiveDate);
             WriteAwySctData();
             WriteAwyAlias();
         }
 
         /// <summary>
-        /// Download the Awy data from the FAA.
-        /// </summary>
-        /// <param name="effectiveDate">Format: YYYY-MM-DD</param>
-        private void DownloadAwyData(string effectiveDate)
-        {
-            // Create Web Client to Connect to the FAA website.
-            var client = new WebClient();
-
-            // Download the AWY Zip File
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip", $"{GlobalConfig.tempPath}\\awy.zip");
-            
-            // Unzip the File we just downloaded
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\awy.zip", $"{GlobalConfig.tempPath}\\awy");
-        }
-
-        /// <summary>
         /// Parse the AWY data from the FAA.
         /// </summary>
-        private void ParseAwyData() 
+        private void ParseAwyData(string effectiveDate) 
         {
             // Create our AWY point Model
             AwyPointModel awyPoint = new AwyPointModel();
 
             // Loop through all the Lines in the AWY.TXT file
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\awy\\AWY.txt")) 
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_AWY\\AWY.txt")) 
             {
                 // IF the Line begins with AWY1
                 if (line.Substring(0, 4) == "AWY1")
@@ -119,8 +102,8 @@ namespace ClassData.DataAccess
                         awyPoint.Lon = GlobalConfig.CorrectLatLon(line.Substring(97, 14).Trim(), false, GlobalConfig.Convert);
 
                         // Set the Decimal Version of Lat and Lon
-                        awyPoint.Dec_Lat = GlobalConfig.createDecFormat(awyPoint.Lat, true);
-                        awyPoint.Dec_Lon = GlobalConfig.createDecFormat(awyPoint.Lon, true);
+                        awyPoint.Dec_Lat = GlobalConfig.CreateDecFormat(awyPoint.Lat, true);
+                        awyPoint.Dec_Lon = GlobalConfig.CreateDecFormat(awyPoint.Lon, true);
 
                         // Add this point to our List
                         allAWYPoints.Add(awyPoint);

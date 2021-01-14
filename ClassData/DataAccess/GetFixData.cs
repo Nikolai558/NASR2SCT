@@ -14,7 +14,7 @@ using ClassData.Models;
 namespace NASRData.DataAccess
 {
     /// <summary>
-    /// Download, Unzip, Parse, and Make SCT2 File for FAA Fix data.
+    /// Parse, and Make SCT2 File for FAA Fix data.
     /// </summary>
     public class GetFixData
     {
@@ -27,38 +27,21 @@ namespace NASRData.DataAccess
         /// <param name="effectiveDate">Format: YYYY-MM-DD</param>
         public void FixQuarterbackFunc(string effectiveDate) 
         {
-            DownloadFixData(effectiveDate);
-            ParseFixData();
+            ParseFixData(effectiveDate);
             WriteFixSctData();
             StoreXMLData();
         }
 
         /// <summary>
-        /// Download and unzip the FAA Fix data from their website.
-        /// </summary>
-        /// <param name="effectiveDate">Valid format is "YYYY-MM-DD"</param>
-        private void DownloadFixData(string effectiveDate) 
-        {
-            // Web Client used to connect to the FAA website.
-            var client = new WebClient();
-
-            // Download the Fix Data
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip", $"{GlobalConfig.tempPath}\\fixes.zip");
-
-            // Extract the ZIP file that we just downloaded.
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\fixes.zip", $"{GlobalConfig.tempPath}\\fixes");
-        }
-
-        /// <summary>
         /// Parse through and get the data we need for all the fixes.
         /// </summary>
-        private void ParseFixData()
+        private void ParseFixData(string effectiveDate)
         {
             // Variable for all the 'bad' characters. We will remove all these characters from the data.
             char[] removeChars = { ' ', '.' };
 
             // Read ALL the lines in FAA Fix data text file.
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\fixes\\FIX.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_FIX\\FIX.txt"))
             {
                 // Check to see if the begining of the line starts with "FIX1"
                 if (line.Substring(0, 4) == "FIX1")
@@ -76,8 +59,8 @@ namespace NASRData.DataAccess
                     };
 
                     // Set the Decimal Format for the Lat and Lon
-                    individualFixData.Lat_Dec = GlobalConfig.createDecFormat(individualFixData.Lat, true);
-                    individualFixData.Lon_Dec = GlobalConfig.createDecFormat(individualFixData.Lon, true);
+                    individualFixData.Lat_Dec = GlobalConfig.CreateDecFormat(individualFixData.Lat, true);
+                    individualFixData.Lon_Dec = GlobalConfig.CreateDecFormat(individualFixData.Lon, true);
 
                     // Add this FIX MODEL to the list of all Fixes.
                     allFixesInData.Add(individualFixData);

@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.CodeDom.Compiler;
 using ClassData.Models.MetaFileModels;
+using System.IO.Compression;
 
 namespace NASARData
 {
@@ -28,6 +29,10 @@ namespace NASARData
         public static string GithubVersion = "";
 
         public static string airacEffectiveDate = "";
+
+        public static string FaaHtmlFileVariable { get; protected set; } = DateTime.Now.ToString("MMddHHmmss");
+
+        private static List<string> DownloadedFilePaths = new List<string>();
 
         public static readonly string testSectorFileName = $"\\VRC\\TestSectorFile.sct2";
 
@@ -72,7 +77,7 @@ namespace NASARData
             {
                 var request = HttpWebRequest.Create(nextUrl);
                 request.Method = "HEAD";
-                using (var response = request.GetResponse() as HttpWebResponse)
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
                     if (response != null)
                     {
@@ -121,34 +126,71 @@ namespace NASARData
             }
         }
 
-        //public static void CheckTempDir() 
-        //{
-        //    // Check to see if the TEMP Directory Exists
-        //    if (Directory.Exists(tempPath) && !updateProgram)
-        //    {
-        //        // This variable holds all information for the temp path ie. Directories and files.
-        //        DirectoryInfo di = new DirectoryInfo(tempPath);
+        public static void DownloadAllFiles(string effectiveDate, string airacCycle)
+        {
+            Dictionary<string, string> allURLs = new Dictionary<string, string>()
+            {
+                { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
+                { $"{effectiveDate}_APT.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip" },
+                { $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
+                { $"{effectiveDate}_ARB.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip" },
+                { $"{effectiveDate}_ATS.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip" },
+                { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
+                { $"{airacCycle}_FAA_Meta.xml", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml"},
+                { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
+                { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"}
+            };
 
-        //        // Loop through the Files in our TempPath
-        //        foreach (FileInfo file in di.EnumerateFiles())
-        //        {
-        //            // Delete each file it finds inside of this directory. IE Temp Path
-        //            file.Delete();
-        //        }
+            // Web Client used to connect to the FAA website.
+            using (var client = new WebClient())
+            {
+                foreach (string fileName in allURLs.Keys)
+                {
+                    client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
+                    DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
+                }
+            }
+        }
 
-        //        // Loop through the Directories in our TempPath
-        //        foreach (DirectoryInfo dir in di.EnumerateDirectories())
-        //        {
-        //            // Delete the folder it finds.
-        //            dir.Delete(true);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // The file does not exist, we need to create it. 
-        //        Directory.CreateDirectory(tempPath);
-        //    }
-        //}
+        public static void UnzipAllDownloaded() 
+        {
+            foreach (string filePath in DownloadedFilePaths)
+            {
+                if (filePath.Contains(".zip"))
+                {
+                    ZipFile.ExtractToDirectory(filePath, filePath.Replace(".zip", string.Empty));
+                }
+            }
+        }
+
+        public static void CheckTempDir()
+        {
+            // Check to see if the TEMP Directory Exists
+            if (Directory.Exists(tempPath) && !updateProgram)
+            {
+                // This variable holds all information for the temp path ie. Directories and files.
+                DirectoryInfo di = new DirectoryInfo(tempPath);
+
+                // Loop through the Files in our TempPath
+                foreach (FileInfo file in di.EnumerateFiles())
+                {
+                    // Delete each file it finds inside of this directory. IE Temp Path
+                    file.Delete();
+                }
+
+                // Loop through the Directories in our TempPath
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    // Delete the folder it finds.
+                    dir.Delete(true);
+                }
+            }
+            else
+            {
+                // The file does not exist, we need to create it. 
+                Directory.CreateDirectory(tempPath);
+            }
+        }
 
         public static void UpdateCheck()
         {
@@ -323,7 +365,7 @@ namespace NASARData
             // Check to see if Convert E is True and Check our Value's Declination to make sure it is an E Coord.
             if (ConvertEast && declination == "E")
             {
-                double oldDecForm = double.Parse(createDecFormat(correctedValue, false));
+                double oldDecForm = double.Parse(CreateDecFormat(correctedValue, false));
 
                 double newDecForm = 180 - oldDecForm;
 
@@ -347,13 +389,13 @@ namespace NASARData
         public static string createDMS(double value, bool lat) 
         {
             
-            int degrees = 0;
+            int degrees;
             decimal degreeFloat = 0;
 
-            int minutes = 0;
+            int minutes;
             decimal minuteFloat = 0;
 
-            int seconds = 0;
+            int seconds;
             decimal secondFloat = 0;
 
             string miliseconds = "0";
@@ -422,7 +464,7 @@ namespace NASARData
         /// </summary>
         /// <param name="value">lat OR Lon</param>
         /// <returns>Decimal Format of the value past in.</returns>
-        public static string createDecFormat(string value, bool roundSixPlaces) 
+        public static string CreateDecFormat(string value, bool roundSixPlaces) 
         {
             // Split the value at decimal points.
             string[] splitValue = value.Split('.');
@@ -459,13 +501,12 @@ namespace NASARData
         {
             string filePath = $"{tempPath}\\getAiraccEff.bat";
             string writeMe = $"cd \"{tempPath}\"\n" +
-                "curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\">FAA_NASR.HTML";
+                $"curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\">{FaaHtmlFileVariable}_FAA_NASR.HTML";
             File.WriteAllText(filePath, writeMe);
         }
 
         private static void ExecuteCurlBatchFile()
         {
-            int ExitCode;
             ProcessStartInfo ProcessInfo;
             Process Process;
 
@@ -476,7 +517,6 @@ namespace NASARData
             Process = Process.Start(ProcessInfo);
             Process.WaitForExit();
 
-            ExitCode = Process.ExitCode;
             Process.Close();
         }
 
@@ -494,9 +534,9 @@ namespace NASARData
             
             ExecuteCurlBatchFile();
 
-            if (File.Exists($"{tempPath}\\FAA_NASR.HTML")  && File.ReadAllText($"{tempPath}\\FAA_NASR.HTML").Length > 10)
+            if (File.Exists($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML")  && File.ReadAllText($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML").Length > 10)
             {
-                response = File.ReadAllText($"{tempPath}\\FAA_NASR.HTML");
+                response = File.ReadAllText($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML");
             }
             else
             {
@@ -520,7 +560,7 @@ namespace NASARData
         /// <summary>
         /// Create our Output directories inside the directory the user chose.
         /// </summary>
-        public static void createDirectories() 
+        public static void CreateDirectories() 
         {
             Directory.CreateDirectory(outputDirectory);
             Directory.CreateDirectory($"{outputDirectory}\\ALIAS");

@@ -18,26 +18,13 @@ namespace ClassData.DataAccess
 
         public void ArbQuarterbacFunc(string effectiveDate) 
         {
-            DownloadAptData(effectiveDate);
-            ParseArb();
+            ParseArb(effectiveDate);
             WriteArbSct();
         }
 
-        private void DownloadAptData(string effectiveDate)
+        private void ParseArb(string effectiveDate) 
         {
-            // Create Web Client to connect to FAA
-            var client = new WebClient();
-
-            // Download the APT.ZIP file from FAA
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip", $"{GlobalConfig.tempPath}\\arb.zip");
-
-            // Unzip FAA apt.zip
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\arb.zip", $"{GlobalConfig.tempPath}\\arb");
-        }
-
-        private void ParseArb() 
-        {
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\arb\\ARB.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_ARB\\ARB.txt"))
             {
                 ArbModel arb = new ArbModel
                 {

@@ -15,29 +15,11 @@ namespace ClassData.DataAccess
 {
     public class GetFaaMetaFileData
     {
-        //public static string AiracCycle { get; private set; } = "2014";
-
-        public static string AiracCycle { get; private set; } = AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate];
-
-        public static string DownloadUrl { get; private set; } = $"https://aeronav.faa.gov/d-tpp/{AiracCycle}/xml_data/d-tpp_Metafile.xml";
-
-        private static readonly string filePath = $"{GlobalConfig.tempPath}\\{AiracCycle}_FAA_Meta.xml";
-        
         private List<MetaAirportModel> AllAirports = new List<MetaAirportModel>();
 
         public void QuarterbackFunc() 
         {
-            if (!File.Exists(filePath))
-            {
-                DownloadMetaFile();
-            }
             ParseMetaFile();
-        }
-
-        private static void DownloadMetaFile() 
-        {
-            var client = new WebClient();
-            client.DownloadFile(DownloadUrl, filePath);
         }
 
         private void ParseMetaFile() 
@@ -46,7 +28,7 @@ namespace ClassData.DataAccess
             string debugUrl = $"https://aeronav.faa.gov/d-tpp/2014/";
 
             StringBuilder aliasCommandSB = new StringBuilder();
-            var xmlDoc = XDocument.Parse(File.ReadAllText(filePath));
+            var xmlDoc = XDocument.Parse(File.ReadAllText($"{GlobalConfig.tempPath}\\{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}_FAA_Meta.xml"));
             var airports = xmlDoc.Descendants("airport_name");
 
             foreach (var aptData in airports)

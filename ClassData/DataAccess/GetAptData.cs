@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 namespace ClassData.DataAccess
 {
     /// <summary>
-    /// Download, Unzip, Parse, Make SCT2, Make Airports.xml, and Make Lables sector Files from FAA APT data.
+    /// Parse, Make SCT2, Make Airports.xml, and Make Lables sector Files from FAA APT data.
     /// </summary>
     public class GetAptData
     {
@@ -31,8 +31,7 @@ namespace ClassData.DataAccess
         /// <param name="effectiveDate">Airac Effective Date, Format: "YYYY-MM-DD"</param>
         public void APTQuarterbackFunc(string effectiveDate, string artcc, string color) 
         {
-            DownloadAptData(effectiveDate);
-            ParseAptData();
+            ParseAptData(effectiveDate);
             WriteAptISR(artcc);
             WriteAptSctData();
 
@@ -47,8 +46,7 @@ namespace ClassData.DataAccess
             //ParseWxStationData(color);
             //WriteWxStationSctData();
 
-            DownloadAltWxStation();
-            ParseAndWriteWxStation();
+            ParseAndWriteWxStation(effectiveDate);
             WriteWxXmlOutput();
             //WriteAltWxStation();
         }
@@ -148,8 +146,8 @@ namespace ClassData.DataAccess
                     {
 
                         int heading = int.Parse(runway.BaseRwyHdg);
-                        double latIn = double.Parse(GlobalConfig.createDecFormat(runway.BaseStartLat, true));
-                        double lonIn = double.Parse(GlobalConfig.createDecFormat(runway.BaseStartLon, true));
+                        double latIn = double.Parse(GlobalConfig.CreateDecFormat(runway.BaseStartLat, true));
+                        double lonIn = double.Parse(GlobalConfig.CreateDecFormat(runway.BaseStartLon, true));
 
                         //double dn = 400;
                         //double de = 400;
@@ -195,7 +193,7 @@ namespace ClassData.DataAccess
 
         }
 
-        private void ParseAndWriteWxStation()
+        private void ParseAndWriteWxStation(string effectiveDate)
         {
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
 
@@ -206,7 +204,7 @@ namespace ClassData.DataAccess
             string id;
             string final; 
 
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\altWxStation.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_WXSTATIONS.txt"))
             {
                 if (line != string.Empty && line[0] != '!' && line.Length > 80 && line.Substring(62, 1) == "X")
                 {
@@ -271,7 +269,7 @@ namespace ClassData.DataAccess
 
                         if (splitValue.Count >= 3)
                         {
-                            string printString = $"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{GlobalConfig.createDecFormat(splitValue[0], true)}\" Lon=\"{GlobalConfig.createDecFormat(splitValue[1], true)}\" Lines={line.Substring(0, line.LastIndexOf('"') + 1)} />";
+                            string printString = $"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{GlobalConfig.CreateDecFormat(splitValue[0], true)}\" Lon=\"{GlobalConfig.CreateDecFormat(splitValue[1], true)}\" Lines={line.Substring(0, line.LastIndexOf('"') + 1)} />";
                             sb.AppendLine(printString);
                         }
                     }
@@ -282,31 +280,6 @@ namespace ClassData.DataAccess
             sb.AppendLine("        </GeoMapObject>");
 
             File.WriteAllText(saveFilePath, sb.ToString());
-        }
-
-        private void DownloadAltWxStation()
-        {
-            // Create Web Client to connect to FAA
-            var client = new WebClient();
-
-            // Download the APT.ZIP file from FAA
-            client.DownloadFile($"https://www.aviationweather.gov/docs/metar/stations.txt", $"{GlobalConfig.tempPath}\\altWxStation.txt");
-        }
-
-        /// <summary>
-        /// Download and unzip the FAA Data
-        /// </summary>
-        /// <param name="effectiveDate">Airac Effective Date, Format: "YYYY-MM-DD"</param>
-        private void DownloadAptData(string effectiveDate)
-        {
-            // Create Web Client to connect to FAA
-            var client = new WebClient();
-
-            // Download the APT.ZIP file from FAA
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip", $"{GlobalConfig.tempPath}\\apt.zip");
-
-            // Unzip FAA apt.zip
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\apt.zip", $"{GlobalConfig.tempPath}\\apt");
         }
 
         /// <summary>
@@ -328,7 +301,7 @@ namespace ClassData.DataAccess
         /// <summary>
         /// Parse through the apt.txt file from the FAA
         /// </summary>
-        private void ParseAptData()
+        private void ParseAptData(string effectiveDate)
         {
             // Characters to be removed from each line TRAILING AND LEADING
             char[] removeChars = { ' ', '.' };
@@ -337,7 +310,7 @@ namespace ClassData.DataAccess
             AptModel airport = null ;
 
             // Read the apt.txt file
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\apt\\APT.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_APT\\APT.txt"))
             {
                 // If the line starts with "APT" create our Airport Model.
                 if (line.Substring(0, 3) == "APT")
@@ -367,8 +340,8 @@ namespace ClassData.DataAccess
                     airport.Ctaf = line.Substring(988, 7).Trim(removeChars);
                     airport.Icao = line.Substring(1210, 7).Trim(removeChars);
                     airport.Lon = GlobalConfig.CorrectLatLon(line.Substring(550, 15).Trim(removeChars), false, GlobalConfig.Convert);
-                    airport.Lat_Dec = GlobalConfig.createDecFormat(airport.Lat, true);
-                    airport.Lon_Dec = GlobalConfig.createDecFormat(airport.Lon, true);
+                    airport.Lat_Dec = GlobalConfig.CreateDecFormat(airport.Lat, true);
+                    airport.Lon_Dec = GlobalConfig.CreateDecFormat(airport.Lon, true);
                     airport.magVariation = line.Substring(586, 3).Trim();
 
                     // If Magnetic Variation is NOT empty Continue with the airport and runway building.
@@ -533,8 +506,8 @@ namespace ClassData.DataAccess
                         station.LonCorrect = GlobalConfig.CorrectLatLon(station.Lon, false, GlobalConfig.Convert);
 
                         // Set the stations Decimal Verison of Lat and Lon
-                        station.Dec_Lat = GlobalConfig.createDecFormat(station.LatCorrect, true);
-                        station.Dec_Lon = GlobalConfig.createDecFormat(station.LonCorrect, true);
+                        station.Dec_Lat = GlobalConfig.CreateDecFormat(station.LatCorrect, true);
+                        station.Dec_Lon = GlobalConfig.CreateDecFormat(station.LonCorrect, true);
 
                         // Add the Wx Station Model to our List of ALL station Models.
                         allWxStationsInData.Add(station);
@@ -631,13 +604,13 @@ namespace ClassData.DataAccess
                             Width = runwayModel.RwyWidth,
                             StartLoc = new StartLoc
                             {
-                                Lon = GlobalConfig.createDecFormat(runwayModel.BaseStartLon, true),
-                                Lat = GlobalConfig.createDecFormat(runwayModel.BaseStartLat, true)
+                                Lon = GlobalConfig.CreateDecFormat(runwayModel.BaseStartLon, true),
+                                Lat = GlobalConfig.CreateDecFormat(runwayModel.BaseStartLat, true)
                             },
                             EndLoc = new EndLoc
                             {
-                                Lon = GlobalConfig.createDecFormat(runwayModel.BaseEndLon, true),
-                                Lat = GlobalConfig.createDecFormat(runwayModel.BaseEndLat, true)
+                                Lon = GlobalConfig.CreateDecFormat(runwayModel.BaseEndLon, true),
+                                Lat = GlobalConfig.CreateDecFormat(runwayModel.BaseEndLat, true)
                             }
                         };
 
@@ -650,13 +623,13 @@ namespace ClassData.DataAccess
                             Width = runwayModel.RwyWidth,
                             StartLoc = new StartLoc
                             {
-                                Lon = GlobalConfig.createDecFormat(runwayModel.RecStartLon, true),
-                                Lat = GlobalConfig.createDecFormat(runwayModel.RecStartLat, true)
+                                Lon = GlobalConfig.CreateDecFormat(runwayModel.RecStartLon, true),
+                                Lat = GlobalConfig.CreateDecFormat(runwayModel.RecStartLat, true)
                             },
                             EndLoc = new EndLoc
                             {
-                                Lon = GlobalConfig.createDecFormat(runwayModel.RecEndLon, true),
-                                Lat = GlobalConfig.createDecFormat(runwayModel.RecEndLat, true)
+                                Lon = GlobalConfig.CreateDecFormat(runwayModel.RecEndLon, true),
+                                Lat = GlobalConfig.CreateDecFormat(runwayModel.RecEndLat, true)
                             }
                         };
 
