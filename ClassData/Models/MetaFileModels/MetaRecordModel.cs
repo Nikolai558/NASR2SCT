@@ -47,6 +47,10 @@ namespace ClassData.Models.MetaFileModels
 
         public string AmdtDate { get; set; }
 
+        public bool HasMultiplePages { get; set; } = false;
+
+        public int PageCount { get; set; } = 1;
+
         public string AliasCommand { get; private set; }
 
         public void CreateAliasComand(string AptIata) 
@@ -97,6 +101,7 @@ namespace ClassData.Models.MetaFileModels
                         MetaRecordModel tempRecordModel = new MetaRecordModel();
                         tempRecordModel.ChartCode = ChartCode;
                         tempRecordModel.PdfName = PdfName;
+                        tempRecordModel.FAAChartName = FAAChartName;
 
 
                         tempRecordModel.ChartName = individualChartName;
@@ -319,8 +324,6 @@ namespace ClassData.Models.MetaFileModels
 
         private string CreateAliasCommandHelper(string aproachTypeCode) 
         {
-
-
             string output;
             bool getTwoDigitRwy;
 
@@ -333,6 +336,14 @@ namespace ClassData.Models.MetaFileModels
                 return output;
             }
 
+            if (ChartName.Contains("CONT."))
+            {
+                HasMultiplePages = true;
+                PageCount += 1;
+
+                ChartName = ChartName.Replace($"{ChartName.Substring(ChartName.IndexOf(", C"))}", string.Empty);
+            }
+
             if (ChartName.IndexOf("RWY") == -1)
             {
                 output = aproachTypeCode;
@@ -341,17 +352,35 @@ namespace ClassData.Models.MetaFileModels
                 {
                     // Chartname has a -VARIANT
                     output += ChartName.Split('-')[1];
+
+                    if (HasMultiplePages)
+                    {
+                        output += $"{PageCount}";
+                    }
+
                     return output;
                 }
                 else if (ChartName.Split(' ').Count() >= 2)
                 {
                     // Chartname has a ' VARIANT'
                     output += ChartName.Split(' ')[1];
+
+                    if (HasMultiplePages)
+                    {
+                        output += $"{PageCount}";
+                    }
+
                     return output;
                 }
                 else
                 {
                     // Chartname has no VARIANT
+
+                    if (HasMultiplePages)
+                    {
+                        output += $"{PageCount}";
+                    }
+
                     return output;
                 }
             }
@@ -388,6 +417,12 @@ namespace ClassData.Models.MetaFileModels
                 {
                     output += ChartName.Substring(ChartName.Length - 1);
                 }
+
+                if (HasMultiplePages)
+                {
+                    output += $"{PageCount}";
+                }
+
                 return output;
             }
             else
@@ -397,6 +432,12 @@ namespace ClassData.Models.MetaFileModels
                 {
                     // Chart RWY does NOT have multiple designators.
                     output += ChartName.Substring(ChartName.Length - 2);
+
+                    if (HasMultiplePages)
+                    {
+                        output += $"{PageCount}";
+                    }
+
                     return output;
                 }
                 else
@@ -424,8 +465,14 @@ namespace ClassData.Models.MetaFileModels
                             output += designator.Substring(designator.Length - 2);
                         }
 
+                        if (HasMultiplePages)
+                        {
+                            output += $"{PageCount}";
+                        }
+
                         tempCount += 1;
                     }
+
                     return output;
                 }
             }

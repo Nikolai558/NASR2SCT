@@ -146,8 +146,15 @@ namespace NASARData
             {
                 foreach (string fileName in allURLs.Keys)
                 {
-                    client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
-                    DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
+                    // TODO - We may not want to keep the data. Might want to remove this and just download it anyways.
+                    // This Data will ALWAYS get removed when user clicks "START" 
+                    // This is pointless but I will keep in for debuging purposes.
+
+                    if (!File.Exists($"{tempPath}\\{fileName}"))
+                    {
+                        client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
+                        DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
+                    }
                 }
             }
         }
