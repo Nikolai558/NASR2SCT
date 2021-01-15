@@ -28,6 +28,7 @@ namespace NASR_GUI
             Application.SetCompatibleTextRenderingDefault(false);
 
             GlobalConfig.CheckTempDir(true);
+            //GlobalConfig.CheckTempDir();
 
             //GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
             //ParseMeta.QuarterbackFunc();
@@ -37,8 +38,6 @@ namespace NASR_GUI
 
             // Check Current Program Against Github, if different ask user if they want to update.
             CheckVersion();
-
-            GlobalConfig.CheckTempDir();
 
             // Start the application
             Application.Run(new MainForm());
@@ -202,7 +201,7 @@ namespace NASR_GUI
                 ":CHK\n" +
                 $"IF EXIST \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\" goto FOUND\n" +
                 "SET /A COUNT=%COUNT% + 1\n" +
-                "IF %COUNT% GEQ 6 GOTO FOUND\n" +
+                "IF %COUNT% GEQ 12 GOTO FOUND\n" +
                 "PING 127.0.0.1 -n 3 >nul\n" +
                 "GOTO CHK\n\n" +
                 ":FOUND\n" +

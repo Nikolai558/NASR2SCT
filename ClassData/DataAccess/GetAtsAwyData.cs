@@ -27,36 +27,19 @@ namespace ClassData.DataAccess
         /// <param name="effectiveDate">Format: YYYY-MM-DD</param>
         public void AWYQuarterbackFunc(string effectiveDate)
         {
-            DownloadAwyData(effectiveDate);
-            ParseAtsData();
+            ParseAtsData(effectiveDate);
             WriteAwySctData();
             WriteAwyAlias();
         }
 
         /// <summary>
-        /// Download the ATS Awy data from the FAA.
-        /// </summary>
-        /// <param name="effectiveDate">Format: YYYY-MM-DD</param>
-        private void DownloadAwyData(string effectiveDate)
-        {
-            // Create Web Client to Connect to the FAA website.
-            var client = new WebClient();
-
-            // Download the AWY Zip File
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip", $"{GlobalConfig.tempPath}\\atsAwy.zip");
-
-            // Unzip the File we just downloaded
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\atsAwy.zip", $"{GlobalConfig.tempPath}\\atsAwy");
-        }
-
-        /// <summary>
         /// Parse the ATS Data from the FAA
         /// </summary>
-        private void ParseAtsData()
+        private void ParseAtsData(string effectiveDate)
         {
             atsAwyPointModel atsPoint = new atsAwyPointModel();
 
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\atsAwy\\ATS.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_ATS\\ATS.txt"))
             {
                 if (line.Substring(0, 4) == "ATS1")
                 {
@@ -93,10 +76,10 @@ namespace ClassData.DataAccess
                     
 
                     atsPoint.Name = line.Substring(25, 40).Trim();
-                    atsPoint.Lat = new GlobalConfig().CorrectLatLon(line.Substring(109, 14).Trim(), true, GlobalConfig.Convert);
-                    atsPoint.Lon = new GlobalConfig().CorrectLatLon(line.Substring(123, 14).Trim(), false, GlobalConfig.Convert);
-                    atsPoint.Dec_Lat = new GlobalConfig().createDecFormat(atsPoint.Lat, true);
-                    atsPoint.Dec_Lon = new GlobalConfig().createDecFormat(atsPoint.Lon, true);
+                    atsPoint.Lat = GlobalConfig.CorrectLatLon(line.Substring(109, 14).Trim(), true, GlobalConfig.Convert);
+                    atsPoint.Lon = GlobalConfig.CorrectLatLon(line.Substring(123, 14).Trim(), false, GlobalConfig.Convert);
+                    atsPoint.Dec_Lat = GlobalConfig.CreateDecFormat(atsPoint.Lat, true);
+                    atsPoint.Dec_Lon = GlobalConfig.CreateDecFormat(atsPoint.Lon, true);
 
                     if (line.Substring(65, 25).Trim() == "NDB")
                     {

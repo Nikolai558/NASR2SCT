@@ -16,6 +16,7 @@ using System.Reflection;
 using ClassData.DataAccess;
 using NASRData.DataAccess;
 using System.Net;
+using ClassData.Models.MetaFileModels;
 
 namespace NASR_GUI
 {
@@ -26,8 +27,6 @@ namespace NASR_GUI
         public MainForm()
         {
             InitializeComponent();
-
-            GlobalConfig.CheckTempDir();
 
             // It should grab from the assembily info. 
             this.Text = $"NASR 2 SCT - V{GlobalConfig.ProgramVersion}";
@@ -125,7 +124,7 @@ namespace NASR_GUI
                 GlobalConfig.outputDirectory += "\\";
             }
 
-            GlobalConfig.createDirectories();
+            GlobalConfig.CreateDirectories();
 
             GlobalConfig.WriteTestSctFile();
 
@@ -158,7 +157,6 @@ namespace NASR_GUI
             processingDataLabel.Enabled = true;
 
             startParsing();
-            GlobalConfig.CheckTempDir();
         }
 
         private void runAgainButton_Click(object sender, EventArgs e)
@@ -230,6 +228,8 @@ namespace NASR_GUI
 
         private void Worker_StartParsingDoWork(object sender, DoWorkEventArgs e)
         {
+            GlobalConfig.CheckTempDir();
+
             string facilityID;
 
             if (currentAiracSelection.Checked)
@@ -243,9 +243,13 @@ namespace NASR_GUI
 
             facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
 
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Downloading Req. Files");
+            GlobalConfig.DownloadAllFiles(GlobalConfig.airacEffectiveDate, AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]);
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Unzipping Files");
+            GlobalConfig.UnzipAllDownloaded();
+
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing DPs and STARs");
-            //processingDataLabel.Text = "Processing DPs and STARs";
-            //processingDataLabel.Refresh();
             GetStarDpData ParseStarDp = new GetStarDpData();
             ParseStarDp.StarDpQuaterBackFunc(GlobalConfig.airacEffectiveDate);
 
@@ -265,60 +269,42 @@ namespace NASR_GUI
             {
                 // Don't Parse Meta File
             }
-            
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Fixes");
-            //processingDataLabel.Text = "Processing Fixes";
-            //processingDataLabel.Refresh();
             GetFixData ParseFixes = new GetFixData();
             ParseFixes.FixQuarterbackFunc(GlobalConfig.airacEffectiveDate);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Boundaries");
-            //processingDataLabel.Text = "Processing Boundaries";
-            //processingDataLabel.Refresh();
             GetArbData ParseArb = new GetArbData();
             ParseArb.ArbQuarterbacFunc(GlobalConfig.airacEffectiveDate);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airways");
-            //processingDataLabel.Text = "Processing Airways";
             GlobalConfig.CreateAwyGeomapHeadersAndEnding(true);
 
-            //processingDataLabel.Refresh();
             GetAwyData ParseAWY = new GetAwyData();
             ParseAWY.AWYQuarterbackFunc(GlobalConfig.airacEffectiveDate);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing ATS Airways");
-            //processingDataLabel.Text = "Processing ATS Airways";
-            //processingDataLabel.Refresh();
             GetAtsAwyData ParseAts = new GetAtsAwyData();
             ParseAts.AWYQuarterbackFunc(GlobalConfig.airacEffectiveDate);
             GlobalConfig.CreateAwyGeomapHeadersAndEnding(false);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing NDBs");
-            //processingDataLabel.Text = "Processing NDBs";
-            //processingDataLabel.Refresh();
             GetNavData ParseNDBs = new GetNavData();
             ParseNDBs.NAVQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
-            //processingDataLabel.Text = "Processing Airports";
-            //processingDataLabel.Refresh();
             GetAptData ParseAPT = new GetAptData();
             ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID, "11579568");
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Waypoints XML");
-            //processingDataLabel.Text = "Processing Waypoints XML";
-            //processingDataLabel.Refresh();
             GlobalConfig.WriteWaypointsXML();
             GlobalConfig.AppendCommentToXML(GlobalConfig.airacEffectiveDate);
             GlobalConfig.WriteNavXmlOutput();
-            //GlobalConfig.WriteAptXmlOutput();
         }
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            GlobalConfig.CheckTempDir();
-
             processingDataLabel.Text = "Complete";
             processingDataLabel.Refresh();
 
@@ -336,8 +322,6 @@ namespace NASR_GUI
 
         private void getAiracDate() 
         {
-            GlobalConfig.CheckTempDir();
-
             //GlobalConfig.GetAiracDateFromFAA();
             var Worker = new BackgroundWorker();
             Worker.RunWorkerCompleted += Worker_RunWorkerCompleted;

@@ -22,32 +22,16 @@ namespace ClassData.DataAccess
 
         public void StarDpQuaterBackFunc(string EffectiveDate) 
         {
-            DownloadStarDp(EffectiveDate);
-            ParseStarDp();
+            ParseStarDp(EffectiveDate);
             //WriteSctData();
             WriteGeoMap();
             WriteAlias();
             WriteSctDiagrams();
         }
 
-        private void DownloadStarDp(string effectiveDate) 
+        private void ParseStarDp(string effectiveDate)
         {
-            // Web Client used to connect to the FAA website.
-            var client = new WebClient();
-
-            // Download the Fix Data
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip", $"{GlobalConfig.tempPath}\\stardp.zip");
-
-            // Extract the ZIP file that we just downloaded.
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\stardp.zip", $"{GlobalConfig.tempPath}\\stardp");
-
-        }
-
-        private void ParseStarDp()
-        {
-            
-
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\stardp\\STARDP.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_STARDP\\STARDP.txt"))
             {
 
                 string procId = line.Substring(0, 5);
@@ -99,8 +83,6 @@ namespace ClassData.DataAccess
             allStarGeoMaps.AppendLine("          <LineDefaults Bcg=\"18\" Filters=\"18\" Style=\"Solid\" Thickness=\"1\" />");
             allStarGeoMaps.AppendLine("          <Elements>");
 
-            GlobalConfig Gb = new GlobalConfig();
-
             bool newSeq;
             foreach (string procKey in procedures.Keys)
             {
@@ -146,11 +128,11 @@ namespace ClassData.DataAccess
                     {
                         if (point.Type == "S")
                         {
-                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.CreateDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.CreateDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.CreateDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.CreateDecFormat(point.Lon, true)}\" />");
                         }
                         else
                         {
-                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.CreateDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.CreateDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.CreateDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.CreateDecFormat(point.Lon, true)}\" />");
                         }
 
                         prevPoint = point;
@@ -588,8 +570,6 @@ namespace ClassData.DataAccess
             StringBuilder individualData;
             StringBuilder aliasComand;
 
-            GlobalConfig Gb = new GlobalConfig();
-
             bool newSeq;
             foreach (string procKey in procedures.Keys)
             {
@@ -647,12 +627,12 @@ namespace ClassData.DataAccess
                         {
                             combinedDataStar.AppendLine($"                          {prevPoint.Lat} {prevPoint.Lon} {point.Lat} {point.Lon}; {prevPoint.PointId} {point.PointId}");
 
-                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allStarGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.CreateDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.CreateDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.CreateDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.CreateDecFormat(point.Lon, true)}\" />");
                         }
                         else
                         {
                             combinedDataDp.AppendLine($"                          {prevPoint.Lat} {prevPoint.Lon} {point.Lat} {point.Lon}; {prevPoint.PointId} {point.PointId}");
-                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{Gb.createDecFormat(prevPoint.Lat, true)}\" StartLon=\"{Gb.createDecFormat(prevPoint.Lon, true)}\" EndLat=\"{Gb.createDecFormat(point.Lat, true)}\" EndLon=\"{Gb.createDecFormat(point.Lon, true)}\" />");
+                            allDpGeoMaps.AppendLine($"            <Element xsi:type=\"Line\" Filters=\"\" StartLat=\"{GlobalConfig.CreateDecFormat(prevPoint.Lat, true)}\" StartLon=\"{GlobalConfig.CreateDecFormat(prevPoint.Lon, true)}\" EndLat=\"{GlobalConfig.CreateDecFormat(point.Lat, true)}\" EndLon=\"{GlobalConfig.CreateDecFormat(point.Lon, true)}\" />");
 
 
                         }

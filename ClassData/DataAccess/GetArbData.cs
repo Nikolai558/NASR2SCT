@@ -18,34 +18,21 @@ namespace ClassData.DataAccess
 
         public void ArbQuarterbacFunc(string effectiveDate) 
         {
-            DownloadAptData(effectiveDate);
-            ParseArb();
+            ParseArb(effectiveDate);
             WriteArbSct();
         }
 
-        private void DownloadAptData(string effectiveDate)
+        private void ParseArb(string effectiveDate) 
         {
-            // Create Web Client to connect to FAA
-            var client = new WebClient();
-
-            // Download the APT.ZIP file from FAA
-            client.DownloadFile($"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip", $"{GlobalConfig.tempPath}\\arb.zip");
-
-            // Unzip FAA apt.zip
-            ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\arb.zip", $"{GlobalConfig.tempPath}\\arb");
-        }
-
-        private void ParseArb() 
-        {
-            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\arb\\ARB.txt"))
+            foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_ARB\\ARB.txt"))
             {
                 ArbModel arb = new ArbModel
                 {
                     Identifier = line.Substring(0, 4).Trim(),
                     CenterName = line.Substring(12, 40).Trim(),
                     DecodeName = line.Substring(52, 10).Trim(),
-                    Lat = new GlobalConfig().CorrectLatLon(line.Substring(62, 14).Trim(), true, GlobalConfig.Convert),
-                    Lon = new GlobalConfig().CorrectLatLon(line.Substring(76, 14).Trim(), false, GlobalConfig.Convert),
+                    Lat = GlobalConfig.CorrectLatLon(line.Substring(62, 14).Trim(), true, GlobalConfig.Convert),
+                    Lon = GlobalConfig.CorrectLatLon(line.Substring(76, 14).Trim(), false, GlobalConfig.Convert),
                     Description = line.Substring(90, 300).Trim(),
                     Sequence = line.Substring(390, 6).Trim(),
                     Legal = line.Substring(396, 1).Trim()
