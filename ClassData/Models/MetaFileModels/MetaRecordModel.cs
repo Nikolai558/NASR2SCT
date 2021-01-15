@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -51,6 +52,8 @@ namespace ClassData.Models.MetaFileModels
 
         public int PageCount { get; set; } = 1;
 
+        public string Variant { get; set; }
+
         public string AliasCommand { get; private set; }
 
         public void CreateAliasComand(string AptIata) 
@@ -84,8 +87,8 @@ namespace ClassData.Models.MetaFileModels
             {
                 if (ChartName.IndexOf(@" OR ") != -1)
                 {
-
                     string runwayTempVar;
+                    List<MetaRecordModel> tempRecordList = new List<MetaRecordModel>();
 
                     if (ChartName.IndexOf("RWY") == -1)
                     {
@@ -110,9 +113,55 @@ namespace ClassData.Models.MetaFileModels
                         {
                             tempRecordModel.ChartName += " " + runwayTempVar;
                         }
-
+                        
                         tempRecordModel.CreateAliasComand(AptIata);
-                        AliasCommand += tempRecordModel.AliasCommand;
+
+                        tempRecordList.Add(tempRecordModel);
+                        //AliasCommand += tempRecordModel.AliasCommand;
+                    }
+
+                    List<int> indexesMissingVariant = new List<int>();
+                    int count = 0;
+                    string tempVariant = "";
+                    foreach (MetaRecordModel tempRcord in tempRecordList)
+                    {
+                        if (string.IsNullOrEmpty(tempRcord.Variant))
+                        {
+                            indexesMissingVariant.Add(count);
+                        }
+                        else
+                        {
+                            tempVariant = tempRcord.Variant;
+                        }
+                        count += 1;
+                    }
+
+                    if (indexesMissingVariant.Count >= 1 && indexesMissingVariant.Count != tempRecordList.Count)
+                    {
+                        foreach (int missingIndex in indexesMissingVariant)
+                        {
+                            if (char.IsDigit(tempRecordList[missingIndex].AliasCommand[tempRecordList[missingIndex].AliasCommand.Length - 1]) &&
+                                char.IsDigit(tempRecordList[missingIndex].AliasCommand[tempRecordList[missingIndex].AliasCommand.Length - 2]))
+                            {
+                                string firstCommandPart = tempRecordList[missingIndex].AliasCommand.Substring(0, 2);
+                                string middleCommandPart = tempVariant;
+                                string endCommandPart = tempRecordList[missingIndex].AliasCommand.Substring(tempRecordList[missingIndex].AliasCommand.Length - 1);
+
+                                tempRecordList[missingIndex].AliasCommand = firstCommandPart + middleCommandPart + endCommandPart;
+                            }
+                            else
+                            {
+                                tempRecordList[missingIndex].AliasCommand = tempRecordList[missingIndex].AliasCommand.Insert(2, tempVariant);
+                            }
+
+                            // TODO - Might want to remove this
+                            File.AppendAllText($"{NASARData.GlobalConfig.tempPath}\\MisMatchingVariants.txt", $"APT IATA: {AptIata} - {tempRecordList[missingIndex].FAAChartName}\n");
+                        }
+                    }
+                    
+                    foreach (MetaRecordModel tempRecord in tempRecordList)
+                    {
+                        AliasCommand += tempRecord.AliasCommand;
                     }
                 }
                 else if (PdfName.IndexOf("_VIS") != -1)
@@ -351,6 +400,7 @@ namespace ClassData.Models.MetaFileModels
                 if (ChartName.IndexOf("-") != -1)
                 {
                     // Chartname has a -VARIANT
+                    Variant = ChartName.Split('-')[1];
                     output += ChartName.Split('-')[1];
 
                     if (HasMultiplePages)
@@ -363,6 +413,7 @@ namespace ClassData.Models.MetaFileModels
                 else if (ChartName.Split(' ').Count() >= 2)
                 {
                     // Chartname has a ' VARIANT'
+                    Variant = ChartName.Split(' ')[1];
                     output += ChartName.Split(' ')[1];
 
                     if (HasMultiplePages)
@@ -392,12 +443,14 @@ namespace ClassData.Models.MetaFileModels
                 getTwoDigitRwy = false;
                 // Chartname has '-' so it HAS a variant, ALWAYS.
                 // add the varrient to output.
+                Variant = ChartName.Split('-')[1][0].ToString();
                 output += ChartName.Split('-')[1][0];
             }
             else if (ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ').Count() > 2)
             {
                 getTwoDigitRwy = false;
                 // Chartname HAS variant
+                Variant = ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ')[1];
                 output += ChartName.Substring(0, ChartName.IndexOf("RWY")).Split(' ')[1];
             }
             else
