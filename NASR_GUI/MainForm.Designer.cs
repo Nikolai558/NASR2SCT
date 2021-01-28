@@ -52,6 +52,9 @@
             this.instructionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.outputLocationLabel = new System.Windows.Forms.Label();
+            this.outputDirectoryLabel = new System.Windows.Forms.Label();
+            this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
             this.startGroupBox.SuspendLayout();
@@ -248,7 +251,7 @@
             // 
             this.processingDataLabel.Enabled = false;
             this.processingDataLabel.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.processingDataLabel.Location = new System.Drawing.Point(6, 15);
+            this.processingDataLabel.Location = new System.Drawing.Point(6, 22);
             this.processingDataLabel.Name = "processingDataLabel";
             this.processingDataLabel.Size = new System.Drawing.Size(545, 68);
             this.processingDataLabel.TabIndex = 15;
@@ -258,13 +261,15 @@
             // 
             // processingGroupBox
             // 
+            this.processingGroupBox.Controls.Add(this.outputDirectoryLabel);
+            this.processingGroupBox.Controls.Add(this.outputLocationLabel);
             this.processingGroupBox.Controls.Add(this.exitButton);
             this.processingGroupBox.Controls.Add(this.runAgainButton);
             this.processingGroupBox.Controls.Add(this.processingDataLabel);
             this.processingGroupBox.Enabled = false;
-            this.processingGroupBox.Location = new System.Drawing.Point(114, 132);
+            this.processingGroupBox.Location = new System.Drawing.Point(114, 127);
             this.processingGroupBox.Name = "processingGroupBox";
-            this.processingGroupBox.Size = new System.Drawing.Size(557, 140);
+            this.processingGroupBox.Size = new System.Drawing.Size(557, 145);
             this.processingGroupBox.TabIndex = 3;
             this.processingGroupBox.TabStop = false;
             this.processingGroupBox.Visible = false;
@@ -274,7 +279,7 @@
             this.exitButton.Enabled = false;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.exitButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(315, 86);
+            this.exitButton.Location = new System.Drawing.Point(315, 93);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(182, 34);
             this.exitButton.TabIndex = 17;
@@ -288,7 +293,7 @@
             this.runAgainButton.Enabled = false;
             this.runAgainButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.runAgainButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.runAgainButton.Location = new System.Drawing.Point(60, 86);
+            this.runAgainButton.Location = new System.Drawing.Point(60, 93);
             this.runAgainButton.Name = "runAgainButton";
             this.runAgainButton.Size = new System.Drawing.Size(182, 34);
             this.runAgainButton.TabIndex = 16;
@@ -304,7 +309,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.instructionsToolStripMenuItem,
             this.creditsToolStripMenuItem,
-            this.changeLogToolStripMenuItem});
+            this.changeLogToolStripMenuItem,
+            this.uninstallToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(785, 24);
@@ -339,6 +345,36 @@
             this.changeLogToolStripMenuItem.Text = "Change Log";
             this.changeLogToolStripMenuItem.Click += new System.EventHandler(this.changeLogToolStripMenuItem_Click);
             // 
+            // outputLocationLabel
+            // 
+            this.outputLocationLabel.AutoSize = true;
+            this.outputLocationLabel.Location = new System.Drawing.Point(507, 145);
+            this.outputLocationLabel.Name = "outputLocationLabel";
+            this.outputLocationLabel.Size = new System.Drawing.Size(152, 25);
+            this.outputLocationLabel.TabIndex = 18;
+            this.outputLocationLabel.Text = "Output Location:";
+            this.outputLocationLabel.Visible = false;
+            // 
+            // outputDirectoryLabel
+            // 
+            this.outputDirectoryLabel.AutoSize = true;
+            this.outputDirectoryLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.outputDirectoryLabel.Location = new System.Drawing.Point(522, 170);
+            this.outputDirectoryLabel.Name = "outputDirectoryLabel";
+            this.outputDirectoryLabel.Size = new System.Drawing.Size(96, 21);
+            this.outputDirectoryLabel.TabIndex = 19;
+            this.outputDirectoryLabel.Text = "<Directory>";
+            this.outputDirectoryLabel.Visible = false;
+            // 
+            // uninstallToolStripMenuItem
+            // 
+            this.uninstallToolStripMenuItem.Font = new System.Drawing.Font("Romantic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.uninstallToolStripMenuItem.ForeColor = System.Drawing.SystemColors.Control;
+            this.uninstallToolStripMenuItem.Name = "uninstallToolStripMenuItem";
+            this.uninstallToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
+            this.uninstallToolStripMenuItem.Text = "Uninstall";
+            this.uninstallToolStripMenuItem.Click += new System.EventHandler(this.uninstallToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
@@ -370,6 +406,7 @@
             this.startGroupBox.ResumeLayout(false);
             this.startGroupBox.PerformLayout();
             this.processingGroupBox.ResumeLayout(false);
+            this.processingGroupBox.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -402,6 +439,9 @@
         private System.Windows.Forms.ToolStripMenuItem instructionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeLogToolStripMenuItem;
+        private System.Windows.Forms.Label outputDirectoryLabel;
+        private System.Windows.Forms.Label outputLocationLabel;
+        private System.Windows.Forms.ToolStripMenuItem uninstallToolStripMenuItem;
     }
 }
 

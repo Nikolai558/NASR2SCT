@@ -1,6 +1,18 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.7.4:
+  - ODP procedures now have the IATA in the command (.{apt iata}{computer code}C)
+  - Downloads All Required Files Together
+  - Unzips All Required Folders Together
+  - Clears %temp%\NASR2SCT directory when "Start" button is clicked. Then continues to Downloading Files.
+	  - Previously the %temp%\NASR2SCT directory was cleared before program starts, and after it finishes.
+  - IAP Chart Recall Multiple Pages Bug #70 fixed.
+    - Only insert page number if IAP has more than 1 page.
+    - Normal IAP command with (page #)C {.(apt iata)(scratch pad code)(page #)C}
+  - IAP Variant Naming Conventions Bug #71
+	  - If there are multiple IAP's in one chart (i.e. "ILS Y *OR* LOC/DME RWY 06" ; "VOR *OR* GPS-B") and one of them has a variant but the other does not, the scratch pad code will be as if both of them had the same variant.
+
 - ## Version 0.7.3:
   - Fixed bug #67: Chart Recall Alias Commands
   - "Processing Update" Screen Will no longer show. (attempting to fix auto updater)

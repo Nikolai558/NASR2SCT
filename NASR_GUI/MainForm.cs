@@ -217,13 +217,31 @@ namespace NASR_GUI
             }
         }
 
-        private void startParsing() 
+        private void startParsing()
         {
+            AdjustProcessingBox();
+
             var worker = new BackgroundWorker();
             worker.RunWorkerCompleted += Worker_StartParsingCompleted;
             worker.DoWork += Worker_StartParsingDoWork;
 
             worker.RunWorkerAsync();
+        }
+
+        private void AdjustProcessingBox() 
+        {
+            outputDirectoryLabel.Text = GlobalConfig.outputDirectory;
+            outputDirectoryLabel.Visible = true;
+            outputLocationLabel.Visible = true;
+
+            processingGroupBox.Location = new Point(114, 59);
+            processingGroupBox.Size = new Size(557, 213);
+
+            outputLocationLabel.Location = new Point(9, 22);
+            outputDirectoryLabel.Location = new Point(24, 47);
+            processingDataLabel.Location = new Point(6, 102);
+            runAgainButton.Location = new Point(60, 173);
+            exitButton.Location = new Point(315, 173);
         }
 
         private void Worker_StartParsingDoWork(object sender, DoWorkEventArgs e)
@@ -424,6 +442,20 @@ namespace NASR_GUI
 
                 MetaNotFoundForm frm = new MetaNotFoundForm();
                 frm.ShowDialog();
+            }
+        }
+
+        private void uninstallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Would you like to UNINSTALL NASR2SCT?", "Uninstall NASR2SCT", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                dialogResult = MessageBox.Show("Sory Not Implemented Yet", "Work In Progress", MessageBoxButtons.OK);
+                //throw new NotImplementedException();
+            }
+            else
+            {
+                //do something else
             }
         }
     }
