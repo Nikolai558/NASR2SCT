@@ -25,7 +25,7 @@ namespace ClassData.DataAccess
         private void ParseMetaFile() 
         {
 
-            string debugUrl = $"https://aeronav.faa.gov/d-tpp/2014/";
+            string baseURL = $"https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}/";
 
             StringBuilder aliasCommandSB = new StringBuilder();
             var xmlDoc = XDocument.Parse(File.ReadAllText($"{GlobalConfig.tempPath}\\{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}_FAA_Meta.xml"));
@@ -94,7 +94,7 @@ namespace ClassData.DataAccess
                             count += 1;
                             if (record.AliasCommand.IndexOf('/') == -1)
                             {
-                                aliasCommandSB.AppendLine($".{apt.AptIdent}{record.AliasCommand}{count}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                aliasCommandSB.AppendLine($".{apt.AptIdent}{record.AliasCommand}{count}C .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                             }
                             else
                             {
@@ -109,19 +109,19 @@ namespace ClassData.DataAccess
 
                                     if (strtrimed == "*")
                                     {
-                                        aliasCommandSB.AppendLine($".{apt.AptIdent}APDC .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}APDC .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                     else if (record.ChartCode == "TM" || record.ChartCode == "DVA")
                                     {
-                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strtrimed}C .OPENURL {debugUrl}{record.PdfName}#nameddest=({apt.AptIdent})  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strtrimed}C .OPENURL {baseURL}{record.PdfName}#nameddest=({apt.AptIdent})  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                     else if (record.ChartCode == "STAR" || record.ChartCode == "DP" || record.ChartCode == "ODP" && !string.IsNullOrEmpty(strtrimed))
                                     {
-                                        aliasCommandSB.AppendLine($".{strtrimed}{count}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{strtrimed}{count}C .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                     else if (!string.IsNullOrEmpty(strtrimed))
                                     {
-                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strtrimed}{count}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strtrimed}{count}C .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                 }
                             }
@@ -131,7 +131,7 @@ namespace ClassData.DataAccess
                             count = 1;
                             if (record.AliasCommand.IndexOf('/') == -1)
                             {
-                                aliasCommandSB.AppendLine($".{apt.AptIdent}{record.AliasCommand}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                aliasCommandSB.AppendLine($".{apt.AptIdent}{record.AliasCommand}C .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                             }
                             else
                             {
@@ -145,19 +145,19 @@ namespace ClassData.DataAccess
 
                                     if (strTrimmed == "*")
                                     {
-                                        aliasCommandSB.AppendLine($".{apt.AptIdent}APDC .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}APDC .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                     else if (record.ChartCode == "MIN")
                                     {
-                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strTrimmed}C .OPENURL {debugUrl}{record.PdfName}#nameddest=({apt.AptIdent})  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strTrimmed}C .OPENURL {baseURL}{record.PdfName}#nameddest=({apt.AptIdent})  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                     else if (record.ChartCode == "STAR" || record.ChartCode == "DP" || record.ChartCode == "ODP" && !string.IsNullOrEmpty(strTrimmed))
                                     {
-                                        aliasCommandSB.AppendLine($".{strTrimmed}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{strTrimmed}C .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                     else if (!string.IsNullOrEmpty(strTrimmed))
                                     {
-                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strTrimmed}C .OPENURL {debugUrl}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
+                                        aliasCommandSB.AppendLine($".{apt.AptIdent}{strTrimmed}C .OPENURL {baseURL}{record.PdfName}  ; {apt.AirportName}-{record.FAAChartName}");
                                     }
                                 }
                             }

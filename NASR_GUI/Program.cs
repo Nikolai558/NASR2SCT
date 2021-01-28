@@ -69,15 +69,15 @@ namespace NASR_GUI
 
                     //GlobalConfig.createDirectories(true);
 
-                    //processForm = new Processing();
-                    //processForm.Size = new Size(359, 194);
-                    //processForm.ChangeTitle("Downloading and Installing Update");
-                    //processForm.ChangeUpdatePanel(new Point(12, 12));
-                    //processForm.ChangeUpdatePanel(new Size(319, 131));
-                    //processForm.ChangeProcessingLabel("Processing Update");
-                    //processForm.ChangeProcessingLabel(new Point(45, 49));
+                    processForm = new Processing();
+                    processForm.Size = new Size(359, 194);
+                    processForm.ChangeTitle("Downloading and Installing Update");
+                    processForm.ChangeUpdatePanel(new Point(12, 12));
+                    processForm.ChangeUpdatePanel(new Size(319, 131));
+                    processForm.ChangeProcessingLabel("Processing Update");
+                    processForm.ChangeProcessingLabel(new Point(45, 49));
 
-                    //new Thread(() => processForm.ShowDialog()).Start();
+                    new Thread(() => processForm.ShowDialog()).Start();
                     //new Thread(() => new Processing().ShowDialog()).Start();
 
                     /////////////////////////// END TESTING - Checking to see if this is our problem code with the auto updater ///////////////////////////////////
