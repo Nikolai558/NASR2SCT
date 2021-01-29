@@ -2,11 +2,11 @@
 ## Pre-V1.0.0
 ---
 - ## Version 0.7.5:
-- Now Display the Output Directory #69
-- Uninstall Button ( WORK IN PROGRESS - NOT FUNCTIONAL YET) #73
-- Fixed Chart Recall Commands #75
+  - Now Display the Output Directory #69
+  - Uninstall Button ( WORK IN PROGRESS - NOT FUNCTIONAL YET) #73
+  - Fixed Chart Recall Commands #75
     - The AIRAC Cycle was Hardcoded in for debugging purposes. Correct Chart Recall Link is now exported.
-- When an Update is available, and the user selects "yes", a message will be displayed telling the user the update is processing. #56
+  - When an Update is available, and the user selects "yes", a message will be displayed telling the user the update is processing. #56
 
 - ## Version 0.7.4:
   - ODP procedures now have the IATA in the command (.{apt iata}{computer code}C)
