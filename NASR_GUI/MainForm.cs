@@ -17,6 +17,8 @@ using ClassData.DataAccess;
 using NASRData.DataAccess;
 using System.Net;
 using ClassData.Models.MetaFileModels;
+using ClassData.Models;
+using System.Diagnostics;
 
 namespace NASR_GUI
 {
@@ -313,12 +315,16 @@ namespace NASR_GUI
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
             GetAptData ParseAPT = new GetAptData();
-            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID, "11579568");
+            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Waypoints XML");
             GlobalConfig.WriteWaypointsXML();
             GlobalConfig.AppendCommentToXML(GlobalConfig.airacEffectiveDate);
             GlobalConfig.WriteNavXmlOutput();
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Checking Alias Commands");
+            AliasCheck aliasCheck = new AliasCheck();
+            aliasCheck.CheckForDuplicates(false, $"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt" );
         }
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -423,6 +429,8 @@ namespace NASR_GUI
             instructionsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             changeLogToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            uninstallToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+
 
 
         }
@@ -450,12 +458,148 @@ namespace NASR_GUI
             DialogResult dialogResult = MessageBox.Show("Would you like to UNINSTALL NASR2SCT?", "Uninstall NASR2SCT", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                dialogResult = MessageBox.Show("Sory Not Implemented Yet", "Work In Progress", MessageBoxButtons.OK);
-                //throw new NotImplementedException();
-            }
-            else
-            {
-                //do something else
+                // dialogResult = MessageBox.Show("Sory Not Implemented Yet", "Work In Progress", MessageBoxButtons.OK);
+                string uninstallBatchFileString = "@echo off\n"
+                        + "PING 127.0.0.1 - n 3 > nul\n"
+                        + "\n"
+                        + "TITLE NASR_2_SCT UNINSTALL\n"
+                        + "\n"
+                        + "SET /A NOT_FOUND_COUNT=0\n"
+                        + "\n"
+                        + "CD \"%temp%\"\n"
+                        + "	if NOT exist NASR2SCT (\n"
+                        + "		SET /A NOT_FOUND_COUNT=%NOT_FOUND_COUNT% + 1\n"
+                        + "		SET NASR_TEMP_FOLDER=NOT_FOUND\n"
+                        + "	)\n"
+                        + "	\n"
+                        + "	if exist NASR2SCT (\n"
+                        + "		SET NASR_TEMP_FOLDER=FOUND\n"
+                        + "		RD /Q /S \"NASR2SCT\"\n"
+                        + "	)\n"
+                        + "\n"
+                        + "CD \"%userprofile%\\AppData\\Local\"\n"
+                        + "	if NOT exist NASR2SCT (\n"
+                        + "		SET /A NOT_FOUND_COUNT=%NOT_FOUND_COUNT% + 1\n"
+                        + "		SET NASR_APPDATA_FOLDER=NOT_FOUND\n"
+                        + "	)\n"
+                        + "	\n"
+                        + "	if exist NASR2SCT (\n"
+                        + "		SET NASR_APPDATA_FOLDER=FOUND\n"
+                        + "		RD /Q /S \"NASR2SCT\"\n"
+                        + "	)\n"
+                        + "\n"
+                        + "CD \"%userprofile%\\Desktop\"\n"
+                        + "	if NOT exist NASR2SCT.lnk (\n"
+                        + "		SET /A NOT_FOUND_COUNT=%NOT_FOUND_COUNT% + 1\n"
+                        + "		SET NASR_SHORTCUT=NOT_FOUND\n"
+                        + "	)\n"
+                        + "\n"
+                        + "	if exist NASR2SCT.lnk (\n"
+                        + "		SET NASR_SHORTCUT=FOUND\n"
+                        + "		DEL /Q \"NASR2SCT.lnk\"\n"
+                        + "	)\n"
+                        + "\n"
+                        + "IF %NOT_FOUND_COUNT%==0 SET UNINSTALL_STATUS=COMPLETE\n"
+                        + "IF %NOT_FOUND_COUNT%==1 SET UNINSTALL_STATUS=PARTIAL\n"
+                        + "IF %NOT_FOUND_COUNT%==2 SET UNINSTALL_STATUS=PARTIAL\n"
+                        + "IF %NOT_FOUND_COUNT%==3 SET UNINSTALL_STATUS=FAIL\n"
+                        + "\n"
+                        + "IF %UNINSTALL_STATUS%==COMPLETE GOTO UNINSTALLED\n"
+                        + "IF %UNINSTALL_STATUS%==PARTIAL GOTO UNINSTALLED\n"
+                        + "IF %UNINSTALL_STATUS%==FAIL GOTO FAILED\n"
+                        + "\n"
+                        + "CLS\n"
+                        + "\n"
+                        + ":UNINSTALLED\n"
+                        + "\n"
+                        + "ECHO.\n"
+                        + "ECHO.\n"
+                        + "ECHO SUCCESSFULLY UNINSTALLED THE FOLLOWING:\n"
+                        + "ECHO.\n"
+                        + "IF %NASR_TEMP_FOLDER%==FOUND ECHO        -temp\\NASR2SCT\n"
+                        + "IF %NASR_APPDATA_FOLDER%==FOUND ECHO        -AppData\\Local\\NASR2SCT\n"
+                        + "IF %NASR_SHORTCUT%==FOUND ECHO        -Desktop\\NASR2SCT Shortcut\n"
+                        + "\n"
+                        + ":FAILED\n"
+                        + "\n"
+                        + "IF NOT %NOT_FOUND_COUNT%==0 (\n"
+                        + "	ECHO.\n"
+                        + "	ECHO.\n"
+                        + "	ECHO.\n"
+                        + "	ECHO.\n"
+                        + "	IF %UNINSTALL_STATUS%==PARTIAL ECHO NOT ABLE TO COMPLETELY UNINSTALL BECAUSE THE FOLLOWING COULD NOT BE FOUND:\n"
+                        + "	IF %UNINSTALL_STATUS%==FAIL ECHO UNINSTALL FAILED COMPLETELY BECAUSE THE FOLLOWING COULD NOT BE FOUND:\n"
+                        + "	ECHO.\n"
+                        + "	IF %NASR_TEMP_FOLDER%==NOT_FOUND ECHO        -temp\\NASR2SCT\n"
+                        + "	IF %NASR_APPDATA_FOLDER%==NOT_FOUND ECHO        -AppData\\Local\\NASR2SCT\n"
+                        + "	IF %NASR_SHORTCUT%==NOT_FOUND (\n"
+                        + "		ECHO        -Desktop\\NASR2SCT Shortcut\n"
+                        + "		ECHO             --If the shortcut was renamed, delete the shortcut manually.\n"
+                        + "	)\n"
+                        + ")\n"
+                        + "\n"
+                        + "ECHO.\n"
+                        + "ECHO.\n"
+                        + "ECHO.\n"
+                        + "ECHO.\n"
+                        + "ECHO.\n"
+                        + "ECHO ...PRESS ANY KEY TO EXIT\n"
+                        + "\n"
+                        + "PAUSE>NUL\n";
+
+                File.WriteAllText($"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat", uninstallBatchFileString);
+
+
+
+                int ExitCode;
+                ProcessStartInfo ProcessInfo;
+                Process Process;
+
+                ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat\"");
+                ProcessInfo.CreateNoWindow = false;
+                ProcessInfo.UseShellExecute = false;
+
+                Process = Process.Start(ProcessInfo);
+                Process.WaitForExit();
+
+                ExitCode = Process.ExitCode;
+                Process.Close();
+
+
+                // TODO - COME BACK TO THIS 
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //List<string> directories = new List<string>() { $"{GlobalConfig.tempPath}", ""};
+
+
+                //foreach (string path in directories)
+                //{
+
+                //    if (Directory.Exists(path))
+                //    {
+                //        // This variable holds all information for the temp path ie. Directories and files.
+                //        DirectoryInfo di = new DirectoryInfo(path);
+
+                //        // Loop through the Files in our TempPath
+                //        foreach (FileInfo file in di.EnumerateFiles())
+                //        {
+                //            // Delete each file it finds inside of this directory. IE Temp Path
+                //            file.Delete();
+                //        }
+
+                //        // Loop through the Directories in our TempPath
+                //        foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                //        {
+                //            // Delete the folder it finds.
+                //            dir.Delete(true);
+                //        }
+                //    }
+                //}
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                File.Delete($"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat");
+
+                Environment.Exit(1);
             }
         }
     }
