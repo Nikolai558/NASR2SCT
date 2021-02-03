@@ -66,6 +66,7 @@
     <Compile Include="GlobalConfig.cs" />
     <Compile Include="Models\Airport.cs" />
     <Compile Include="Models\AirwayModel.cs" />
+    <Compile Include="Models\AliasCheck.cs" />
     <Compile Include="Models\ArbModel.cs" />
     <Compile Include="Models\AssetsModel.cs" />
     <Compile Include="Models\AtsAirwayModel.cs" />

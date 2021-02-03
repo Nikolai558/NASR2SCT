@@ -29,7 +29,7 @@ namespace ClassData.DataAccess
         /// Call all the needed functions.
         /// </summary>
         /// <param name="effectiveDate">Airac Effective Date, Format: "YYYY-MM-DD"</param>
-        public void APTQuarterbackFunc(string effectiveDate, string artcc, string color) 
+        public void APTQuarterbackFunc(string effectiveDate, string artcc) 
         {
             ParseAptData(effectiveDate);
             WriteAptISR(artcc);
@@ -434,6 +434,8 @@ namespace ClassData.DataAccess
             {
                 allAptModels.Add(airport);
             }
+
+            GlobalConfig.allAptModelsForCheck = allAptModels;
         }
 
         /// <summary>

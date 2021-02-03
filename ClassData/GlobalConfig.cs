@@ -24,7 +24,7 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
-        public static readonly string ProgramVersion = "0.7.5";
+        public static readonly string ProgramVersion = "0.7.6";
 
         public static string GithubVersion = "";
 
@@ -44,7 +44,9 @@ namespace NASARData
 
         public static StringBuilder AwyGeoMap = new StringBuilder();
         public static string AwyGeoMapFileName = "AWY_GEOMAP.xml";
-        
+
+        public static List<AptModel> allAptModelsForCheck = null;
+
         // XML Serializer for our Waypoints.xml file.
         private static XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Waypoints");
         public static XmlSerializer WaypointSerializer = new XmlSerializer(typeof(Waypoint[]), xmlRootAttribute);
