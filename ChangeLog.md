@@ -1,6 +1,11 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.7.6:
+  - Uninstall Button Functional #73
+  - Fixed Uninstall Hieroglyphics #77
+  - Output Duplicate Alias Commands Text File #78
+
 - ## Version 0.7.5:
   - Now Display the Output Directory #69
   - Uninstall Button ( WORK IN PROGRESS - NOT FUNCTIONAL YET) #73
