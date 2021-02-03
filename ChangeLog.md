@@ -5,6 +5,7 @@
   - Uninstall Button Functional #73
   - Fixed Uninstall Hieroglyphics #77
   - Output Duplicate Alias Commands Text File #78
+  - NOTE: UPDATING FROM 0.7.5 to 0.7.6 will NOT WORK. Manual installation of 0.7.6 is REQUIRED! 
 
 - ## Version 0.7.5:
   - Now Display the Output Directory #69
