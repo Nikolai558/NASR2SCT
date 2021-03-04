@@ -1,0 +1,12 @@
+0.7.6
+
+Release Candidate V-0.7.6
+
+## Instructions to install:
+1. Download the zip file named "NASR2SCT-0.7.6.zip"
+2. Unzip the file
+3. Keep all files inside it together. 
+4. Run the Setup.exe
+
+## Change log:
+- 
