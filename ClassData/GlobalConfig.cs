@@ -68,6 +68,16 @@ namespace NASARData
         // Temp path for the user. ie: C:\Users\nik\AppData\Local\Temp\NASR_TO_SCT
         public static readonly string tempPath = $"{Path.GetTempPath()}NASR2SCT";
 
+        public static List<MetaAirportModel> AllMetaFileAirports = new List<MetaAirportModel>();
+
+        public static string facilityID;
+
+        public static List<string> allArtcc = new List<string>() {
+            "FAA","FIM","SBA","ZAB","ZAK","ZAN","ZAP","ZAU","ZBW","ZDC","ZDV","ZEG","ZFW","ZHN",
+            "ZHU","ZID","ZJX","ZKC","ZLA","ZLC","ZMA","ZME","ZMP","ZNY","ZOA","ZOB","ZSE","ZSU",
+            "ZTL","ZUA","ZUL","ZVR","ZWG","ZYZ"
+        };
+
         public static bool GetMetaUrlResponse() 
         {
             string nextUrl = $"https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[nextAiracDate]}/xml_data/d-tpp_Metafile.xml";
@@ -130,6 +140,7 @@ namespace NASARData
 
         public static void DownloadAllFiles(string effectiveDate, string airacCycle)
         {
+            DownloadedFilePaths = new List<string>();
             Dictionary<string, string> allURLs = new Dictionary<string, string>()
             {
                 { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },

@@ -15,7 +15,7 @@ namespace ClassData.DataAccess
 {
     public class GetFaaMetaFileData
     {
-        private List<MetaAirportModel> AllAirports = new List<MetaAirportModel>();
+        private List<MetaAirportModel> AllAirports = GlobalConfig.AllMetaFileAirports; 
 
         public void QuarterbackFunc() 
         {
