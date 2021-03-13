@@ -140,6 +140,7 @@ namespace NASARData
 
         public static void DownloadAllFiles(string effectiveDate, string airacCycle)
         {
+            DownloadedFilePaths = new List<string>();
             Dictionary<string, string> allURLs = new Dictionary<string, string>()
             {
                 { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
