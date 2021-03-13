@@ -48,6 +48,8 @@ namespace NASR_GUI
             processingGroupBox.Enabled = true;
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
+
+            facilityIdCombobox.DataSource = GlobalConfig.allArtcc;
         }
 
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
@@ -90,9 +92,9 @@ namespace NASR_GUI
                 }
             }
 
-            if (facilityIdTextbox.Text.Trim() == "" || facilityIdTextbox.Text.Trim() == null)
+            if (GlobalConfig.facilityID == "" || GlobalConfig.facilityID.Trim() == null)
             {
-                DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have typed a Facility ID.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
+                DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have selected a correct Facility ID.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
                 if (dialogResult == DialogResult.OK)
                 {
                     return;
@@ -102,6 +104,19 @@ namespace NASR_GUI
                     return;
                 }
             }
+
+            //if (facilityIdTextbox.Text.Trim() == "" || facilityIdTextbox.Text.Trim() == null)
+            //{
+            //    DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have selected an Incorrect Facility ID.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
+            //    if (dialogResult == DialogResult.OK)
+            //    {
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        return;
+            //    }
+            //}
 
             if (GlobalConfig.outputDirectory == null)
             {
@@ -250,8 +265,6 @@ namespace NASR_GUI
         {
             GlobalConfig.CheckTempDir();
 
-            string facilityID;
-
             if (currentAiracSelection.Checked)
             {
                 GlobalConfig.airacEffectiveDate = currentAiracSelection.Text;
@@ -261,14 +274,16 @@ namespace NASR_GUI
                 GlobalConfig.airacEffectiveDate = nextAiracSelection.Text;
             }
 
-            facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
+            //facilityIdCombobox.Invoke(new MethodInvoker(delegate { facilityID = facilityIdCombobox.SelectedItem.ToString(); }));
 
-            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Downloading Req. Files");
+            //facilityID = facilityIdCombobox.SelectedItem.ToString();
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Downloading FAA Data");
             GlobalConfig.DownloadAllFiles(GlobalConfig.airacEffectiveDate, AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Unzipping Files");
             GlobalConfig.UnzipAllDownloaded();
-
+            
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing DPs and STARs");
             GetStarDpData ParseStarDp = new GetStarDpData();
             ParseStarDp.StarDpQuaterBackFunc(GlobalConfig.airacEffectiveDate);
@@ -284,6 +299,27 @@ namespace NASR_GUI
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recalls");
                 GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
                 ParseMeta.QuarterbackFunc();
+            }
+            else
+            {
+                // Don't Parse Meta File
+            }
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
+            GetAptData ParseAPT = new GetAptData();
+            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
+
+            if (nextAiracSelection.Checked == true && nextAiracAvailable == true)
+            {
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Getting Publications");
+                PublicationParser publications = new PublicationParser();
+                publications.WriteAirportInfoTxt(GlobalConfig.facilityID);
+            }
+            else if (currentAiracSelection.Checked == true)
+            {
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Getting Publications");
+                PublicationParser publications = new PublicationParser();
+                publications.WriteAirportInfoTxt(GlobalConfig.facilityID);
             }
             else
             {
@@ -311,11 +347,7 @@ namespace NASR_GUI
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing NDBs");
             GetNavData ParseNDBs = new GetNavData();
-            ParseNDBs.NAVQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
-
-            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
-            GetAptData ParseAPT = new GetAptData();
-            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
+            ParseNDBs.NAVQuarterbackFunc(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Waypoints XML");
             GlobalConfig.WriteWaypointsXML();
@@ -325,10 +357,6 @@ namespace NASR_GUI
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Checking Alias Commands");
             AliasCheck aliasCheck = new AliasCheck();
             aliasCheck.CheckForDuplicates(false, $"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt");
-
-            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Getting Publications");
-            PublicationParser publications = new PublicationParser();
-            publications.WriteAirportInfoTxt(facilityIdTextbox.Text);
         }
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -605,6 +633,11 @@ namespace NASR_GUI
 
                 Environment.Exit(1);
             }
+        }
+
+        private void facilityIdCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GlobalConfig.facilityID = facilityIdCombobox.SelectedItem.ToString();
         }
     }
 }

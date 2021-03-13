@@ -1,4 +1,5 @@
 ﻿using ClassData.Models;
+using ClassData.Models.MetaFileModels;
 using NASARData;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,8 @@ namespace ClassData.DataAccess
 {
     public class PublicationParser
     {
-        public static List<string> allArtcc = new List<string>() { 
-            "ZAP", "ZAN", "ZJX", "ZME", "ZTL", "ZHU", "ZID", "ZFW", "ZKC", "ZHN", "ZAB",
-            "ZLA", "ZDV", "ZSE", "ZOA", "ZUA", "ZBW", "ZNY", "ZDC", "ZMA", "ZAU", "ZMP", "ZLC", "ZOB",
-            "ZYZ", "ZSU", "ZVR", "ZEG", "FIM", "SBA", "ZAK", "ZUL", "ZWG"
-        };
+        // TODO - Populate this list from somewhere from some how.
+        public static List<string> allArtcc = GlobalConfig.allArtcc;
 
         private string outputDirectory = GlobalConfig.outputDirectory + "Publications";
 
@@ -27,25 +25,73 @@ namespace ClassData.DataAccess
 
             if (responsibleArtcc == "FAA")
             {
-                List<AptModel> dupAirportModel = GlobalConfig.allAptModelsForCheck;
                 foreach (string artcc in allArtcc)
                 {
+                    if (artcc == "FAA")
+                    {
+                        continue;
+                    }
+                    // This creates our Airport list that the ARTCC is responsible for.
                     airportInArtccInfo = new StringBuilder();
                     airportProcedureChanges = new StringBuilder();
                     airportProcedures = new StringBuilder();
-                    foreach (AptModel airport in dupAirportModel)
+                    foreach (AptModel airport in GlobalConfig.allAptModelsForCheck)
                     {
                         if (airport.ResArtcc == artcc)
                         {
-                            string airportInfo = $"{airport.Name}{' '*(25-airport.Name.Length)}: {airport.Id} - {airport.Icao}";
+                            string airportInfo = $"{airport.Id} - {airport.Icao}";
                             airportInArtccInfo.AppendLine(airportInfo);
-
-
                         }
                     }
-                    string airportsInArtccFilePath = $"{outputDirectory}\\{GlobalConfig.airacEffectiveDate}_{artcc}\\Res_Artcc_Airports.txt";
+                    string airportsInArtccFilePath = $"{outputDirectory}\\{artcc}_{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}\\{artcc}_Airports.txt";
                     CreateDirAndFile(airportsInArtccFilePath);
                     File.WriteAllText(airportsInArtccFilePath, airportInArtccInfo.ToString());
+
+                    // this will create our ALL publications and Changes Publications file. 
+                    foreach (MetaAirportModel apt in GlobalConfig.AllMetaFileAirports)
+                    {
+                        foreach (string resAirport in airportInArtccInfo.ToString().Split('\n'))
+                        {
+                            if (string.IsNullOrEmpty(resAirport))
+                            {
+                                continue;
+                            }
+                            string wantedAirport = resAirport.Substring(0, resAirport.IndexOf('-')).Trim();
+                            if (wantedAirport == apt.AptIdent)
+                            {
+                                List<string> hasChanges = new List<string>();
+
+                                airportProcedures.AppendLine($"[{apt.AptIdent}]");
+                                foreach (MetaRecordModel recordModel in apt.Records)
+                                {
+                                    airportProcedures.AppendLine($"\t{recordModel.ChartName} | https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}/{recordModel.PdfName}");
+                                    if ((recordModel.UserAction != "" && recordModel.UserAction != " ") && !hasChanges.Contains(apt.AptIdent))
+                                    {
+                                        hasChanges.Add(apt.AptIdent);
+                                    }
+                                }
+
+                                if (hasChanges.Contains(apt.AptIdent))
+                                {
+                                    airportProcedureChanges.AppendLine($"[{apt.AptIdent}]");
+                                    foreach (MetaRecordModel recordModel1 in apt.Records)
+                                    {
+                                        if (recordModel1.UserAction != "" && recordModel1.UserAction != " ")
+                                        {
+                                            airportProcedureChanges.AppendLine($"\t({recordModel1.UserAction}) {recordModel1.ChartName} | https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}/compare_pdf/{recordModel1.PdfName.Substring(0, recordModel1.PdfName.Length - 4)}_cmp.pdf");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    string ProcedureFilePath = $"{outputDirectory}\\{artcc}_{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}\\Procedures.txt";
+                    CreateDirAndFile(ProcedureFilePath);
+                    File.WriteAllText(ProcedureFilePath, airportProcedures.ToString());
+
+                    string ProcedureChangefilePath = $"{outputDirectory}\\{artcc}_{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}\\Procedure_Changes.txt";
+                    CreateDirAndFile(ProcedureChangefilePath);
+                    File.WriteAllText(ProcedureChangefilePath, airportProcedureChanges.ToString());
                 }
             }
             else if (allArtcc.Contains(responsibleArtcc))
@@ -58,10 +104,55 @@ namespace ClassData.DataAccess
                         airportInArtccInfo.AppendLine(output);
                     }
                 }
-                string airportsInArtccFilePath = $"{outputDirectory}\\{GlobalConfig.airacEffectiveDate}_{responsibleArtcc}\\Res_Artcc_Airports.txt";
+                string airportsInArtccFilePath = $"{outputDirectory}\\{responsibleArtcc}_{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}\\Res_Artcc_Airports.txt";
                 CreateDirAndFile(airportsInArtccFilePath);
                 File.WriteAllText(airportsInArtccFilePath, airportInArtccInfo.ToString());
 
+                foreach (MetaAirportModel apt in GlobalConfig.AllMetaFileAirports)
+                {
+                    foreach (string resAirport in airportInArtccInfo.ToString().Split('\n'))
+                    {
+                        if (string.IsNullOrEmpty(resAirport))
+                        {
+                            continue;
+                        }
+                        string wantedAirport = resAirport.Substring(0, resAirport.IndexOf('-')).Trim();
+                        if (wantedAirport == apt.AptIdent)
+                        {
+                            List<string> hasChanges = new List<string>();
+
+                            airportProcedures.AppendLine($"[{apt.AptIdent}]");
+                            foreach (MetaRecordModel recordModel in apt.Records)
+                            {
+                                airportProcedures.AppendLine($"\t{recordModel.ChartName} | https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}/{recordModel.PdfName}");
+                                if ((recordModel.UserAction != "" && recordModel.UserAction != " ") && !hasChanges.Contains(apt.AptIdent))
+                                {
+                                    hasChanges.Add(apt.AptIdent);
+                                }
+                            }
+
+                            if (hasChanges.Contains(apt.AptIdent))
+                            {
+                                airportProcedureChanges.AppendLine($"[{apt.AptIdent}]");
+                                foreach (MetaRecordModel recordModel1 in apt.Records)
+                                {
+                                    if (recordModel1.UserAction != "" && recordModel1.UserAction != " ")
+                                    {
+                                        airportProcedureChanges.AppendLine($"\t({recordModel1.UserAction}) {recordModel1.ChartName} | https://aeronav.faa.gov/d-tpp/{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}/compare_pdf/{recordModel1.PdfName.Substring(0, recordModel1.PdfName.Length - 4)}_cmp.pdf");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                string ProcedureFilePath = $"{outputDirectory}\\{responsibleArtcc}_{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}\\Procedures.txt";
+                CreateDirAndFile(ProcedureFilePath);
+                File.WriteAllText(ProcedureFilePath, airportProcedures.ToString());
+
+                string ProcedureChangefilePath = $"{outputDirectory}\\{responsibleArtcc}_{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}\\Procedure_Changes.txt";
+                CreateDirAndFile(ProcedureChangefilePath);
+                File.WriteAllText(ProcedureChangefilePath, airportProcedureChanges.ToString());
             }
             else
             {

@@ -33,7 +33,6 @@
             this.nextAiracSelection = new System.Windows.Forms.RadioButton();
             this.airacLabel = new System.Windows.Forms.Label();
             this.facilityIDLabel = new System.Windows.Forms.Label();
-            this.facilityIdTextbox = new System.Windows.Forms.TextBox();
             this.convertLabel = new System.Windows.Forms.Label();
             this.convertNo = new System.Windows.Forms.RadioButton();
             this.convertYes = new System.Windows.Forms.RadioButton();
@@ -55,6 +54,7 @@
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.facilityIdCombobox = new System.Windows.Forms.ComboBox();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
             this.startGroupBox.SuspendLayout();
@@ -114,15 +114,6 @@
             this.facilityIDLabel.Size = new System.Drawing.Size(212, 25);
             this.facilityIDLabel.TabIndex = 3;
             this.facilityIDLabel.Text = "What is your Facility ID?";
-            // 
-            // facilityIdTextbox
-            // 
-            this.facilityIdTextbox.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.facilityIdTextbox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.facilityIdTextbox.Location = new System.Drawing.Point(40, 64);
-            this.facilityIdTextbox.Name = "facilityIdTextbox";
-            this.facilityIdTextbox.Size = new System.Drawing.Size(182, 33);
-            this.facilityIdTextbox.TabIndex = 4;
             // 
             // convertLabel
             // 
@@ -235,8 +226,8 @@
             // 
             // startGroupBox
             // 
+            this.startGroupBox.Controls.Add(this.facilityIdCombobox);
             this.startGroupBox.Controls.Add(this.facilityIDLabel);
-            this.startGroupBox.Controls.Add(this.facilityIdTextbox);
             this.startGroupBox.Controls.Add(this.startButton);
             this.startGroupBox.Controls.Add(this.filePathLabel);
             this.startGroupBox.Controls.Add(this.chooseDirButton);
@@ -374,6 +365,19 @@
             this.uninstallToolStripMenuItem.Text = "Uninstall";
             this.uninstallToolStripMenuItem.Click += new System.EventHandler(this.uninstallToolStripMenuItem_Click);
             // 
+            // facilityIdCombobox
+            // 
+            this.facilityIdCombobox.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.facilityIdCombobox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.facilityIdCombobox.FormattingEnabled = true;
+            this.facilityIdCombobox.IntegralHeight = false;
+            this.facilityIdCombobox.Location = new System.Drawing.Point(53, 64);
+            this.facilityIdCombobox.MaxDropDownItems = 10;
+            this.facilityIdCombobox.Name = "facilityIdCombobox";
+            this.facilityIdCombobox.Size = new System.Drawing.Size(182, 33);
+            this.facilityIdCombobox.TabIndex = 12;
+            this.facilityIdCombobox.SelectedIndexChanged += new System.EventHandler(this.facilityIdCombobox_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
@@ -419,7 +423,6 @@
         private System.Windows.Forms.RadioButton nextAiracSelection;
         private System.Windows.Forms.Label airacLabel;
         private System.Windows.Forms.Label facilityIDLabel;
-        private System.Windows.Forms.TextBox facilityIdTextbox;
         private System.Windows.Forms.Label convertLabel;
         private System.Windows.Forms.RadioButton convertNo;
         private System.Windows.Forms.RadioButton convertYes;
@@ -441,6 +444,7 @@
         private System.Windows.Forms.Label outputDirectoryLabel;
         private System.Windows.Forms.Label outputLocationLabel;
         private System.Windows.Forms.ToolStripMenuItem uninstallToolStripMenuItem;
+        private System.Windows.Forms.ComboBox facilityIdCombobox;
     }
 }
 
