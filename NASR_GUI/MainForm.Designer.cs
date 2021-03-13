@@ -46,14 +46,14 @@
             this.startGroupBox = new System.Windows.Forms.GroupBox();
             this.processingDataLabel = new System.Windows.Forms.Label();
             this.processingGroupBox = new System.Windows.Forms.GroupBox();
+            this.outputDirectoryLabel = new System.Windows.Forms.Label();
+            this.outputLocationLabel = new System.Windows.Forms.Label();
             this.exitButton = new System.Windows.Forms.Button();
             this.runAgainButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.instructionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.outputLocationLabel = new System.Windows.Forms.Label();
-            this.outputDirectoryLabel = new System.Windows.Forms.Label();
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
@@ -123,7 +123,6 @@
             this.facilityIdTextbox.Name = "facilityIdTextbox";
             this.facilityIdTextbox.Size = new System.Drawing.Size(182, 33);
             this.facilityIdTextbox.TabIndex = 4;
-            this.facilityIdTextbox.Text = "FAA";
             // 
             // convertLabel
             // 
@@ -274,6 +273,27 @@
             this.processingGroupBox.TabStop = false;
             this.processingGroupBox.Visible = false;
             // 
+            // outputDirectoryLabel
+            // 
+            this.outputDirectoryLabel.AutoSize = true;
+            this.outputDirectoryLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.outputDirectoryLabel.Location = new System.Drawing.Point(522, 170);
+            this.outputDirectoryLabel.Name = "outputDirectoryLabel";
+            this.outputDirectoryLabel.Size = new System.Drawing.Size(96, 21);
+            this.outputDirectoryLabel.TabIndex = 19;
+            this.outputDirectoryLabel.Text = "<Directory>";
+            this.outputDirectoryLabel.Visible = false;
+            // 
+            // outputLocationLabel
+            // 
+            this.outputLocationLabel.AutoSize = true;
+            this.outputLocationLabel.Location = new System.Drawing.Point(507, 145);
+            this.outputLocationLabel.Name = "outputLocationLabel";
+            this.outputLocationLabel.Size = new System.Drawing.Size(152, 25);
+            this.outputLocationLabel.TabIndex = 18;
+            this.outputLocationLabel.Text = "Output Location:";
+            this.outputLocationLabel.Visible = false;
+            // 
             // exitButton
             // 
             this.exitButton.Enabled = false;
@@ -344,27 +364,6 @@
             this.changeLogToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.changeLogToolStripMenuItem.Text = "Change Log";
             this.changeLogToolStripMenuItem.Click += new System.EventHandler(this.changeLogToolStripMenuItem_Click);
-            // 
-            // outputLocationLabel
-            // 
-            this.outputLocationLabel.AutoSize = true;
-            this.outputLocationLabel.Location = new System.Drawing.Point(507, 145);
-            this.outputLocationLabel.Name = "outputLocationLabel";
-            this.outputLocationLabel.Size = new System.Drawing.Size(152, 25);
-            this.outputLocationLabel.TabIndex = 18;
-            this.outputLocationLabel.Text = "Output Location:";
-            this.outputLocationLabel.Visible = false;
-            // 
-            // outputDirectoryLabel
-            // 
-            this.outputDirectoryLabel.AutoSize = true;
-            this.outputDirectoryLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outputDirectoryLabel.Location = new System.Drawing.Point(522, 170);
-            this.outputDirectoryLabel.Name = "outputDirectoryLabel";
-            this.outputDirectoryLabel.Size = new System.Drawing.Size(96, 21);
-            this.outputDirectoryLabel.TabIndex = 19;
-            this.outputDirectoryLabel.Text = "<Directory>";
-            this.outputDirectoryLabel.Visible = false;
             // 
             // uninstallToolStripMenuItem
             // 

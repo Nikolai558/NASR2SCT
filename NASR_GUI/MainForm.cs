@@ -324,7 +324,11 @@ namespace NASR_GUI
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Checking Alias Commands");
             AliasCheck aliasCheck = new AliasCheck();
-            aliasCheck.CheckForDuplicates(false, $"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt" );
+            aliasCheck.CheckForDuplicates(false, $"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt");
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Getting Publications");
+            PublicationParser publications = new PublicationParser();
+            publications.WriteAirportInfoTxt(facilityIdTextbox.Text);
         }
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -361,7 +365,7 @@ namespace NASR_GUI
             nextAiracSelection.Text = GlobalConfig.nextAiracDate;
 
             // Disable the Facility ID for Now, Might want it later, If so comment out the below line.
-            facilityIdTextbox.Enabled = false;
+            // facilityIdTextbox.Enabled = false;
 
 
         }

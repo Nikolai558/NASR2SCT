@@ -63,6 +63,7 @@
     <Compile Include="DataAccess\GetFixData.cs" />
     <Compile Include="DataAccess\GetNavData.cs" />
     <Compile Include="DataAccess\GetStarDpData.cs" />
+    <Compile Include="DataAccess\PublicationParser.cs" />
     <Compile Include="GlobalConfig.cs" />
     <Compile Include="Models\Airport.cs" />
     <Compile Include="Models\AirwayModel.cs" />
@@ -91,6 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="NASR_2_SCT_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Static\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
