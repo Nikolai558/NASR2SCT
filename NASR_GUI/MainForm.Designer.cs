@@ -107,7 +107,7 @@
             // 
             this.facilityIDLabel.AutoSize = true;
             this.facilityIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.facilityIDLabel.Location = new System.Drawing.Point(35, 29);
+            this.facilityIDLabel.Location = new System.Drawing.Point(25, 32);
             this.facilityIDLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.facilityIDLabel.Name = "facilityIDLabel";
             this.facilityIDLabel.Size = new System.Drawing.Size(212, 25);
@@ -242,7 +242,7 @@
             this.facilityIdCombobox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.facilityIdCombobox.FormattingEnabled = true;
             this.facilityIdCombobox.IntegralHeight = false;
-            this.facilityIdCombobox.Location = new System.Drawing.Point(53, 64);
+            this.facilityIdCombobox.Location = new System.Drawing.Point(40, 64);
             this.facilityIdCombobox.MaxDropDownItems = 10;
             this.facilityIdCombobox.Name = "facilityIdCombobox";
             this.facilityIdCombobox.Size = new System.Drawing.Size(182, 33);

@@ -180,6 +180,8 @@ namespace ClassData.DataAccess
             }
 
             File.WriteAllText(awyAliasFilePath, sb.ToString());
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sb.ToString());
+
         }
 
 
