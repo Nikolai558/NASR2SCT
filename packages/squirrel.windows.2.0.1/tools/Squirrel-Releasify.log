@@ -515,3 +515,30 @@ Usage: WriteZipToSetup [Setup.exe template] [Zip File]
 [03/05/21 22:12:41] info: ReleasePackage: No release notes found in C:\Users\nikol\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
 [03/05/21 22:12:42] info: Program: Building embedded zip file for Setup.exe
 [03/05/21 22:12:45] info: Program: Finished Squirrel Updater
+[03/05/21 23:37:41] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.7.8.nupkg
+[03/05/21 23:37:41] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[03/05/21 23:37:41] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.7.8.nupkg
+[03/05/21 23:37:41] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.7.8.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.7.8-full.nupkg
+[03/05/21 23:37:42] info: ReleasePackage: Extracting dependent packages: []
+[03/05/21 23:37:42] info: ReleasePackage: Removing unnecessary data
+[03/05/21 23:37:42] info: ReleasePackage: No release notes found in C:\Users\nikol\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[03/05/21 23:37:43] info: Program: Building embedded zip file for Setup.exe
+[03/05/21 23:37:43] error: Program: Failed to update Setup.exe with new Zip file: System.Exception: Failed to write Zip to Setup.exe!
+
+Setup: C:\Repos\NASR2SCT\Releases\Setup.exe, Zip: C:\Users\nikol\AppData\Local\Temp\tmp3806.tmp
+Starting to read in Zip file!
+Updating Resource!
+Finished!
+Failed to update resource
+Usage: WriteZipToSetup [Setup.exe template] [Zip File]
+   at Squirrel.Update.Program.Releasify(String package, String targetDir, String packagesDir, String bootstrapperExe, String backgroundGif, String signingOpts, String baseUrl, String setupIcon, Boolean generateMsi, Boolean packageAs64Bit, String frameworkVersion, Boolean generateDeltas)
+[03/05/21 23:37:45] info: Program: Finished Squirrel Updater
+[04/05/21 16:19:25] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.7.9.nupkg
+[04/05/21 16:19:25] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[04/05/21 16:19:25] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.7.9.nupkg
+[04/05/21 16:19:25] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.7.9.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.7.9-full.nupkg
+[04/05/21 16:19:25] info: ReleasePackage: Extracting dependent packages: []
+[04/05/21 16:19:25] info: ReleasePackage: Removing unnecessary data
+[04/05/21 16:19:25] info: ReleasePackage: No release notes found in C:\Users\nikol\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[04/05/21 16:19:26] info: Program: Building embedded zip file for Setup.exe
+[04/05/21 16:19:31] info: Program: Finished Squirrel Updater

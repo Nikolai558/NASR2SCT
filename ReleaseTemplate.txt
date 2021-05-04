@@ -1,14 +1,12 @@
-0.7.8
+0.7.9
 
-Release Candidate V-0.7.8
+Release Candidate V-0.7.9
 
 ## Instructions to install:
-1. Download the zip file named "NASR2SCT-0.7.8.zip"
+1. Download the zip file named "NASR2SCT-0.7.9.zip"
 2. Unzip the file
 3. Keep all files inside it together. 
 4. Run the Setup.exe
 
 ## Change log:
-- Fixed Facility Id Drop Down Alignment #92
-- Duplicate Airway Alias Commands are now put in the 'OTHER' section of the Duplicate Alias Commands Text file. #94 and #81
-- Added Dialog message box with more information when a user is updating NASR2SCT #93
+- 0.7.8 was packaged incorrectly and would not allow fresh install of 0.7.8
