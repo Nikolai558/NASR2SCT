@@ -24,7 +24,7 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
-        public static readonly string ProgramVersion = "0.7.8";
+        public static readonly string ProgramVersion = "0.7.9";
 
         public static string GithubVersion = "";
 
