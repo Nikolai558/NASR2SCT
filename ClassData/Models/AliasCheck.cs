@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassData.Models
@@ -79,7 +80,7 @@ namespace ClassData.Models
             string currentAirportIatta = "";
             string aptIatta;
 
-            File.WriteAllText(outFilePath, "Duplicate Chart Recall commands per ARTCC. Solutions are required at ARTCC level.\n" +
+            File.WriteAllText(outFilePath, "Duplicate Alias commands per ARTCC. Solutions are required at ARTCC level.\n" +
                 "\tConsult developers if unable to resolve at a local level.\n\n");
 
             foreach (string line in DuplicateCommandsList)
@@ -92,12 +93,18 @@ namespace ClassData.Models
                 }
                 else
                 {
+                    int count = 1;
                     foreach (AptModel apt in AirportModels)
                     {
+                        count += 1;
                         if (aptIatta == apt.Id)
                         {
                             File.AppendAllText(outFilePath, $"{apt.ResArtcc}\n");
                             break;
+                        }
+                        else if (count > AirportModels.Count())
+                        {
+                            File.AppendAllText(outFilePath, $"OTHER\n");
                         }
                         else
                         {
