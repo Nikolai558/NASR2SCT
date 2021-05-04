@@ -33,7 +33,6 @@
             this.nextAiracSelection = new System.Windows.Forms.RadioButton();
             this.airacLabel = new System.Windows.Forms.Label();
             this.facilityIDLabel = new System.Windows.Forms.Label();
-            this.facilityIdTextbox = new System.Windows.Forms.TextBox();
             this.convertLabel = new System.Windows.Forms.Label();
             this.convertNo = new System.Windows.Forms.RadioButton();
             this.convertYes = new System.Windows.Forms.RadioButton();
@@ -44,16 +43,16 @@
             this.airacCycleGroupBox = new System.Windows.Forms.GroupBox();
             this.convertGroupBox = new System.Windows.Forms.GroupBox();
             this.startGroupBox = new System.Windows.Forms.GroupBox();
+            this.facilityIdCombobox = new System.Windows.Forms.ComboBox();
             this.processingDataLabel = new System.Windows.Forms.Label();
             this.processingGroupBox = new System.Windows.Forms.GroupBox();
+            this.outputDirectoryLabel = new System.Windows.Forms.Label();
+            this.outputLocationLabel = new System.Windows.Forms.Label();
             this.exitButton = new System.Windows.Forms.Button();
-            this.runAgainButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.instructionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.outputLocationLabel = new System.Windows.Forms.Label();
-            this.outputDirectoryLabel = new System.Windows.Forms.Label();
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
@@ -114,16 +113,6 @@
             this.facilityIDLabel.Size = new System.Drawing.Size(212, 25);
             this.facilityIDLabel.TabIndex = 3;
             this.facilityIDLabel.Text = "What is your Facility ID?";
-            // 
-            // facilityIdTextbox
-            // 
-            this.facilityIdTextbox.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.facilityIdTextbox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.facilityIdTextbox.Location = new System.Drawing.Point(40, 64);
-            this.facilityIdTextbox.Name = "facilityIdTextbox";
-            this.facilityIdTextbox.Size = new System.Drawing.Size(182, 33);
-            this.facilityIdTextbox.TabIndex = 4;
-            this.facilityIdTextbox.Text = "FAA";
             // 
             // convertLabel
             // 
@@ -236,8 +225,8 @@
             // 
             // startGroupBox
             // 
+            this.startGroupBox.Controls.Add(this.facilityIdCombobox);
             this.startGroupBox.Controls.Add(this.facilityIDLabel);
-            this.startGroupBox.Controls.Add(this.facilityIdTextbox);
             this.startGroupBox.Controls.Add(this.startButton);
             this.startGroupBox.Controls.Add(this.filePathLabel);
             this.startGroupBox.Controls.Add(this.chooseDirButton);
@@ -247,11 +236,24 @@
             this.startGroupBox.TabIndex = 14;
             this.startGroupBox.TabStop = false;
             // 
+            // facilityIdCombobox
+            // 
+            this.facilityIdCombobox.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.facilityIdCombobox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.facilityIdCombobox.FormattingEnabled = true;
+            this.facilityIdCombobox.IntegralHeight = false;
+            this.facilityIdCombobox.Location = new System.Drawing.Point(53, 64);
+            this.facilityIdCombobox.MaxDropDownItems = 10;
+            this.facilityIdCombobox.Name = "facilityIdCombobox";
+            this.facilityIdCombobox.Size = new System.Drawing.Size(182, 33);
+            this.facilityIdCombobox.TabIndex = 12;
+            this.facilityIdCombobox.SelectedIndexChanged += new System.EventHandler(this.facilityIdCombobox_SelectedIndexChanged);
+            // 
             // processingDataLabel
             // 
             this.processingDataLabel.Enabled = false;
             this.processingDataLabel.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.processingDataLabel.Location = new System.Drawing.Point(6, 22);
+            this.processingDataLabel.Location = new System.Drawing.Point(6, 17);
             this.processingDataLabel.Name = "processingDataLabel";
             this.processingDataLabel.Size = new System.Drawing.Size(545, 68);
             this.processingDataLabel.TabIndex = 15;
@@ -264,7 +266,6 @@
             this.processingGroupBox.Controls.Add(this.outputDirectoryLabel);
             this.processingGroupBox.Controls.Add(this.outputLocationLabel);
             this.processingGroupBox.Controls.Add(this.exitButton);
-            this.processingGroupBox.Controls.Add(this.runAgainButton);
             this.processingGroupBox.Controls.Add(this.processingDataLabel);
             this.processingGroupBox.Enabled = false;
             this.processingGroupBox.Location = new System.Drawing.Point(114, 127);
@@ -274,12 +275,33 @@
             this.processingGroupBox.TabStop = false;
             this.processingGroupBox.Visible = false;
             // 
+            // outputDirectoryLabel
+            // 
+            this.outputDirectoryLabel.AutoSize = true;
+            this.outputDirectoryLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.outputDirectoryLabel.Location = new System.Drawing.Point(522, 170);
+            this.outputDirectoryLabel.Name = "outputDirectoryLabel";
+            this.outputDirectoryLabel.Size = new System.Drawing.Size(96, 21);
+            this.outputDirectoryLabel.TabIndex = 19;
+            this.outputDirectoryLabel.Text = "<Directory>";
+            this.outputDirectoryLabel.Visible = false;
+            // 
+            // outputLocationLabel
+            // 
+            this.outputLocationLabel.AutoSize = true;
+            this.outputLocationLabel.Location = new System.Drawing.Point(507, 145);
+            this.outputLocationLabel.Name = "outputLocationLabel";
+            this.outputLocationLabel.Size = new System.Drawing.Size(152, 25);
+            this.outputLocationLabel.TabIndex = 18;
+            this.outputLocationLabel.Text = "Output Location:";
+            this.outputLocationLabel.Visible = false;
+            // 
             // exitButton
             // 
             this.exitButton.Enabled = false;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.exitButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(315, 93);
+            this.exitButton.Location = new System.Drawing.Point(346, 88);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(182, 34);
             this.exitButton.TabIndex = 17;
@@ -287,20 +309,6 @@
             this.exitButton.UseVisualStyleBackColor = true;
             this.exitButton.Visible = false;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
-            // 
-            // runAgainButton
-            // 
-            this.runAgainButton.Enabled = false;
-            this.runAgainButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.runAgainButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.runAgainButton.Location = new System.Drawing.Point(60, 93);
-            this.runAgainButton.Name = "runAgainButton";
-            this.runAgainButton.Size = new System.Drawing.Size(182, 34);
-            this.runAgainButton.TabIndex = 16;
-            this.runAgainButton.Text = "Run Again";
-            this.runAgainButton.UseVisualStyleBackColor = true;
-            this.runAgainButton.Visible = false;
-            this.runAgainButton.Click += new System.EventHandler(this.runAgainButton_Click);
             // 
             // menuStrip1
             // 
@@ -344,27 +352,6 @@
             this.changeLogToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.changeLogToolStripMenuItem.Text = "Change Log";
             this.changeLogToolStripMenuItem.Click += new System.EventHandler(this.changeLogToolStripMenuItem_Click);
-            // 
-            // outputLocationLabel
-            // 
-            this.outputLocationLabel.AutoSize = true;
-            this.outputLocationLabel.Location = new System.Drawing.Point(507, 145);
-            this.outputLocationLabel.Name = "outputLocationLabel";
-            this.outputLocationLabel.Size = new System.Drawing.Size(152, 25);
-            this.outputLocationLabel.TabIndex = 18;
-            this.outputLocationLabel.Text = "Output Location:";
-            this.outputLocationLabel.Visible = false;
-            // 
-            // outputDirectoryLabel
-            // 
-            this.outputDirectoryLabel.AutoSize = true;
-            this.outputDirectoryLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outputDirectoryLabel.Location = new System.Drawing.Point(522, 170);
-            this.outputDirectoryLabel.Name = "outputDirectoryLabel";
-            this.outputDirectoryLabel.Size = new System.Drawing.Size(96, 21);
-            this.outputDirectoryLabel.TabIndex = 19;
-            this.outputDirectoryLabel.Text = "<Directory>";
-            this.outputDirectoryLabel.Visible = false;
             // 
             // uninstallToolStripMenuItem
             // 
@@ -420,7 +407,6 @@
         private System.Windows.Forms.RadioButton nextAiracSelection;
         private System.Windows.Forms.Label airacLabel;
         private System.Windows.Forms.Label facilityIDLabel;
-        private System.Windows.Forms.TextBox facilityIdTextbox;
         private System.Windows.Forms.Label convertLabel;
         private System.Windows.Forms.RadioButton convertNo;
         private System.Windows.Forms.RadioButton convertYes;
@@ -434,7 +420,6 @@
         private System.Windows.Forms.Label processingDataLabel;
         private System.Windows.Forms.GroupBox processingGroupBox;
         private System.Windows.Forms.Button exitButton;
-        private System.Windows.Forms.Button runAgainButton;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem instructionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;
@@ -442,6 +427,7 @@
         private System.Windows.Forms.Label outputDirectoryLabel;
         private System.Windows.Forms.Label outputLocationLabel;
         private System.Windows.Forms.ToolStripMenuItem uninstallToolStripMenuItem;
+        private System.Windows.Forms.ComboBox facilityIdCombobox;
     }
 }
 

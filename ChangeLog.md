@@ -1,10 +1,24 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.7.7:
+  - NEW FEATURE, ARTCC Publication Parser. #83
+  - NEW FEATURE, Telephony Alias Commands. #87
+  - Uninstall button works properly. #80
+  - Facility ID has a function and has been re-enabled.
+    - If you leave it as "FAA", ALL ARTCC Publications will be parsed.
+    - If you select your individual ARTCC, only the publications for that ARTCC will be parsed.
+  - Deleted Job links are ignored. #84
+    - This only effects when the FAA removes data. (Chart Recall Alias Commands)
+  - Removed "Run Again" button. #86
+  - "Checking Alias" (Duplicate Alias Commands) is now twice as fast. #89
+  - Default Output directory is the User's Desktop. #90
+
 - ## Version 0.7.6:
   - Uninstall Button Functional #73
   - Fixed Uninstall Hieroglyphics #77
   - Output Duplicate Alias Commands Text File #78
+  - NOTE: UPDATING FROM 0.7.5 to 0.7.6 will NOT WORK. Manual installation of 0.7.6 is REQUIRED! 
 
 - ## Version 0.7.5:
   - Now Display the Output Directory #69

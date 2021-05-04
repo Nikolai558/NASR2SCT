@@ -15,7 +15,7 @@ namespace ClassData.DataAccess
 {
     public class GetFaaMetaFileData
     {
-        private List<MetaAirportModel> AllAirports = new List<MetaAirportModel>();
+        private List<MetaAirportModel> AllAirports = GlobalConfig.AllMetaFileAirports; 
 
         public void QuarterbackFunc() 
         {
@@ -51,7 +51,8 @@ namespace ClassData.DataAccess
                         ChartSeq = recordData.Element("chartseq").Value,
                         ChartCode = recordData.Element("chart_code").Value,
                         ChartName = recordData.Element("chart_name").Value,
-                        FAAChartName = recordData.Element("chart_name").Value,                        UserAction = recordData.Element("useraction").Value,
+                        FAAChartName = recordData.Element("chart_name").Value,                        
+                        UserAction = recordData.Element("useraction").Value,
                         PdfName = recordData.Element("pdf_name").Value,
                         CnFlag = recordData.Element("cn_flg").Value,
                         CnPage = recordData.Element("cnpage").Value,
@@ -78,10 +79,10 @@ namespace ClassData.DataAccess
                             record.ChartName.IndexOf("COPTER") == -1 &&
                             record.ChartName.IndexOf("HI-") == -1 &&
                             record.ChartName.IndexOf("PRM") == -1 &&
-                            record.ChartName.IndexOf("PRM") == -1 &&
                             record.ChartName.IndexOf("BC") == -1 &&
                             record.ChartName.IndexOf("CAT ") == -1 &&
-                            record.ChartName.IndexOf("TACAN 056") == -1)
+                            record.ChartName.IndexOf("TACAN 056") == -1 &&
+                            record.PdfName.IndexOf("DELETED") == -1)
                     {
                         // Move these.
                         record.CreateAliasComand(apt.AptIdent);

@@ -48,6 +48,13 @@ namespace NASR_GUI
             processingGroupBox.Enabled = true;
             processingDataLabel.Visible = true;
             processingDataLabel.Enabled = true;
+
+            facilityIdCombobox.DataSource = GlobalConfig.allArtcc;
+
+            GlobalConfig.outputDirBase = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            filePathLabel.Text = GlobalConfig.outputDirBase;
+            filePathLabel.Visible = true;
+            filePathLabel.MaximumSize = new Size(257, 82);
         }
 
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
@@ -90,9 +97,9 @@ namespace NASR_GUI
                 }
             }
 
-            if (facilityIdTextbox.Text.Trim() == "" || facilityIdTextbox.Text.Trim() == null)
+            if (GlobalConfig.facilityID == "" || GlobalConfig.facilityID.Trim() == null)
             {
-                DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have typed a Facility ID.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
+                DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have selected a correct Facility ID.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
                 if (dialogResult == DialogResult.OK)
                 {
                     return;
@@ -102,6 +109,19 @@ namespace NASR_GUI
                     return;
                 }
             }
+
+            //if (facilityIdTextbox.Text.Trim() == "" || facilityIdTextbox.Text.Trim() == null)
+            //{
+            //    DialogResult dialogResult = MessageBox.Show("Seems there may be an error.\n Please verify you have selected an Incorrect Facility ID.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
+            //    if (dialogResult == DialogResult.OK)
+            //    {
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        return;
+            //    }
+            //}
 
             if (GlobalConfig.outputDirectory == null)
             {
@@ -163,11 +183,13 @@ namespace NASR_GUI
 
         private void runAgainButton_Click(object sender, EventArgs e)
         {
+            // Artifact Code - REMOVE THIS. 
+
             processingGroupBox.Visible = false;
             processingGroupBox.Enabled = false;
 
-            runAgainButton.Visible = false;
-            runAgainButton.Enabled = false;
+            //runAgainButton.Visible = false;
+            //runAgainButton.Enabled = false;
 
             exitButton.Visible = false;
             exitButton.Enabled = false;
@@ -242,15 +264,13 @@ namespace NASR_GUI
             outputLocationLabel.Location = new Point(9, 22);
             outputDirectoryLabel.Location = new Point(24, 47);
             processingDataLabel.Location = new Point(6, 102);
-            runAgainButton.Location = new Point(60, 173);
-            exitButton.Location = new Point(315, 173);
+            //runAgainButton.Location = new Point(60, 173);
+            exitButton.Location = new Point(187, 173);
         }
 
         private void Worker_StartParsingDoWork(object sender, DoWorkEventArgs e)
         {
             GlobalConfig.CheckTempDir();
-
-            string facilityID;
 
             if (currentAiracSelection.Checked)
             {
@@ -261,13 +281,19 @@ namespace NASR_GUI
                 GlobalConfig.airacEffectiveDate = nextAiracSelection.Text;
             }
 
-            facilityID = facilityIdTextbox.Text.Replace(" ", string.Empty);
+            //facilityIdCombobox.Invoke(new MethodInvoker(delegate { facilityID = facilityIdCombobox.SelectedItem.ToString(); }));
 
-            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Downloading Req. Files");
+            //facilityID = facilityIdCombobox.SelectedItem.ToString();
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Downloading FAA Data");
             GlobalConfig.DownloadAllFiles(GlobalConfig.airacEffectiveDate, AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Unzipping Files");
             GlobalConfig.UnzipAllDownloaded();
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Telephony");
+            GetTelephony Telephony = new GetTelephony();
+            Telephony.readFAAData($"{GlobalConfig.tempPath}\\{AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]}_TELEPHONY.html");
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing DPs and STARs");
             GetStarDpData ParseStarDp = new GetStarDpData();
@@ -284,6 +310,27 @@ namespace NASR_GUI
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recalls");
                 GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
                 ParseMeta.QuarterbackFunc();
+            }
+            else
+            {
+                // Don't Parse Meta File
+            }
+
+            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
+            GetAptData ParseAPT = new GetAptData();
+            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
+
+            if (nextAiracSelection.Checked == true && nextAiracAvailable == true)
+            {
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Getting Publications");
+                PublicationParser publications = new PublicationParser();
+                publications.WriteAirportInfoTxt(GlobalConfig.facilityID);
+            }
+            else if (currentAiracSelection.Checked == true)
+            {
+                SetControlPropertyThreadSafe(processingDataLabel, "Text", "Getting Publications");
+                PublicationParser publications = new PublicationParser();
+                publications.WriteAirportInfoTxt(GlobalConfig.facilityID);
             }
             else
             {
@@ -311,11 +358,7 @@ namespace NASR_GUI
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing NDBs");
             GetNavData ParseNDBs = new GetNavData();
-            ParseNDBs.NAVQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
-
-            SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
-            GetAptData ParseAPT = new GetAptData();
-            ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, facilityID);
+            ParseNDBs.NAVQuarterbackFunc(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Waypoints XML");
             GlobalConfig.WriteWaypointsXML();
@@ -324,7 +367,7 @@ namespace NASR_GUI
 
             SetControlPropertyThreadSafe(processingDataLabel, "Text", "Checking Alias Commands");
             AliasCheck aliasCheck = new AliasCheck();
-            aliasCheck.CheckForDuplicates(false, $"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt" );
+            aliasCheck.CheckForDuplicates($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt");
         }
 
         private void Worker_StartParsingCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -337,8 +380,8 @@ namespace NASR_GUI
             
             menuStrip1.Visible = true;
 
-            runAgainButton.Visible = true;
-            runAgainButton.Enabled = true;
+            //runAgainButton.Visible = true;
+            //runAgainButton.Enabled = true;
 
             exitButton.Visible = true;
             exitButton.Enabled = true;
@@ -361,7 +404,7 @@ namespace NASR_GUI
             nextAiracSelection.Text = GlobalConfig.nextAiracDate;
 
             // Disable the Facility ID for Now, Might want it later, If so comment out the below line.
-            facilityIdTextbox.Enabled = false;
+            // facilityIdTextbox.Enabled = false;
 
 
         }
@@ -384,8 +427,8 @@ namespace NASR_GUI
             processingGroupBox.Visible = false;
             processingGroupBox.Enabled = false;
 
-            runAgainButton.Visible = false;
-            runAgainButton.Enabled = false;
+            //runAgainButton.Visible = false;
+            //runAgainButton.Enabled = false;
 
             exitButton.Visible = false;
             exitButton.Enabled = false;
@@ -458,9 +501,13 @@ namespace NASR_GUI
             DialogResult dialogResult = MessageBox.Show("Would you like to UNINSTALL NASR2SCT?", "Uninstall NASR2SCT", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
+                string uninstall_start_string = $"start \"\" \"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat\"";
+
                 // dialogResult = MessageBox.Show("Sory Not Implemented Yet", "Work In Progress", MessageBoxButtons.OK);
                 string uninstallBatchFileString = "@echo off\n"
-                        + "PING 127.0.0.1 - n 3 > nul\n"
+                        + "PING 127.0.0.1 - n 5 > nul\n"
+                        + "tasklist /FI \"IMAGENAME eq NASR2SCT.exe\" 2>NUL | find /I /N \"NASR2SCT.exe\">NUL\n"
+                        + "if \"%ERRORLEVEL%\"==\"0\" taskkill /F /im NASR2SCT.exe\n"
                         + "\n"
                         + "TITLE NASR_2_SCT UNINSTALL\n"
                         + "\n"
@@ -548,21 +595,17 @@ namespace NASR_GUI
                         + "PAUSE>NUL\n";
 
                 File.WriteAllText($"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat", uninstallBatchFileString);
+                File.WriteAllText($"{Path.GetTempPath()}UNINSTALL_START_NASR2SCT.bat", uninstall_start_string);
 
-
-
-                int ExitCode;
                 ProcessStartInfo ProcessInfo;
                 Process Process;
 
-                ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat\"");
+                ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{Path.GetTempPath()}UNINSTALL_START_NASR2SCT.bat\"");
                 ProcessInfo.CreateNoWindow = false;
                 ProcessInfo.UseShellExecute = false;
 
                 Process = Process.Start(ProcessInfo);
-                Process.WaitForExit();
 
-                ExitCode = Process.ExitCode;
                 Process.Close();
 
 
@@ -597,10 +640,15 @@ namespace NASR_GUI
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-                File.Delete($"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat");
+                //File.Delete($"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat");
 
                 Environment.Exit(1);
             }
+        }
+
+        private void facilityIdCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GlobalConfig.facilityID = facilityIdCombobox.SelectedItem.ToString();
         }
     }
 }

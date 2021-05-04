@@ -63,6 +63,8 @@
     <Compile Include="DataAccess\GetFixData.cs" />
     <Compile Include="DataAccess\GetNavData.cs" />
     <Compile Include="DataAccess\GetStarDpData.cs" />
+    <Compile Include="DataAccess\GetTelephony.cs" />
+    <Compile Include="DataAccess\PublicationParser.cs" />
     <Compile Include="GlobalConfig.cs" />
     <Compile Include="Models\Airport.cs" />
     <Compile Include="Models\AirwayModel.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Models\NDBModel.cs" />
     <Compile Include="Models\RunwayModel.cs" />
     <Compile Include="Models\StarAndDpModel.cs" />
+    <Compile Include="Models\TelephonyModel.cs" />
     <Compile Include="Models\VORModel.cs" />
     <Compile Include="Models\Waypoint.cs" />
     <Compile Include="Models\WxStationModel.cs" />
@@ -91,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="NASR_2_SCT_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Static\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

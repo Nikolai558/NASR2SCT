@@ -10,7 +10,7 @@ namespace ClassData.Models
 {
     public class AliasCheck
     {
-        public void CheckForDuplicates(bool IncludeAll, string CompleteAliasFilePath) 
+        public void CheckForDuplicates(string CompleteAliasFilePath) 
         {
             List<string> allAliasLines = File.ReadAllLines(CompleteAliasFilePath).ToList();
             List<string> allCommands = new List<string>();
@@ -26,6 +26,16 @@ namespace ClassData.Models
                 }
 
                 string command = line.Split(' ')[0];
+
+                if (command.Contains(".NAV"))
+                {
+                    continue;
+                }
+
+                if (command.Contains(".APT"))
+                {
+                    continue;
+                }
 
                 if (allCommands.Contains(command))
                 {
@@ -53,25 +63,7 @@ namespace ClassData.Models
                 
                 if (duplicateCommands.Contains(command))
                 {
-                    if (IncludeAll)
-                    {
-                        duplicateCommandLines.Add(line);
-                    }
-                    else
-                    {
-                        if (command.Contains(".NAV"))
-                        {
-                            continue;
-                        }
-                        else if (command.Contains(".APT"))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            duplicateCommandLines.Add(line);
-                        }
-                    }
+                    duplicateCommandLines.Add(line);
                 }
             }
 
