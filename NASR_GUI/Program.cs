@@ -63,6 +63,11 @@ namespace NASR_GUI
 
                 if (GlobalConfig.updateProgram)
                 {
+                    string updateInformationMessage = "Once you click 'OK', all screens related to NASR2SCT will close.\n\n" +
+                        "Once the program has fully updated, it will restart.";
+
+                    MessageBox.Show(updateInformationMessage);
+
                     // Create our Temp Directory so we can download assets from Github and store them here.
 
                     /////////////////////////// TESTING - Checking to see if this is our problem code with the auto updater ///////////////////////////////////
