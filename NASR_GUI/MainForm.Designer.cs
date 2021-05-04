@@ -43,18 +43,17 @@
             this.airacCycleGroupBox = new System.Windows.Forms.GroupBox();
             this.convertGroupBox = new System.Windows.Forms.GroupBox();
             this.startGroupBox = new System.Windows.Forms.GroupBox();
+            this.facilityIdCombobox = new System.Windows.Forms.ComboBox();
             this.processingDataLabel = new System.Windows.Forms.Label();
             this.processingGroupBox = new System.Windows.Forms.GroupBox();
             this.outputDirectoryLabel = new System.Windows.Forms.Label();
             this.outputLocationLabel = new System.Windows.Forms.Label();
             this.exitButton = new System.Windows.Forms.Button();
-            this.runAgainButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.instructionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.facilityIdCombobox = new System.Windows.Forms.ComboBox();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
             this.startGroupBox.SuspendLayout();
@@ -237,11 +236,24 @@
             this.startGroupBox.TabIndex = 14;
             this.startGroupBox.TabStop = false;
             // 
+            // facilityIdCombobox
+            // 
+            this.facilityIdCombobox.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.facilityIdCombobox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.facilityIdCombobox.FormattingEnabled = true;
+            this.facilityIdCombobox.IntegralHeight = false;
+            this.facilityIdCombobox.Location = new System.Drawing.Point(53, 64);
+            this.facilityIdCombobox.MaxDropDownItems = 10;
+            this.facilityIdCombobox.Name = "facilityIdCombobox";
+            this.facilityIdCombobox.Size = new System.Drawing.Size(182, 33);
+            this.facilityIdCombobox.TabIndex = 12;
+            this.facilityIdCombobox.SelectedIndexChanged += new System.EventHandler(this.facilityIdCombobox_SelectedIndexChanged);
+            // 
             // processingDataLabel
             // 
             this.processingDataLabel.Enabled = false;
             this.processingDataLabel.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.processingDataLabel.Location = new System.Drawing.Point(6, 22);
+            this.processingDataLabel.Location = new System.Drawing.Point(6, 17);
             this.processingDataLabel.Name = "processingDataLabel";
             this.processingDataLabel.Size = new System.Drawing.Size(545, 68);
             this.processingDataLabel.TabIndex = 15;
@@ -254,7 +266,6 @@
             this.processingGroupBox.Controls.Add(this.outputDirectoryLabel);
             this.processingGroupBox.Controls.Add(this.outputLocationLabel);
             this.processingGroupBox.Controls.Add(this.exitButton);
-            this.processingGroupBox.Controls.Add(this.runAgainButton);
             this.processingGroupBox.Controls.Add(this.processingDataLabel);
             this.processingGroupBox.Enabled = false;
             this.processingGroupBox.Location = new System.Drawing.Point(114, 127);
@@ -290,7 +301,7 @@
             this.exitButton.Enabled = false;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.exitButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(315, 93);
+            this.exitButton.Location = new System.Drawing.Point(346, 88);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(182, 34);
             this.exitButton.TabIndex = 17;
@@ -298,20 +309,6 @@
             this.exitButton.UseVisualStyleBackColor = true;
             this.exitButton.Visible = false;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
-            // 
-            // runAgainButton
-            // 
-            this.runAgainButton.Enabled = false;
-            this.runAgainButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.runAgainButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.runAgainButton.Location = new System.Drawing.Point(60, 93);
-            this.runAgainButton.Name = "runAgainButton";
-            this.runAgainButton.Size = new System.Drawing.Size(182, 34);
-            this.runAgainButton.TabIndex = 16;
-            this.runAgainButton.Text = "Run Again";
-            this.runAgainButton.UseVisualStyleBackColor = true;
-            this.runAgainButton.Visible = false;
-            this.runAgainButton.Click += new System.EventHandler(this.runAgainButton_Click);
             // 
             // menuStrip1
             // 
@@ -364,19 +361,6 @@
             this.uninstallToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
             this.uninstallToolStripMenuItem.Text = "Uninstall";
             this.uninstallToolStripMenuItem.Click += new System.EventHandler(this.uninstallToolStripMenuItem_Click);
-            // 
-            // facilityIdCombobox
-            // 
-            this.facilityIdCombobox.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.facilityIdCombobox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.facilityIdCombobox.FormattingEnabled = true;
-            this.facilityIdCombobox.IntegralHeight = false;
-            this.facilityIdCombobox.Location = new System.Drawing.Point(53, 64);
-            this.facilityIdCombobox.MaxDropDownItems = 10;
-            this.facilityIdCombobox.Name = "facilityIdCombobox";
-            this.facilityIdCombobox.Size = new System.Drawing.Size(182, 33);
-            this.facilityIdCombobox.TabIndex = 12;
-            this.facilityIdCombobox.SelectedIndexChanged += new System.EventHandler(this.facilityIdCombobox_SelectedIndexChanged);
             // 
             // MainForm
             // 
@@ -436,7 +420,6 @@
         private System.Windows.Forms.Label processingDataLabel;
         private System.Windows.Forms.GroupBox processingGroupBox;
         private System.Windows.Forms.Button exitButton;
-        private System.Windows.Forms.Button runAgainButton;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem instructionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;

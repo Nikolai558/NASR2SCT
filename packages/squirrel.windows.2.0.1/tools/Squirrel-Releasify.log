@@ -497,3 +497,12 @@ Usage: WriteZipToSetup [Setup.exe template] [Zip File]
 [21/12/20 19:37:28] info: DeltaPackageBuilder: \lib\net45\Properties\romantic.ttf not found in base package, marking as new
 [21/12/20 19:37:29] info: Program: Building embedded zip file for Setup.exe
 [21/12/20 19:37:43] info: Program: Finished Squirrel Updater
+[03/05/21 18:01:13] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.7.7.nupkg
+[03/05/21 18:01:13] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[03/05/21 18:01:13] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.7.7.nupkg
+[03/05/21 18:01:13] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.7.7.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.7.7-full.nupkg
+[03/05/21 18:01:14] info: ReleasePackage: Extracting dependent packages: []
+[03/05/21 18:01:14] info: ReleasePackage: Removing unnecessary data
+[03/05/21 18:01:14] info: ReleasePackage: No release notes found in C:\Users\nikol\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[03/05/21 18:01:15] info: Program: Building embedded zip file for Setup.exe
+[03/05/21 18:01:19] info: Program: Finished Squirrel Updater

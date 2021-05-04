@@ -24,7 +24,7 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
-        public static readonly string ProgramVersion = "0.7.6";
+        public static readonly string ProgramVersion = "0.7.7";
 
         public static string GithubVersion = "";
 
@@ -151,7 +151,8 @@ namespace NASARData
                 { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
                 { $"{airacCycle}_FAA_Meta.xml", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml"},
                 { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
-                { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"}
+                { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
+                { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" }
             };
 
             // Web Client used to connect to the FAA website.
