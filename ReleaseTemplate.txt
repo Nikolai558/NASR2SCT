@@ -1,12 +1,22 @@
-0.7.6
+0.7.7
 
-Release Candidate V-0.7.6
+Release Candidate V-0.7.7
 
 ## Instructions to install:
-1. Download the zip file named "NASR2SCT-0.7.6.zip"
+1. Download the zip file named "NASR2SCT-0.7.7.zip"
 2. Unzip the file
 3. Keep all files inside it together. 
 4. Run the Setup.exe
 
 ## Change log:
-- 
+- NEW FEATURE, ARTCC Publication Parser. #83
+- NEW FEATURE, Telephony Alias Commands. #87
+- Uninstall button works properly. #80
+- Facility ID has a function and has been re-enabled.
+    - If you leave it as "FAA", ALL ARTCC Publications will be parsed.
+    - If you select your individual ARTCC, only the publications for that ARTCC will be parsed.
+- Deleted Job links are ignored. #84
+    - This only effects when the FAA removes data. (Chart Recall Alias Commands)
+- Removed "Run Again" button. #86
+- "Checking Alias" (Duplicate Alias Commands) is now twice as fast. #89
+- Default Output directory is the User's Desktop. #90

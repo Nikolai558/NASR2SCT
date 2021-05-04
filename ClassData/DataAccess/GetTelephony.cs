@@ -93,6 +93,11 @@ namespace ClassData.DataAccess
 
                         currentTelephony.ThreeLD = threeLDData;
 
+                        if (currentTelephony.ThreeLD.Length < 2)
+                        {
+                            continue;
+                        }
+
                         allTelephony.Add(currentTelephony);
                         continue;
                     }
