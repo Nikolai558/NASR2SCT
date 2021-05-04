@@ -1,6 +1,11 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.7.8:
+- Fixed Facility Id Drop Down Alignment #92
+- Duplicate Airway Alias Commands are now put in the 'OTHER' section of the Duplicate Alias Commands Text file. #94 and #81
+- Added Dialog message box with more information when a user is updating NASR2SCT #93
+
 - ## Version 0.7.7:
   - NEW FEATURE, ARTCC Publication Parser. #83
   - NEW FEATURE, Telephony Alias Commands. #87
