@@ -161,6 +161,27 @@ namespace NASARData
             }
             else
             {
+                string warningMSG = "\n" +
+                    "WARNING:\n" +
+                    "	Since NASR2SCT was ran before the FAA    \n" +
+                    "	meta file was completed for this AIRAC,  \n" +
+                    "	the following files are not generated!   \n\n" +
+                    "	If you need the following files, please  \n" +
+                    "	run NASR2SCT again when the FAA meta     \n" +
+                    "	file is ready. This is usually available \n" +
+                    "	15-18 days before the AIRAC Effective    \n" +
+                    "	Date.                                    \n\n" +
+                    "*********************************************\n" +
+                    "**                                         **\n" +
+                    "**	- PUBLICATIONS (ALL or Specific)        **\n" +
+                    "**	                                        **\n" +
+                    "**	- ALIAS                                 **\n" +
+                    "**		- FAA_CHART_RECALL.TXT              **\n" +
+                    "**		                                    **\n" +
+                    "*********************************************\n";
+
+                File.WriteAllText($"{outputDirectory}\\WARN-README.txt", warningMSG);
+
                 allURLs = new Dictionary<string, string>()
                 {
                     { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
