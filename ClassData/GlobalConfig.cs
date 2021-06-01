@@ -173,11 +173,11 @@ namespace NASARData
                     "	Date.                                    \n\n" +
                     "*********************************************\n" +
                     "**                                         **\n" +
-                    "**	- PUBLICATIONS (ALL or Specific)        **\n" +
-                    "**	                                        **\n" +
-                    "**	- ALIAS                                 **\n" +
-                    "**		- FAA_CHART_RECALL.TXT              **\n" +
-                    "**		                                    **\n" +
+                    "**	- PUBLICATIONS (ALL or Specific)       **\n" +
+                    "**	                                       **\n" +
+                    "**	- ALIAS                                **\n" +
+                    "**		- FAA_CHART_RECALL.TXT             **\n" +
+                    "**		                                   **\n" +
                     "*********************************************\n";
 
                 File.WriteAllText($"{outputDirectory}\\WARN-README.txt", warningMSG);
