@@ -1,6 +1,6 @@
-0.7.9
+0.8.0
 
-Release Candidate V-0.7.9
+Release Candidate V-0.8.0
 
 ## Instructions to install:
 1. Download the zip file named "NASR2SCT-0.7.9.zip"
@@ -9,4 +9,4 @@ Release Candidate V-0.7.9
 4. Run the Setup.exe
 
 ## Change log:
-- 0.7.8 was packaged incorrectly and would not allow fresh install of 0.7.8
+-

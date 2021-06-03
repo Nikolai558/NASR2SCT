@@ -24,7 +24,7 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
-        public static readonly string ProgramVersion = "0.7.9";
+        public static readonly string ProgramVersion = "0.8.0";
 
         public static string GithubVersion = "";
 
@@ -97,6 +97,7 @@ namespace NASARData
                         response.Close();
                     }
                 }
+
                 return true;
             }
             catch (WebException)
@@ -138,22 +139,64 @@ namespace NASARData
             }
         }
 
-        public static void DownloadAllFiles(string effectiveDate, string airacCycle)
+        public static void DownloadAllFiles(string effectiveDate, string airacCycle, bool getMetaFile = true)
         {
             DownloadedFilePaths = new List<string>();
-            Dictionary<string, string> allURLs = new Dictionary<string, string>()
+            Dictionary<string, string> allURLs;
+            if (getMetaFile)
             {
-                { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
-                { $"{effectiveDate}_APT.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip" },
-                { $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
-                { $"{effectiveDate}_ARB.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip" },
-                { $"{effectiveDate}_ATS.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip" },
-                { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
-                { $"{airacCycle}_FAA_Meta.xml", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml"},
-                { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
-                { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
-                { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" }
-            };
+                allURLs = new Dictionary<string, string>()
+                {
+                    { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
+                    { $"{effectiveDate}_APT.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip" },
+                    { $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
+                    { $"{effectiveDate}_ARB.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip" },
+                    { $"{effectiveDate}_ATS.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip" },
+                    { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
+                    { $"{airacCycle}_FAA_Meta.xml", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml"},
+                    { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
+                    { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
+                    { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" }
+                };
+            }
+            else
+            {
+                string warningMSG = "\n" +
+                    "WARNING:\n" +
+                    "	Since NASR2SCT was ran before the FAA    \n" +
+                    "	meta file was completed for this AIRAC,  \n" +
+                    "	the following files are not generated!   \n\n" +
+                    "	If you need the following files, please  \n" +
+                    "	run NASR2SCT again when the FAA meta     \n" +
+                    "	file is ready. This is usually available \n" +
+                    "	15-18 days before the AIRAC Effective    \n" +
+                    "	Date.                                    \n\n" +
+                    "*********************************************\n" +
+                    "**                                         **\n" +
+                    "**	- PUBLICATIONS (ALL or Specific)       **\n" +
+                    "**	                                       **\n" +
+                    "**	- ALIAS                                **\n" +
+                    "**		- FAA_CHART_RECALL.TXT             **\n" +
+                    "**		                                   **\n" +
+                    "*********************************************\n";
+
+                File.WriteAllText($"{outputDirectory}\\WARN-README.txt", warningMSG);
+
+                allURLs = new Dictionary<string, string>()
+                {
+                    { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
+                    { $"{effectiveDate}_APT.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip" },
+                    { $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
+                    { $"{effectiveDate}_ARB.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip" },
+                    { $"{effectiveDate}_ATS.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip" },
+                    { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
+                    { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
+                    { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
+                    { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" }
+                };
+            }
+
+            
 
             // Web Client used to connect to the FAA website.
             using (var client = new WebClient())
