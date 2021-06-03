@@ -1,6 +1,11 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.8.0
+- Fixed Bug #98 META File Causing Crash:
+	- If Meta File is not available, NASR2SCT will put a WARN-README.txt file in output directory.
+- Testing Update Function ( For Release of 1.0.0 ) 
+
 - ## Version 0.7.9:
 - 0.7.8 was packaged incorrectly and would not allow fresh install of 0.7.8
 
