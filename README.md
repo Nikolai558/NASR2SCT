@@ -21,6 +21,6 @@ Converts the FAA National Airspace System Resource (NASR) Data to formats that m
 https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO05NOIJMeB4mbIbs3CY5pIOYtrFtqo8BfmlCFaJSFMSxI_ut/embed
 
 ### REQUIREMENTS:
-- Windows OS
+- Windows OS (8.1 or newer)
 - CUrl (recomended)
 
