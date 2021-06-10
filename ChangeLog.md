@@ -2,19 +2,18 @@
 ## Pre-V1.0.0
 ---
 - ## Version 0.8.0
-- Fixed Bug #98 META File Causing Crash:
-	- If Meta File is not available, NASR2SCT will put a WARN-README.txt file in output directory.
-- Testing Update Function ( For Release of 1.0.0 ) 
+  - Fixed Bug #98 META File Causing Crash:
+    - If Meta File is not available, NASR2SCT will put a WARN-README.txt file in output directory.
+  - Testing Update Function ( For Release of 1.0.0 ) 
 
 - ## Version 0.7.9:
-- 0.7.8 was packaged incorrectly and would not allow fresh install of 0.7.8
+  - 0.7.8 was packaged incorrectly and would not allow fresh install of 0.7.8
 
 - ## Version 0.7.8:
-(WARNING) 
-   *** FRESH INSTALL OF THIS VERSION DOES NOT WORK
-- Fixed Facility Id Drop Down Alignment #92
-- Duplicate Airway Alias Commands are now put in the 'OTHER' section of the Duplicate Alias Commands Text file. #94 and #81
-- Added Dialog message box with more information when a user is updating NASR2SCT #93
+  (WARNING) *** FRESH INSTALL OF THIS VERSION DOES NOT WORK
+  - Fixed Facility Id Drop Down Alignment #92
+  - Duplicate Airway Alias Commands are now put in the 'OTHER' section of the Duplicate Alias Commands Text file. #94 and #81
+  - Added Dialog message box with more information when a user is updating NASR2SCT #93
 
 - ## Version 0.7.7:
   - NEW FEATURE, ARTCC Publication Parser. #83
