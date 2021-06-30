@@ -229,7 +229,9 @@ namespace ClassData.DataAccess
                                 if (id == apt.Id)
                                 {
                                     final = $"\"{line.Substring(20, 4)} {apt.Name.Replace('"', '-')}\" {GlobalConfig.CorrectLatLon(lat, true, GlobalConfig.Convert)} {GlobalConfig.CorrectLatLon(lon, false, GlobalConfig.Convert)} 11579568";
-
+                                    // TODO - WX Checker runs here. 
+                                    // curl -X GET "https://api.weather.gov/stations/ADS/observations?limit=1" -H "accept: application/geo+json"
+                                    // If "Features" is empty, does not exist otherwise add it. 
                                     sb.AppendLine(final);
                                     break;
                                 }
