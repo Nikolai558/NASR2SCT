@@ -209,7 +209,15 @@ namespace NASARData
 
                     if (!File.Exists($"{tempPath}\\{fileName}"))
                     {
-                        client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
+                        try
+                        {
+                            client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"FAILED DOWNLOADING: \n\n{fileName}\n{allURLs[fileName]}\n\nThis program will exit.\nPlease try again.");
+                            Environment.Exit(-1);
+                        }
                         DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
                     }
                 }
