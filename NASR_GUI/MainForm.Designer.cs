@@ -94,14 +94,14 @@
             // 
             // airacLabel
             // 
-            this.airacLabel.AutoSize = true;
             this.airacLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.airacLabel.Location = new System.Drawing.Point(67, 29);
+            this.airacLabel.Location = new System.Drawing.Point(1, 29);
             this.airacLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.airacLabel.Name = "airacLabel";
-            this.airacLabel.Size = new System.Drawing.Size(296, 25);
+            this.airacLabel.Size = new System.Drawing.Size(450, 25);
             this.airacLabel.TabIndex = 2;
-            this.airacLabel.Text = "Which AIRAC Cycle do you want? ";
+            this.airacLabel.Text = "Select an AIRAC Cycle by Effective Date";
+            this.airacLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // facilityIDLabel
             // 
