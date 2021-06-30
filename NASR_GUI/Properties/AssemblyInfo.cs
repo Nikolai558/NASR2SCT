@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NASR2SCT")]
-[assembly: AssemblyCopyright("Copyright ©  2020 Nikolas Boling, Kyle Sanders")]
+[assembly: AssemblyCopyright("Copyright ©  2021 Nikolas Boling, Kyle Sanders")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
