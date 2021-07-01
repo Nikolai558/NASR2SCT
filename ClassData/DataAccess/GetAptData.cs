@@ -199,8 +199,8 @@ namespace ClassData.DataAccess
         private void ParseAndWriteWxStation(string effectiveDate)
         {
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
-            List<string> codes = new List<string>() { "K", "P" };
             HttpResponseMessage response;
+            bool useSlowWay = false;
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("[LABELS]");
@@ -240,19 +240,27 @@ namespace ClassData.DataAccess
                                 {
                                     final = $"\"{line.Substring(20, 4)} {apt.Name.Replace('"', '-')}\" {GlobalConfig.CorrectLatLon(lat, true, GlobalConfig.Convert)} {GlobalConfig.CorrectLatLon(lon, false, GlobalConfig.Convert)} 11579568";
 
-                                    // curl -X GET "https://api.weather.gov/stations/{Station_ID}/" -H "accept: application/geo+json"
-                                    foreach (string letter in codes)
+                                    if (useSlowWay)
                                     {
-                                        var task = Task.Run(() => client.GetAsync(letter + id + "/"));
-                                        task.Wait();
-                                        response = task.Result;
-                                        if (response.IsSuccessStatusCode)
+                                        // TODO - Get rid of this.. We do not want to do this method.
+                                        // curl -X GET "https://api.weather.gov/stations/{Station_ID}/" -H "accept: application/geo+json"
+                                        foreach (string letter in new List<string>() { "P", "K", "L", "T"})
                                         {
-                                            sb.AppendLine(final);
-                                            break;
+                                            var task = Task.Run(() => client.GetAsync(letter + id + "/"));
+                                            task.Wait();
+                                            response = task.Result;
+                                            if (response.IsSuccessStatusCode)
+                                            {
+                                                sb.AppendLine(final);
+                                                break;
+                                            }
                                         }
                                     }
-                                    break;
+                                    else
+                                    {
+                                        sb.AppendLine(final);
+                                        break;
+                                    }
                                 }
                             }
                         }
