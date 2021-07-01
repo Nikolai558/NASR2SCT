@@ -217,7 +217,7 @@ namespace ClassData.DataAccess
             // string xml = new WebClient().DownloadString("https://w1.weather.gov/xml/current_obs/index.xml");
             XDocument xDocSload = XDocument.Load(wxCrossCheckFilePathIn);
             var sList = xDocSload.Root.Elements("station").Elements("station_id").Select(element => element.Value.Substring(1,3)).ToList();
-            List<string> seriesList = sList;
+            var lList = xDocSload.Root.Elements("station").Elements("station_id").Select(element => element.Value).ToList();
 
 
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_WXSTATIONS.txt"))
@@ -246,8 +246,7 @@ namespace ClassData.DataAccess
                                 {
                                     final = $"\"{line.Substring(20, 4)} {apt.Name.Replace('"', '-')}\" {GlobalConfig.CorrectLatLon(lat, true, GlobalConfig.Convert)} {GlobalConfig.CorrectLatLon(lon, false, GlobalConfig.Convert)} 11579568";
 
-                                    bool contains = seriesList.Contains(id, StringComparer.OrdinalIgnoreCase);
-                                    if (contains)
+                                    if (sList.Contains(id, StringComparer.OrdinalIgnoreCase) || lList.Contains(id, StringComparer.OrdinalIgnoreCase))
                                     {
                                         sb.AppendLine(final);
                                     }
