@@ -6,8 +6,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace ClassData.DataAccess
@@ -196,13 +199,20 @@ namespace ClassData.DataAccess
         private void ParseAndWriteWxStation(string effectiveDate)
         {
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
+            List<string> codes = new List<string>() { "K", "P" };
+            HttpResponseMessage response;
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("[LABELS]");
 
             List<string> countryCodes = new List<string> { "AS", "GU", "MP", "PR", "VI", "US" };
             string id;
-            string final; 
+            string final;
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.weather.gov/stations/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/geo+json"));
 
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_WXSTATIONS.txt"))
             {
@@ -229,10 +239,19 @@ namespace ClassData.DataAccess
                                 if (id == apt.Id)
                                 {
                                     final = $"\"{line.Substring(20, 4)} {apt.Name.Replace('"', '-')}\" {GlobalConfig.CorrectLatLon(lat, true, GlobalConfig.Convert)} {GlobalConfig.CorrectLatLon(lon, false, GlobalConfig.Convert)} 11579568";
-                                    // TODO - WX Checker runs here. 
-                                    // curl -X GET "https://api.weather.gov/stations/ADS/observations?limit=1" -H "accept: application/geo+json"
-                                    // If "Features" is empty, does not exist otherwise add it. 
-                                    sb.AppendLine(final);
+
+                                    // curl -X GET "https://api.weather.gov/stations/{Station_ID}/" -H "accept: application/geo+json"
+                                    foreach (string letter in codes)
+                                    {
+                                        var task = Task.Run(() => client.GetAsync(letter + id + "/"));
+                                        task.Wait();
+                                        response = task.Result;
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            sb.AppendLine(final);
+                                            break;
+                                        }
+                                    }
                                     break;
                                 }
                             }
