@@ -74,8 +74,6 @@ namespace ClassData.Models
 
         private void WriteDupFile(List<string> DuplicateCommandsList, List<AptModel> AirportModels) 
         {
-            // TODO - Make more efficient
-
             string outFilePath = $"{GlobalConfig.outputDirectory}\\ALIAS\\DUPLICATE_COMMANDS.txt";
             string currentAirportIatta = "";
             string aptIatta;

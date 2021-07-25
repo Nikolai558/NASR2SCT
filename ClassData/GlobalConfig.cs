@@ -205,31 +205,24 @@ namespace NASARData
             {
                 foreach (string fileName in allURLs.Keys)
                 {
-                    // TODO - We may not want to keep the data. Might want to remove this and just download it anyways.
-                    // This Data will ALWAYS get removed when user clicks "START" 
-                    // This is pointless but I will keep in for debuging purposes.
-
-                    if (!File.Exists($"{tempPath}\\{fileName}"))
+                    try
                     {
-                        try
+                        if (fileName == $"{effectiveDate}_WX-CROSSCHECK.xml")
                         {
-                            if (fileName == $"{effectiveDate}_WX-CROSSCHECK.xml")
-                            {
-                                CreateCurlBatchFile("WXCROSSCHECK.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
-                                ExecuteCurlBatchFile("WXCROSSCHECK.bat");
-                            }
-                            else
-                            {
-                                client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
-                            }
+                            CreateCurlBatchFile("WXCROSSCHECK.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
+                            ExecuteCurlBatchFile("WXCROSSCHECK.bat");
                         }
-                        catch (Exception)
+                        else
                         {
-                            MessageBox.Show($"FAILED DOWNLOADING: \n\n{fileName}\n{allURLs[fileName]}\n\nThis program will exit.\nPlease try again.");
-                            Environment.Exit(-1);
+                            client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
                         }
-                        DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
                     }
+                    catch (Exception)
+                    {
+                        MessageBox.Show($"FAILED DOWNLOADING: \n\n{fileName}\n{allURLs[fileName]}\n\nThis program will exit.\nPlease try again.");
+                        Environment.Exit(-1);
+                    }
+                    DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
                 }
             }
         }

@@ -284,8 +284,6 @@ namespace NASR_GUI
             //facilityIdCombobox.Invoke(new MethodInvoker(delegate { facilityID = facilityIdCombobox.SelectedItem.ToString(); }));
             //facilityID = facilityIdCombobox.SelectedItem.ToString();
 
-            // TODO - This is messy and needs to be cleaned up. 
-
             if (nextAiracSelection.Checked == true && nextAiracAvailable == false)
             {
                 // DialogResult dialogResult = MessageBox.Show("Next Airacc not available, No Code to handle this yet.", "ERROR: NO Facility ID", MessageBoxButtons.OK);
@@ -640,40 +638,6 @@ namespace NASR_GUI
                 Process = Process.Start(ProcessInfo);
 
                 Process.Close();
-
-
-                // TODO - COME BACK TO THIS 
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //List<string> directories = new List<string>() { $"{GlobalConfig.tempPath}", ""};
-
-
-                //foreach (string path in directories)
-                //{
-
-                //    if (Directory.Exists(path))
-                //    {
-                //        // This variable holds all information for the temp path ie. Directories and files.
-                //        DirectoryInfo di = new DirectoryInfo(path);
-
-                //        // Loop through the Files in our TempPath
-                //        foreach (FileInfo file in di.EnumerateFiles())
-                //        {
-                //            // Delete each file it finds inside of this directory. IE Temp Path
-                //            file.Delete();
-                //        }
-
-                //        // Loop through the Directories in our TempPath
-                //        foreach (DirectoryInfo dir in di.EnumerateDirectories())
-                //        {
-                //            // Delete the folder it finds.
-                //            dir.Delete(true);
-                //        }
-                //    }
-                //}
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-                //File.Delete($"{Path.GetTempPath()}UNINSTALL_NASR2SCT.bat");
 
                 Environment.Exit(1);
             }

@@ -154,8 +154,8 @@ namespace ClassData.Models.MetaFileModels
                                 tempRecordList[missingIndex].AliasCommand = tempRecordList[missingIndex].AliasCommand.Insert(2, tempVariant);
                             }
 
-                            // TODO - Might want to remove this
-                            File.AppendAllText($"{NASARData.GlobalConfig.tempPath}\\MisMatchingVariants.txt", $"APT IATA: {AptIata} - {tempRecordList[missingIndex].FAAChartName}\n");
+                            // Might want to remove this - This is to see MisMatchingVaarents inside the Temp File.
+                            // File.AppendAllText($"{NASARData.GlobalConfig.tempPath}\\MisMatchingVariants.txt", $"APT IATA: {AptIata} - {tempRecordList[missingIndex].FAAChartName}\n");
                         }
                     }
                     

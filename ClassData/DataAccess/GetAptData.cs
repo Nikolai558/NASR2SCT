@@ -205,10 +205,10 @@ namespace ClassData.DataAccess
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("[LABELS]");
 
-            // TODO - DEBUGING ONLY!
-            string debugfilepath = $"{GlobalConfig.outputDirectory}\\debug.txt";
-            StringBuilder debugSB = new StringBuilder();
-            debugSB.AppendLine("DEBUGING ONLY! The following weather stations would have been added the old way. But now they will not be in [LABELS].\n\n");
+            // DEBUGING ONLY! WX STATION
+            // string debugfilepath = $"{GlobalConfig.outputDirectory}\\debug.txt";
+            // StringBuilder debugSB = new StringBuilder();
+            // debugSB.AppendLine("DEBUGING ONLY! The following weather stations would have been added the old way. But now they will not be in [LABELS].\n\n");
 
             List<string> countryCodes = new List<string> { "AS", "GU", "MP", "PR", "VI", "US" };
             string id;
@@ -252,8 +252,8 @@ namespace ClassData.DataAccess
                                     }
                                     else
                                     {
-                                        // TODO - Do nothing here. This is Debuging only.
-                                        debugSB.AppendLine(final);
+                                        // Do nothing here. This is Debuging only. WX STATION
+                                        // debugSB.AppendLine(final);
                                     }
 
                                     break;
