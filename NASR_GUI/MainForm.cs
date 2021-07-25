@@ -682,5 +682,10 @@ namespace NASR_GUI
         {
             GlobalConfig.facilityID = facilityIdCombobox.SelectedItem.ToString();
         }
+
+        private void fAQToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://docs.google.com/presentation/d/e/2PACX-1vSlhz1DhDwZ-43BY4Q2vg-ff0QBGssxpmv4-nhZlz9LpGJvWjqLsHVaQwwsV1AGMWFFF_x_j_b3wTBO/embed");
+        }
     }
 }
