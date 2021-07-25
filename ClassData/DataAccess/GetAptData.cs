@@ -263,7 +263,7 @@ namespace ClassData.DataAccess
                     }
                 }
             }
-            File.WriteAllText(debugfilepath, debugSB.ToString());
+            // File.WriteAllText(debugfilepath, debugSB.ToString());
 
             File.WriteAllText(filepath, sb.ToString());
             File.AppendAllText(filepath, $"\n\n\n\n\n\n");
