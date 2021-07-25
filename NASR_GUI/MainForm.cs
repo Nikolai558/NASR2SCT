@@ -505,6 +505,7 @@ namespace NASR_GUI
             creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             changeLogToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             uninstallToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            fAQToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
 
 
 
