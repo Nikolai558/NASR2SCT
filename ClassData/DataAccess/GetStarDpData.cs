@@ -177,16 +177,21 @@ namespace ClassData.DataAccess
                 {
                     // TODO - I think this is where the non generated computer codes are being skipped. 
                     // DEBUG - Remove this Console.writeline.
-                    Console.WriteLine(procedures[procSeqNumber][0].PointId + " - Seq: " + procedures[procSeqNumber][0].SeqNumber);
+                    // Console.WriteLine(procedures[procSeqNumber][0].PointId + " - Seq: " + procedures[procSeqNumber][0].SeqNumber);
+                    // Console.WriteLine("C: " + procedures[procSeqNumber][0].PointId);
+                    //currentComputerCode = procedures[procSeqNumber][0].PointId;
+                    //procedures[procSeqNumber][0].PointCode = "AA";
                     continue;
                 }
                 else if (procedures[procSeqNumber][0].Type == "S")
                 {
                     currentComputerCode = procedures[procSeqNumber][0].ComputerCode.Split('.')[1].Substring(0, procedures[procSeqNumber][0].ComputerCode.Split('.')[1].Length - 1);
+                    //Console.WriteLine("S: " + currentComputerCode);
                 }
                 else if (procedures[procSeqNumber][0].Type == "D")
                 {
                     currentComputerCode = procedures[procSeqNumber][0].ComputerCode.Split('.')[0].Substring(0, procedures[procSeqNumber][0].ComputerCode.Split('.')[0].Length - 1);
+                    //Console.WriteLine("D: " + currentComputerCode);
                 }
                 else
                 {
@@ -293,6 +298,8 @@ namespace ClassData.DataAccess
                     else if (indvData.PointCode == "NA")
                     {
                         // Do nothing here but not Continue???
+                        // TODO - What do we do here? 
+                        // DEBUG
                     }
                     else
                     {

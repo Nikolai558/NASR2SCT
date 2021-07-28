@@ -67,12 +67,20 @@ namespace ClassData.DataAccess
                         AmdtNum = recordData.Element("amdtnum").Value,
                         AmdtDate = recordData.Element("amdtdate").Value
                     };
-                    // - If something breaks totally move those back here. 
 
-                    //if ($"; {apt.AirportName}-{record.FAAChartName}" == "; OCEANA NAS/ APOLLO SOUCEK FIELD-RNAV (GPS) RWY 32L/R")
-                    //{
-                    //    string STOPME = "";
-                    //}
+                    // TODO - Check for Empty FAANFD18 Number
+                    if (string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "STAR")
+                    {
+                        // DEBUG
+                        record.Faanfd18 = apt.AptIdent + "." + apt.AptIdent + "?";
+                    }
+
+                    // TODO - Check for Empty FAANFD18 Number
+                    if (string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "DP")
+                    {
+                        // DEBUG
+                        record.Faanfd18 = apt.AptIdent + "?." + apt.AptIdent;
+                    }
 
                     if (
                             record.ChartName.IndexOf("CONVERGING") == -1 &&
