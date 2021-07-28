@@ -9,4 +9,9 @@ Release Candidate V-0.8.0
 4. Run the Setup.exe
 
 ## Change log:
--
+- Change log on Update question will display all changes from user version and up to the latest release. 
+- FAQ button added. This will take you to a Facts And Questions google slide.
+- Choosing AIRAC cycle phrase/question changed.
+- Fixed bug where program crashes if the user is not connected to the internet. 
+- Fixed bug where program states it's complete when it really is not. This happened when a file download failed.
+- Fixed Credit screen title. 
