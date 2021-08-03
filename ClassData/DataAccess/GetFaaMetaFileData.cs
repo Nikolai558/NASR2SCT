@@ -68,18 +68,33 @@ namespace ClassData.DataAccess
                         AmdtDate = recordData.Element("amdtdate").Value
                     };
 
-                    // TODO - Check for Empty FAANFD18 Number
-                    if (string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "STAR")
+                    if ((string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "DP") || (string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "STAR"))
                     {
-                        // DEBUG
-                        record.Faanfd18 = apt.AptIdent + "." + apt.AptIdent + "?";
-                    }
+                        string newFaanfd18 = "";
 
-                    // TODO - Check for Empty FAANFD18 Number
-                    if (string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "DP")
-                    {
-                        // DEBUG
-                        record.Faanfd18 = apt.AptIdent + "?." + apt.AptIdent;
+                        if (record.ChartName.Trim().Replace(" ", string.Empty).Length <= 5)
+                        {
+                            // This apears to be redundant check. As chart name Trimed and No spaces will always be greater than 5 Chars.
+                            newFaanfd18 = record.ChartName.Trim().Replace(" ", string.Empty);
+                        }
+                        else
+                        {
+                            newFaanfd18 = record.ChartName.Trim().Replace(" ", string.Empty).Substring(0, 5);
+                        }
+
+                        newFaanfd18 += "?";
+
+                        if (record.ChartCode == "DP")
+                        {
+                            record.Faanfd18 = newFaanfd18 + "." + apt.AptIdent;
+                        }
+                        else
+                        {
+                            record.Faanfd18 = apt.AptIdent + "." + newFaanfd18;
+                        }
+
+                        // TODO - DEBUG
+                        Console.WriteLine(apt.AptIdent + " - " + record.ChartCode + " - " + record.ChartSeq + " - " + record.ChartName);
                     }
 
                     if (
