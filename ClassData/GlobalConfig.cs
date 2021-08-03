@@ -157,7 +157,8 @@ namespace NASARData
                     { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
                     { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
                     { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" },
-                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" }
+                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" },
+                    { $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
                 };
             }
             else
@@ -194,7 +195,8 @@ namespace NASARData
                     { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
                     { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
                     { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" },
-                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" }
+                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" },
+                    { $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
                 };
             }
 

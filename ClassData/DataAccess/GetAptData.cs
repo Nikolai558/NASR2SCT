@@ -248,7 +248,15 @@ namespace ClassData.DataAccess
 
                                     if (sList.Contains(id, StringComparer.OrdinalIgnoreCase) || lList.Contains(id, StringComparer.OrdinalIgnoreCase))
                                     {
-                                        sb.AppendLine(final);
+                                        foreach (string vatsimWXLine in File.ReadLines($"{GlobalConfig.tempPath}\\{effectiveDate}_WX-VATSIM.txt"))
+                                        {
+                                            if (vatsimWXLine.Substring(0, 5).Trim() == apt.Icao)
+                                            {
+                                                sb.AppendLine(final);
+                                                Console.WriteLine($"Added weather station for {id}");
+                                                break;
+                                            }
+                                        }
                                     }
                                     else
                                     {
