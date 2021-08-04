@@ -92,9 +92,7 @@ namespace ClassData.DataAccess
                         {
                             record.Faanfd18 = apt.AptIdent + "." + newFaanfd18;
                         }
-
-                        // TODO - DEBUG
-                        Console.WriteLine(apt.AptIdent + " - " + record.ChartCode + " - " + record.ChartSeq + " - " + record.ChartName);
+                        //Console.WriteLine(apt.AptIdent + " - " + record.ChartCode + " - " + record.ChartSeq + " - " + record.ChartName);
                     }
 
                     if (

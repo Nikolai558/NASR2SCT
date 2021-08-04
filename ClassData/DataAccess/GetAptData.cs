@@ -253,7 +253,7 @@ namespace ClassData.DataAccess
                                             if (vatsimWXLine.Substring(0, 5).Trim() == apt.Icao)
                                             {
                                                 sb.AppendLine(final);
-                                                Console.WriteLine($"Added weather station for {id}");
+                                                //Console.WriteLine($"Added weather station for {id}");
                                                 break;
                                             }
                                         }

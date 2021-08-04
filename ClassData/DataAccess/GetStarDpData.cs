@@ -42,7 +42,6 @@ namespace ClassData.DataAccess
                     SeqNumber = line.Substring(1, 4).Trim(),
                     PointCode = line.Substring(10, 2).Trim(),
                     PointId = line.Substring(30, 6).Trim(),
-                    // TODO - NOT Assigned Computer Code - Need to handle this? 
                     ComputerCode = line.Substring(38, 13).Trim(),
                     Lat_N_S = line.Substring(13, 1).Trim(),
                     Lat_Deg = "0" + line.Substring(14, 2).Trim(),
@@ -175,12 +174,6 @@ namespace ClassData.DataAccess
 
                 if (procedures[procSeqNumber][0].ComputerCode.IndexOf("NOT ASSIGNED") != -1)
                 {
-                    // TODO - I think this is where the non generated computer codes are being skipped. 
-                    // DEBUG - Remove this Console.writeline.
-                    // Console.WriteLine(procedures[procSeqNumber][0].PointId + " - Seq: " + procedures[procSeqNumber][0].SeqNumber);
-                    // Console.WriteLine("C: " + procedures[procSeqNumber][0].PointId);
-                    //currentComputerCode = procedures[procSeqNumber][0].PointId;
-                    //procedures[procSeqNumber][0].PointCode = "AA";
                     continue;
                 }
                 else if (procedures[procSeqNumber][0].Type == "S")
@@ -298,8 +291,6 @@ namespace ClassData.DataAccess
                     else if (indvData.PointCode == "NA")
                     {
                         // Do nothing here but not Continue???
-                        // TODO - What do we do here? 
-                        // DEBUG
                     }
                     else
                     {

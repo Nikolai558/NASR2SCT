@@ -1,9 +1,9 @@
-0.8.0
+0.8.1
 
-Release Candidate V-0.8.0
+Release Candidate V-0.8.1
 
 ## Instructions to install:
-1. Download the zip file named "NASR2SCT-0.7.9.zip"
+1. Download the zip file named "NASR2SCT-0.8.1.zip"
 2. Unzip the file
 3. Keep all files inside it together. 
 4. Run the Setup.exe
@@ -15,3 +15,7 @@ Release Candidate V-0.8.0
 - Fixed bug where program crashes if the user is not connected to the internet. 
 - Fixed bug where program states it's complete when it really is not. This happened when a file download failed.
 - Fixed Credit screen title. 
+- New Functionality to FAA Chart Recal Commands
+    - Charts without computer codes will be generated with the first 5 characters (not including spaces) of the chart name. 
+- Gather WX Station data from Vatsim
+    - This may cause issues, if so please report in issues section on github. 
