@@ -1,6 +1,18 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.8.1
+  - Change log on Update question will display all changes from user version and up to the latest release. 
+  - FAQ button added. This will take you to a Facts And Questions google slide.
+  - Choosing AIRAC cycle phrase/question changed.
+  - Fixed bug where program crashes if the user is not connected to the internet. 
+  - Fixed bug where program states it's complete when it really is not. This happened when a file download failed.
+  - Fixed Credit screen title. 
+  - New Functionality to FAA Chart Recal Commands
+      - Charts without computer codes will be generated with the first 5 characters (not including spaces) of the chart name. 
+  - Gather WX Station data from Vatsim
+      - This may cause issues, if so please report in issues section on github. 
+
 - ## Version 0.8.0
   - Fixed Bug #98 META File Causing Crash:
     - If Meta File is not available, NASR2SCT will put a WARN-README.txt file in output directory.

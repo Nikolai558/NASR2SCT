@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -77,13 +80,42 @@ namespace NASR_GUI
             }
         }
 
+        private string ReadChangeLog()
+        {
+            string output = "";
+            string content = "";
+
+            string url = "https://raw.githubusercontent.com/Nikolai558/NASR2SCT/development/ChangeLog.md";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            using (var reader = new StreamReader(response.GetResponseStream()))
+            {
+                content = reader.ReadToEnd();
+            }
+
+            foreach (string line in content.Split('\n'))
+            {
+                if (line.Contains("## Version "))
+                {
+                    string version = line.Substring(13, 5);
+
+                    if (GlobalConfig.ProgramVersion == version)
+                    {
+                        break;
+                    }
+                }
+                output += line + '\n';
+            }
+
+            return output;
+        }
+
         private void InputVariables() 
         {
-            List<string> msg = GlobalConfig.ReleaseBody.Split(new string[] { "##" }, StringSplitOptions.None).ToList();
-            msg = msg.GetRange(2, msg.Count - 2);
-            msg[0] = msg[0].Substring(1, msg[0].Length - 1);
+            string msg = ReadChangeLog();
 
-            githubMessagelabel.Text = string.Join(" ", msg);
+            githubMessagelabel.Text = msg;
             programVersionLabel.Text = $"Your program version: {GlobalConfig.ProgramVersion}";
             githubVersionLabel.Text = $"Latest release version: {GlobalConfig.GithubVersion}";
         }

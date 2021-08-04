@@ -67,12 +67,33 @@ namespace ClassData.DataAccess
                         AmdtNum = recordData.Element("amdtnum").Value,
                         AmdtDate = recordData.Element("amdtdate").Value
                     };
-                    // - If something breaks totally move those back here. 
 
-                    //if ($"; {apt.AirportName}-{record.FAAChartName}" == "; OCEANA NAS/ APOLLO SOUCEK FIELD-RNAV (GPS) RWY 32L/R")
-                    //{
-                    //    string STOPME = "";
-                    //}
+                    if ((string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "DP") || (string.IsNullOrEmpty(record.Faanfd18) && record.ChartCode == "STAR"))
+                    {
+                        string newFaanfd18 = "";
+
+                        if (record.ChartName.Trim().Replace(" ", string.Empty).Length <= 5)
+                        {
+                            // This apears to be redundant check. As chart name Trimed and No spaces will always be greater than 5 Chars.
+                            newFaanfd18 = record.ChartName.Trim().Replace(" ", string.Empty);
+                        }
+                        else
+                        {
+                            newFaanfd18 = record.ChartName.Trim().Replace(" ", string.Empty).Substring(0, 5);
+                        }
+
+                        newFaanfd18 += "?";
+
+                        if (record.ChartCode == "DP")
+                        {
+                            record.Faanfd18 = newFaanfd18 + "." + apt.AptIdent;
+                        }
+                        else
+                        {
+                            record.Faanfd18 = apt.AptIdent + "." + newFaanfd18;
+                        }
+                        //Console.WriteLine(apt.AptIdent + " - " + record.ChartCode + " - " + record.ChartSeq + " - " + record.ChartName);
+                    }
 
                     if (
                             record.ChartName.IndexOf("CONVERGING") == -1 &&
