@@ -174,16 +174,17 @@ namespace ClassData.DataAccess
 
                 if (procedures[procSeqNumber][0].ComputerCode.IndexOf("NOT ASSIGNED") != -1)
                 {
-                    // Um this might skip procedures...... Might have an issue here? We will see. 
                     continue;
                 }
                 else if (procedures[procSeqNumber][0].Type == "S")
                 {
                     currentComputerCode = procedures[procSeqNumber][0].ComputerCode.Split('.')[1].Substring(0, procedures[procSeqNumber][0].ComputerCode.Split('.')[1].Length - 1);
+                    //Console.WriteLine("S: " + currentComputerCode);
                 }
                 else if (procedures[procSeqNumber][0].Type == "D")
                 {
                     currentComputerCode = procedures[procSeqNumber][0].ComputerCode.Split('.')[0].Substring(0, procedures[procSeqNumber][0].ComputerCode.Split('.')[0].Length - 1);
+                    //Console.WriteLine("D: " + currentComputerCode);
                 }
                 else
                 {

@@ -111,7 +111,7 @@
             this.MinimizeBox = false;
             this.Name = "CreditsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "CreditsForm";
+            this.Text = "Credits";
             this.ResumeLayout(false);
             this.PerformLayout();
 

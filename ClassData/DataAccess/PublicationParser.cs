@@ -12,7 +12,6 @@ namespace ClassData.DataAccess
 {
     public class PublicationParser
     {
-        // TODO - Populate this list from somewhere from some how.
         public static List<string> allArtcc = GlobalConfig.allArtcc;
 
         private string outputDirectory = GlobalConfig.outputDirectory + "PUBLICATIONS";

@@ -24,7 +24,7 @@ namespace NASARData
     /// </summary>
     public class GlobalConfig
     {
-        public static readonly string ProgramVersion = "0.8.0";
+        public static readonly string ProgramVersion = "0.8.1";
 
         public static string GithubVersion = "";
 
@@ -156,7 +156,9 @@ namespace NASARData
                     { $"{airacCycle}_FAA_Meta.xml", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml"},
                     { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
                     { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
-                    { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" }
+                    { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" },
+                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" },
+                    { $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
                 };
             }
             else
@@ -192,7 +194,9 @@ namespace NASARData
                     { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
                     { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
                     { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
-                    { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" }
+                    { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" },
+                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" },
+                    { $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
                 };
             }
 
@@ -203,15 +207,24 @@ namespace NASARData
             {
                 foreach (string fileName in allURLs.Keys)
                 {
-                    // TODO - We may not want to keep the data. Might want to remove this and just download it anyways.
-                    // This Data will ALWAYS get removed when user clicks "START" 
-                    // This is pointless but I will keep in for debuging purposes.
-
-                    if (!File.Exists($"{tempPath}\\{fileName}"))
+                    try
                     {
-                        client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
-                        DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
+                        if (fileName == $"{effectiveDate}_WX-CROSSCHECK.xml")
+                        {
+                            CreateCurlBatchFile("WXCROSSCHECK.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
+                            ExecuteCurlBatchFile("WXCROSSCHECK.bat");
+                        }
+                        else
+                        {
+                            client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
+                        }
                     }
+                    catch (Exception)
+                    {
+                        MessageBox.Show($"FAILED DOWNLOADING: \n\n{fileName}\n{allURLs[fileName]}\n\nThis program will exit.\nPlease try again.");
+                        Environment.Exit(-1);
+                    }
+                    DownloadedFilePaths.Add($"{tempPath}\\{fileName}");
                 }
             }
         }
@@ -561,20 +574,20 @@ namespace NASARData
             return decFormat;
         }
 
-        private static void CreateCurlBatchFile() 
+        private static void CreateCurlBatchFile(string name, string url, string outputFileName) 
         {
-            string filePath = $"{tempPath}\\getAiraccEff.bat";
+            string filePath = $"{tempPath}\\{name}";
             string writeMe = $"cd \"{tempPath}\"\n" +
-                $"curl \"https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/\">{FaaHtmlFileVariable}_FAA_NASR.HTML";
+                $"curl \"{url}\">{outputFileName}";
             File.WriteAllText(filePath, writeMe);
         }
 
-        private static void ExecuteCurlBatchFile()
+        private static void ExecuteCurlBatchFile(string batchFileName)
         {
             ProcessStartInfo ProcessInfo;
             Process Process;
 
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{tempPath}\\getAiraccEff.bat\"");
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{tempPath}\\{batchFileName}\"");
             ProcessInfo.CreateNoWindow = true;
             ProcessInfo.UseShellExecute = false;
 
@@ -594,9 +607,9 @@ namespace NASARData
 
             string response;
 
-            CreateCurlBatchFile();
+            CreateCurlBatchFile("getAiraccEff.bat", "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/", $"{FaaHtmlFileVariable}_FAA_NASR.HTML");
             
-            ExecuteCurlBatchFile();
+            ExecuteCurlBatchFile("getAiraccEff.bat");
 
             if (File.Exists($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML")  && File.ReadAllText($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML").Length > 10)
             {

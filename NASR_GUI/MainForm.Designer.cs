@@ -54,6 +54,7 @@
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fAQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.airacCycleGroupBox.SuspendLayout();
             this.convertGroupBox.SuspendLayout();
             this.startGroupBox.SuspendLayout();
@@ -94,14 +95,14 @@
             // 
             // airacLabel
             // 
-            this.airacLabel.AutoSize = true;
             this.airacLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.airacLabel.Location = new System.Drawing.Point(67, 29);
+            this.airacLabel.Location = new System.Drawing.Point(1, 29);
             this.airacLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.airacLabel.Name = "airacLabel";
-            this.airacLabel.Size = new System.Drawing.Size(296, 25);
+            this.airacLabel.Size = new System.Drawing.Size(450, 25);
             this.airacLabel.TabIndex = 2;
-            this.airacLabel.Text = "Which AIRAC Cycle do you want? ";
+            this.airacLabel.Text = "Select an AIRAC Cycle by Effective Date";
+            this.airacLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // facilityIDLabel
             // 
@@ -316,6 +317,7 @@
             this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.instructionsToolStripMenuItem,
+            this.fAQToolStripMenuItem,
             this.creditsToolStripMenuItem,
             this.changeLogToolStripMenuItem,
             this.uninstallToolStripMenuItem});
@@ -361,6 +363,15 @@
             this.uninstallToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
             this.uninstallToolStripMenuItem.Text = "Uninstall";
             this.uninstallToolStripMenuItem.Click += new System.EventHandler(this.uninstallToolStripMenuItem_Click);
+            // 
+            // fAQToolStripMenuItem
+            // 
+            this.fAQToolStripMenuItem.Font = new System.Drawing.Font("Romantic", 11.25F);
+            this.fAQToolStripMenuItem.ForeColor = System.Drawing.SystemColors.Control;
+            this.fAQToolStripMenuItem.Name = "fAQToolStripMenuItem";
+            this.fAQToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.fAQToolStripMenuItem.Text = "FAQ";
+            this.fAQToolStripMenuItem.Click += new System.EventHandler(this.fAQToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -428,6 +439,7 @@
         private System.Windows.Forms.Label outputLocationLabel;
         private System.Windows.Forms.ToolStripMenuItem uninstallToolStripMenuItem;
         private System.Windows.Forms.ComboBox facilityIdCombobox;
+        private System.Windows.Forms.ToolStripMenuItem fAQToolStripMenuItem;
     }
 }
 

@@ -34,7 +34,15 @@ namespace NASR_GUI
             //ParseMeta.QuarterbackFunc();
 
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
-            GlobalConfig.UpdateCheck();
+            try
+            {
+                GlobalConfig.UpdateCheck();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"NASR2SCT could not preform update check, please check internet connection.\n\nThis program will exit.\nPlease try again.");
+                Environment.Exit(-1);
+            }
 
             // Check Current Program Against Github, if different ask user if they want to update.
             CheckVersion();

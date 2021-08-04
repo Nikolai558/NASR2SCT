@@ -6,8 +6,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ClassData.DataAccess
@@ -195,14 +199,26 @@ namespace ClassData.DataAccess
 
         private void ParseAndWriteWxStation(string effectiveDate)
         {
+            string wxCrossCheckFilePathIn = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
-
+            
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("[LABELS]");
 
+            // DEBUGING ONLY! WX STATION
+            // string debugfilepath = $"{GlobalConfig.outputDirectory}\\debug.txt";
+            // StringBuilder debugSB = new StringBuilder();
+            // debugSB.AppendLine("DEBUGING ONLY! The following weather stations would have been added the old way. But now they will not be in [LABELS].\n\n");
+
             List<string> countryCodes = new List<string> { "AS", "GU", "MP", "PR", "VI", "US" };
             string id;
-            string final; 
+            string final;
+
+            // string xml = new WebClient().DownloadString("https://w1.weather.gov/xml/current_obs/index.xml");
+            XDocument xDocSload = XDocument.Load(wxCrossCheckFilePathIn);
+            var sList = xDocSload.Root.Elements("station").Elements("station_id").Select(element => element.Value.Substring(1,3)).ToList();
+            var lList = xDocSload.Root.Elements("station").Elements("station_id").Select(element => element.Value).ToList();
+
 
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_WXSTATIONS.txt"))
             {
@@ -230,7 +246,24 @@ namespace ClassData.DataAccess
                                 {
                                     final = $"\"{line.Substring(20, 4)} {apt.Name.Replace('"', '-')}\" {GlobalConfig.CorrectLatLon(lat, true, GlobalConfig.Convert)} {GlobalConfig.CorrectLatLon(lon, false, GlobalConfig.Convert)} 11579568";
 
-                                    sb.AppendLine(final);
+                                    if (sList.Contains(id, StringComparer.OrdinalIgnoreCase) || lList.Contains(id, StringComparer.OrdinalIgnoreCase))
+                                    {
+                                        foreach (string vatsimWXLine in File.ReadLines($"{GlobalConfig.tempPath}\\{effectiveDate}_WX-VATSIM.txt"))
+                                        {
+                                            if (vatsimWXLine.Substring(0, 5).Trim() == apt.Icao)
+                                            {
+                                                sb.AppendLine(final);
+                                                //Console.WriteLine($"Added weather station for {id}");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Do nothing here. This is Debuging only. WX STATION
+                                        // debugSB.AppendLine(final);
+                                    }
+
                                     break;
                                 }
                             }
@@ -238,6 +271,7 @@ namespace ClassData.DataAccess
                     }
                 }
             }
+            // File.WriteAllText(debugfilepath, debugSB.ToString());
 
             File.WriteAllText(filepath, sb.ToString());
             File.AppendAllText(filepath, $"\n\n\n\n\n\n");

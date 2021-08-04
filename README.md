@@ -1,9 +1,10 @@
 # NASR2SCT
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Nikolai558/NASR2SCT)
-![GitHub contributors](https://img.shields.io/github/contributors/Nikolai558/NASR2SCT)
-![GitHub stars](https://img.shields.io/github/stars/Nikolai558/NASR2SCT?style=social)
-![GitHub forks](https://img.shields.io/github/forks/Nikolai558/NASR2SCT?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/Nikolai558/NASR2SCT?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/Nikolai558/NASR2SCT?style=for-the-badge)
+![GitHub stars](https://img.shields.io/github/stars/Nikolai558/NASR2SCT?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/Nikolai558/NASR2SCT?style=for-the-badge)
+
 
 ## Authors: 
 - Kyle Sanders - [Github Profile](https://github.com/KSanders7070)
@@ -20,6 +21,6 @@ Converts the FAA National Airspace System Resource (NASR) Data to formats that m
 https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO05NOIJMeB4mbIbs3CY5pIOYtrFtqo8BfmlCFaJSFMSxI_ut/embed
 
 ### REQUIREMENTS:
-- Windows OS
+- Windows OS (8.1 or newer)
 - CUrl (recomended)
 
