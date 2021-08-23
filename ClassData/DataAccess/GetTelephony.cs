@@ -65,23 +65,23 @@ namespace ClassData.DataAccess
 
                     if (line.Contains("<p") && line.Contains("</p>"))
                     {
-                        completedLine = line;
+                        completedLine = line.Trim();
                         inParagraph = false;
                     }
                     else if (line.Contains("<p"))
                     {
                         inParagraph = true;
-                        completedLine += line;
+                        completedLine += " " + line.Trim();
                         continue;
                     }
                     else if (line.Contains("</p>"))
                     {
                         inParagraph = false;
-                        completedLine += line;
+                        completedLine += " " + line.Trim();
                     }
                     else if (inParagraph)
                     {
-                        completedLine += line;
+                        completedLine += " " + line.Trim();
                         continue;
                     }
                     else
