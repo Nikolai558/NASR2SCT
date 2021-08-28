@@ -20,13 +20,20 @@ namespace ClassData.DataAccess
 
             bool inTableRow = false;
             bool inTableData = false;
+            bool inParagraph = false;
 
             TelephonyModel currentTelephony = new TelephonyModel();
 
             int count = 0;
+            string completedLine = "";
 
             foreach (string line in allLines)
             {
+                if (inParagraph == false)
+                {
+                    completedLine = "";
+                }
+
                 if (line.Contains("<tr>"))
                 {
                     inTableRow = true;
@@ -56,9 +63,40 @@ namespace ClassData.DataAccess
                 {
                     string[] badCharacters = new string[] { " ", ",", ".", "/", "!", "@", "#", "$", "%", "^", "&", "*", "\'", ";", "_", "(", ")", ":", "|", "[", "]", "-", "~", "`", "+", "\"" };
 
+                    if (line.Contains("<p") && line.Contains("</p>"))
+                    {
+                        completedLine = line.Trim();
+                        inParagraph = false;
+                    }
+                    else if (line.Contains("<p"))
+                    {
+                        inParagraph = true;
+                        completedLine += " " + line.Trim();
+                        continue;
+                    }
+                    else if (line.Contains("</p>"))
+                    {
+                        inParagraph = false;
+                        completedLine += " " + line.Trim();
+                    }
+                    else if (inParagraph)
+                    {
+                        completedLine += " " + line.Trim();
+                        continue;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+
+                    if (completedLine == "")
+                    {
+                        throw new Exception("Error creating full paragraph tag.");
+                    }
                     if (count == 1)
                     {
-                        string telephonyData = line.Split('>')[1];
+                        string telephonyData = completedLine.Split('>')[1];
 
                         if (telephonyData.Contains('<'))
                         {
@@ -78,7 +116,7 @@ namespace ClassData.DataAccess
                     }
                     else if (count == 4)
                     {
-                        string threeLDData = line.Split('>')[1];
+                        string threeLDData = completedLine.Split('>')[1];
 
                         if (threeLDData.Contains('<'))
                         {

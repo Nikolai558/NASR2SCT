@@ -1,6 +1,10 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.8.2
+  - Fixed bugs #120 and #118. There was an update to the telophony website we use. This broke NASR2SCT
+  - Modified backend code to account for HTML updates from various websites NASR2SCT uses.
+
 - ## Version 0.8.1
   - Change log on Update question will display all changes from user version and up to the latest release. 
   - FAQ button added. This will take you to a Facts And Questions google slide.
