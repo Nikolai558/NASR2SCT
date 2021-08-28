@@ -1,18 +1,9 @@
-﻿[03/06/21 10:48:37] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.8.0.nupkg
-[03/06/21 10:48:37] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
-[03/06/21 10:48:37] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.0.nupkg
-[03/06/21 10:48:37] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.0.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.8.0-full.nupkg
-[03/06/21 10:48:37] info: ReleasePackage: Extracting dependent packages: []
-[03/06/21 10:48:37] info: ReleasePackage: Removing unnecessary data
-[03/06/21 10:48:37] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempc\NASR2SCT.nuspec
-[03/06/21 10:48:38] info: Program: Building embedded zip file for Setup.exe
-[03/06/21 10:48:42] info: Program: Finished Squirrel Updater
-[03/08/21 18:11:03] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.8.1.nupkg
-[03/08/21 18:11:03] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
-[03/08/21 18:11:03] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.1.nupkg
-[03/08/21 18:11:04] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.1.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.8.1-full.nupkg
-[03/08/21 18:11:04] info: ReleasePackage: Extracting dependent packages: []
-[03/08/21 18:11:04] info: ReleasePackage: Removing unnecessary data
-[03/08/21 18:11:04] info: ReleasePackage: No release notes found in C:\Users\nikol\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
-[03/08/21 18:11:06] info: Program: Building embedded zip file for Setup.exe
-[03/08/21 18:11:11] info: Program: Finished Squirrel Updater
+﻿[28/08/21 12:48:50] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.8.2.nupkg
+[28/08/21 12:48:50] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[28/08/21 12:48:50] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.2.nupkg
+[28/08/21 12:48:50] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.2.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.8.2-full.nupkg
+[28/08/21 12:48:50] info: ReleasePackage: Extracting dependent packages: []
+[28/08/21 12:48:50] info: ReleasePackage: Removing unnecessary data
+[28/08/21 12:48:50] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempc\NASR2SCT.nuspec
+[28/08/21 12:48:51] info: Program: Building embedded zip file for Setup.exe
+[28/08/21 12:48:55] info: Program: Finished Squirrel Updater
