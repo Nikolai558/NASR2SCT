@@ -1,7 +1,6 @@
 ﻿using ClassData.DataAccess;
 using ClassData.Models;
 using NASARData;
-using Squirrel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,7 +39,7 @@ namespace NASR_GUI
             }
             catch (Exception)
             {
-                MessageBox.Show($"NASR2SCT could not preform update check, please check internet connection.\n\nThis program will exit.\nPlease try again.");
+                MessageBox.Show($"NASR2SCT could not perform update check, please check internet connection.\n\nThis program will exit.\nPlease try again.");
                 Environment.Exit(-1);
             }
 
@@ -68,7 +67,7 @@ namespace NASR_GUI
                 processForm.ChangeProcessingLabel(new Point(5, 5));
                 processForm.DisplayMessages(true);
                 processForm.ShowDialog();
-
+                /*
                 if (GlobalConfig.updateProgram)
                 {
                     string updateInformationMessage = "Once you click 'OK', all screens related to NASR2SCT will close.\n\n" +
@@ -125,7 +124,8 @@ namespace NASR_GUI
                 else
                 {
                     // User does not want to Update
-                }
+                }*/
+                StartNewVersion();
             }
         }
 
@@ -192,6 +192,7 @@ namespace NASR_GUI
         /// <summary>
         /// Use squirrel to update the program.
         /// </summary>
+        /*
         private static async void UpdateProgram() 
         {
             //var updateManager = new UpdateManager($"{GlobalConfig.tempPath}");
@@ -203,7 +204,7 @@ namespace NASR_GUI
             {
                 var releaseEntry = await updateManager.UpdateApp();
             }
-        }
+        }*/
 
 
         private static void StartNewVersion() 
