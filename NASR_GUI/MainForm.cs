@@ -483,9 +483,7 @@ namespace NASR_GUI
 
         private void instructionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: open in browser
-            //System.Diagnostics.Process.Start("https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO05NOIJMeB4mbIbs3CY5pIOYtrFtqo8BfmlCFaJSFMSxI_ut/embed?");
-
+            Program.OpenBrowser("https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO05NOIJMeB4mbIbs3CY5pIOYtrFtqo8BfmlCFaJSFMSxI_ut/embed?");
         }
 
         private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -511,8 +509,7 @@ namespace NASR_GUI
 
         private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: open in browser
-            //System.Diagnostics.Process.Start("https://github.com/Nikolai558/NASR2SCT/blob/development/ChangeLog.md");
+            Program.OpenBrowser("https://github.com/Nikolai558/NASR2SCT/blob/development/ChangeLog.md");
         }
 
         private void nextAiracSelection_Click(object sender, EventArgs e)
@@ -651,8 +648,7 @@ namespace NASR_GUI
 
         private void fAQToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: open in browser
-            //System.Diagnostics.Process.Start("https://docs.google.com/presentation/d/e/2PACX-1vSlhz1DhDwZ-43BY4Q2vg-ff0QBGssxpmv4-nhZlz9LpGJvWjqLsHVaQwwsV1AGMWFFF_x_j_b3wTBO/embed");
+            Program.OpenBrowser("https://docs.google.com/presentation/d/e/2PACX-1vSlhz1DhDwZ-43BY4Q2vg-ff0QBGssxpmv4-nhZlz9LpGJvWjqLsHVaQwwsV1AGMWFFF_x_j_b3wTBO/embed");
         }
     }
 }
