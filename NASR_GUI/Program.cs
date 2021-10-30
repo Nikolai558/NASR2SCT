@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -90,12 +91,6 @@ namespace NASR_GUI
 				/////////////////////////// END TESTING - Checking to see if this is our problem code with the auto updater ///////////////////////////////////
 
 
-				// User DOES want to update. 
-				GlobalConfig.DownloadAssets();
-
-				ZipFile.ExtractToDirectory($"{GlobalConfig.tempPath}\\NASR2SCT-{GlobalConfig.GithubVersion}.zip", $"{GlobalConfig.tempPath}\\program");
-
-
 				// This is incharge of calling squirrel to patch update the program. 
 			        UpdateProgram();
 
@@ -116,15 +111,20 @@ namespace NASR_GUI
         /// <summary>
         /// Use squirrel to update the program.
         /// </summary>
-        
-        //TODO: RUN UPDATER
 
         private static void UpdateProgram()
         {
             // run OS specific update methods
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-
+                // Download ZIP archive of program
+                WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://github.com/Nikolai558/NASR2SCT/releases/download/" + GlobalConfig.GithubVersion + "/NASR2SCT-" + GlobalConfig.GithubVersion + ".zip", "update.zip");
+                // Unzip and delete archive
+                ZipFile.ExtractToDirectory("update.zip", "update");
+                File.Delete("update.zip");
+                // Move update to AppData\Roaming
+                Directory.Move(@"update\NASR2SCT-" + GlobalConfig.GithubVersion, Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion);
             }
 
         }
@@ -135,13 +135,13 @@ namespace NASR_GUI
             string writeMe =
                 "SET /A COUNT=0\n\n" +
                 ":CHK\n" +
-                $"IF EXIST \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\" goto FOUND\n" +
+                $"IF EXIST \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\\NASR2SCT.exe\" goto FOUND\n" +
                 "SET /A COUNT=%COUNT% + 1\n" +
                 "IF %COUNT% GEQ 12 GOTO FOUND\n" +
                 "PING 127.0.0.1 -n 3 >nul\n" +
                 "GOTO CHK\n\n" +
                 ":FOUND\n" +
-                $"start \"\" \"%userprofile%\\AppData\\Local\\NASR2SCT\\app-{GlobalConfig.GithubVersion}\\NASR2SCT.exe\"\n";
+                $"start \"\" \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\\NASR2SCT.exe\"\n";
 
 
             File.WriteAllText(filePath, writeMe);
