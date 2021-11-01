@@ -99,11 +99,6 @@ namespace NASR_GUI
 
                     Environment.Exit(1);
 				}
-				else
-                {
-                    // User does not want to Update
-                    StartNewVersion();
-                }
             }
         }
 
@@ -124,43 +119,23 @@ namespace NASR_GUI
                 ZipFile.ExtractToDirectory("update.zip", "update");
                 File.Delete("update.zip");
                 // Move update to AppData\Roaming
-                Directory.Move(@"update\NASR2SCT-" + GlobalConfig.GithubVersion, Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion);
+                try
+                {
+                    Directory.Move(@"update\NASR2SCT-" + GlobalConfig.GithubVersion, Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion);
+                } catch (IOException e)
+                {
+
+                }
+                string runner = $"start /d \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\" NASR2SCT.exe";
+                File.WriteAllText($"{GlobalConfig.tempPath}\\test.bat", runner);
+
+            } else
+            {
+                MessageBox.Show("This platform is not yet supported.");
             }
 
         }
 
-        private static void StartNewVersion()
-        {
-            string filePath = $"{GlobalConfig.tempPath}\\startNewVersion.bat";
-            string writeMe =
-                "SET /A COUNT=0\n\n" +
-                ":CHK\n" +
-                $"IF EXIST \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\\NASR2SCT.exe\" goto FOUND\n" +
-                "SET /A COUNT=%COUNT% + 1\n" +
-                "IF %COUNT% GEQ 12 GOTO FOUND\n" +
-                "PING 127.0.0.1 -n 3 >nul\n" +
-                "GOTO CHK\n\n" +
-                ":FOUND\n" +
-                $"start \"\" \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\\NASR2SCT.exe\"\n";
-
-
-            File.WriteAllText(filePath, writeMe);
-
-
-            int ExitCode;
-            ProcessStartInfo ProcessInfo;
-            Process Process;
-
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{GlobalConfig.tempPath}\\startNewVersion.bat\"");
-            ProcessInfo.CreateNoWindow = true;
-            ProcessInfo.UseShellExecute = false;
-
-            Process = Process.Start(ProcessInfo);
-            Process.WaitForExit();
-
-            ExitCode = Process.ExitCode;
-            Process.Close();
-        }
 
         //from https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
         public static void OpenBrowser(string url)

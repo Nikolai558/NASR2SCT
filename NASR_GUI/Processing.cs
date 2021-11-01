@@ -131,5 +131,10 @@ namespace NASR_GUI
             GlobalConfig.updateProgram = false;
             this.Close();
         }
+
+        private void updatePanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

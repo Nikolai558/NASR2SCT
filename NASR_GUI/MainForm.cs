@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using NASARData;
-using ClassData;
-using System.Threading;
-using System.IO;
-using System.Drawing.Text;
-using System.Reflection;
-using ClassData.DataAccess;
-using NASRData.DataAccess;
-using System.Net;
-using ClassData.Models.MetaFileModels;
+﻿using ClassData.DataAccess;
 using ClassData.Models;
+using ClassData.Models.MetaFileModels;
+using NASARData;
+using NASRData.DataAccess;
+using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace NASR_GUI
 {
@@ -252,7 +244,7 @@ namespace NASR_GUI
             worker.RunWorkerAsync();
         }
 
-        private void AdjustProcessingBox() 
+        private void AdjustProcessingBox()
         {
             outputDirectoryLabel.Text = GlobalConfig.outputDirectory;
             outputDirectoryLabel.Visible = true;
@@ -338,7 +330,7 @@ namespace NASR_GUI
                 AliasCheck aliasCheck = new AliasCheck();
                 aliasCheck.CheckForDuplicates($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt");
             }
-            else 
+            else
             {
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Downloading FAA Data");
                 GlobalConfig.DownloadAllFiles(GlobalConfig.airacEffectiveDate, AiracDateCycleModel.AllCycleDates[GlobalConfig.airacEffectiveDate]);
@@ -407,7 +399,7 @@ namespace NASR_GUI
 
             processingGroupBox.Visible = true;
             processingGroupBox.Enabled = true;
-            
+
             menuStrip1.Visible = true;
 
             //runAgainButton.Visible = true;
@@ -417,7 +409,7 @@ namespace NASR_GUI
             exitButton.Enabled = true;
         }
 
-        private void getAiracDate() 
+        private void getAiracDate()
         {
             //GlobalConfig.GetAiracDateFromFAA();
             var Worker = new BackgroundWorker();
