@@ -513,11 +513,11 @@ namespace NASARData
                 if (degrees < 0)
                 {
                     degrees = degrees * -1;
-                    dms = $"S{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                    dms = $"S{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadLeft(2, '0')}.{seconds.ToString().PadLeft(2, '0')}.{miliseconds.ToString().PadLeft(3, '0')}";
                 }
                 else
                 {
-                    dms = $"N{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                    dms = $"N{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadLeft(2, '0')}.{seconds.ToString().PadLeft(2, '0')}.{miliseconds.ToString().PadLeft(3, '0')}";
                 }
             }
             else
@@ -525,11 +525,11 @@ namespace NASARData
                 if (degrees < 0)
                 {
                     degrees = degrees * -1;
-                    dms = $"W{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                    dms = $"W{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadLeft(2, '0')}.{seconds.ToString().PadLeft(2, '0')}.{miliseconds.ToString().PadLeft(3, '0')}";
                 }
                 else
                 {
-                    dms = $"E{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadRight(2, '0')}.{seconds.ToString().PadRight(2, '0')}.{miliseconds.ToString().PadRight(3, '0')}";
+                    dms = $"E{degrees.ToString().PadLeft(3, '0')}.{minutes.ToString().PadLeft(2, '0')}.{seconds.ToString().PadLeft(2, '0')}.{miliseconds.ToString().PadLeft(3, '0')}";
                 }
             }
 
