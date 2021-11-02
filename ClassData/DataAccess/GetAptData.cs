@@ -199,6 +199,109 @@ namespace ClassData.DataAccess
 
         private void ParseAndWriteWxStation(string effectiveDate)
         {
+
+            /* get metars from index.xml
+             * if metar id in apt use apt name
+             * if not remove first metar letter (ku42 = u42) check if in apt use apt name
+             * if not dont print
+             */
+
+
+            string metar_data_filepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
+            string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("[LABELS]");
+
+            XDocument xDocSload = XDocument.Load(metar_data_filepath);
+
+            // { Station ID (str): [lat (str), lon (str) ] }
+            Dictionary<string, List<double>> station_info = new Dictionary<string, List<double>>();
+
+
+            foreach (XElement xElement in xDocSload.Descendants("station"))
+            {
+                string id = xElement.Element("station_id").Value;
+                double lat = Convert.ToDouble(xElement.Element("latitude").Value);
+                double lon = Convert.ToDouble(xElement.Element("longitude").Value);
+
+
+                station_info.Add(id, new List<double> { lat, lon });
+            }
+
+            // { Airport Code (str): [airport name (str), airport lat (str), airport lon (str) ] }
+            Dictionary<string, List<string>> all_apt_info = new Dictionary<string, List<string>>();
+
+
+            foreach (AptModel apt in allAptModels)
+            {
+
+                if (string.IsNullOrEmpty(apt.Icao))
+                {
+                    all_apt_info.Add(apt.Id, new List<string> { apt.Name, apt.Lat_Dec, apt.Lon_Dec });
+                }
+                else
+                {
+                    all_apt_info.Add(apt.Icao, new List<string> { apt.Name, apt.Lat_Dec, apt.Lon_Dec });
+                }
+
+            }
+
+            string final;
+            foreach (string metar_id in station_info.Keys)
+            {
+                // "PAKH AKHIOK" N056.56.00.000 W154.11.00.000 11579568
+                if (all_apt_info.Keys.Contains(metar_id))
+                {
+                    // Metar ID matches an airport 
+                    final = $"\"{metar_id} {all_apt_info[metar_id][0].Replace('"', '-')}\" {GlobalConfig.createDMS(station_info[metar_id][0], true)} {GlobalConfig.createDMS(station_info[metar_id][1], false)} 11579568";
+                    sb.AppendLine(final);
+
+                }
+                else if (all_apt_info.Keys.Contains(metar_id.Substring(1)))
+                {
+                    // Metar ID WITHOUT PREFIXING CHAR matches an Airport Ex. KU42 --> U42
+                    foreach (var apt in all_apt_info.Keys)
+                    {
+                        if (metar_id.Substring(1) == apt)
+                        {
+                            // { Station ID (str): [lat (str), lon (str) ] }
+                            // { Airport Code (str): [airport name (str), airport lat (str), airport lon (str) ] }
+
+                            // Need to check lat and lon before '.' to make sure its refering to same airport. the rest of the lat and lon can be different
+                            // example "CWVI" is nowhere near "KWVI"
+                            string station_lat = station_info[metar_id][0].ToString().Split('.')[0];
+                            string airport_lat = all_apt_info[apt][1].Split('.')[0];
+                            string station_lon = station_info[metar_id][1].ToString().Split('.')[0];
+                            string airport_lon = all_apt_info[apt][2].Split('.')[0];
+
+                            if (station_lat == airport_lat && station_lon == airport_lon)
+                            {
+                                final = $"\"{metar_id} {all_apt_info[metar_id.Substring(1)][0].Replace('"', '-')}\" {GlobalConfig.createDMS(station_info[metar_id][0], true)} {GlobalConfig.createDMS(station_info[metar_id][1], false)} 11579568";
+                                sb.AppendLine(final);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Metar Id dos not match in anyway an airport so just continue 
+                    continue;
+                }
+
+            }
+
+            File.WriteAllText(filepath, sb.ToString());
+            File.AppendAllText(filepath, $"\n\n\n\n\n\n");
+
+            // Add this file to our TEST SECTOR FILE.
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
+
+            /*
+             * OLD CODE!!!!!! 
+            // Cross check = https://w1.weather.gov/xml/current_obs/index.xml
             string wxCrossCheckFilePathIn = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
             
@@ -278,6 +381,7 @@ namespace ClassData.DataAccess
 
             // Add this file to our TEST SECTOR FILE.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
+            */
         }
 
         public static void WriteWxXmlOutput()
