@@ -207,7 +207,7 @@ namespace ClassData.DataAccess
              */
 
 
-            string metar_data_filepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
+            string metar_data_filepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_NWS-WX-STATIONS.xml";
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
 
 
@@ -302,7 +302,7 @@ namespace ClassData.DataAccess
             /*
              * OLD CODE!!!!!! 
             // Cross check = https://w1.weather.gov/xml/current_obs/index.xml
-            string wxCrossCheckFilePathIn = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
+            string wxCrossCheckFilePathIn = $"{GlobalConfig.tempPath}\\{effectiveDate}_NWS-WX-STATIONS.xml";
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
             
             StringBuilder sb = new StringBuilder();

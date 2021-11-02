@@ -149,7 +149,7 @@ namespace NASARData
                 {
                     { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
                     { $"{effectiveDate}_APT.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip" },
-                    { $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
+                    //{ $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
                     { $"{effectiveDate}_ARB.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip" },
                     { $"{effectiveDate}_ATS.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip" },
                     { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
@@ -157,8 +157,8 @@ namespace NASARData
                     { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
                     { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
                     { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" },
-                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" },
-                    { $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
+                    { $"{effectiveDate}_NWS-WX-STATIONS.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" }
+                    //{ $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
                 };
             }
             else
@@ -188,15 +188,15 @@ namespace NASARData
                 {
                     { $"{effectiveDate}_STARDP.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/STARDP.zip" },
                     { $"{effectiveDate}_APT.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/APT.zip" },
-                    { $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
+                    //{ $"{effectiveDate}_WXSTATIONS.txt", $"https://www.aviationweather.gov/docs/metar/stations.txt" },
                     { $"{effectiveDate}_ARB.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ARB.zip" },
                     { $"{effectiveDate}_ATS.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/ATS.zip" },
                     { $"{effectiveDate}_AWY.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/AWY.zip"},
                     { $"{effectiveDate}_FIX.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/FIX.zip" },
                     { $"{effectiveDate}_NAV.zip", $"https://nfdc.faa.gov/webContent/28DaySub/{effectiveDate}/NAV.zip"},
                     { $"{airacCycle}_TELEPHONY.html", $"https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html" },
-                    { $"{effectiveDate}_WX-CROSSCHECK.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" },
-                    { $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
+                    { $"{effectiveDate}_NWS-WX-STATIONS.xml", $"https://w1.weather.gov/xml/current_obs/index.xml" }
+                    //{ $"{effectiveDate}_WX-VATSIM.txt", $"http://metar.vatsim.net/metar.php?id=all" }
                 };
             }
 
@@ -209,7 +209,7 @@ namespace NASARData
                 {
                     try
                     {
-                        if (fileName == $"{effectiveDate}_WX-CROSSCHECK.xml")
+                        if (fileName == $"{effectiveDate}_NWS-WX-STATIONS.xml")
                         {
                             CreateCurlBatchFile("WXCROSSCHECK.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
                             ExecuteCurlBatchFile("WXCROSSCHECK.bat");
