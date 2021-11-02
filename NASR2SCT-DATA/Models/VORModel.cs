@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ClassData.Models
+﻿namespace ClassData.Models
 {
     /// <summary>
     /// VOR Model - Holds all information we need about each VOR

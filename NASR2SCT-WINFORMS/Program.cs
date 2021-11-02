@@ -1,16 +1,9 @@
-﻿using ClassData.DataAccess;
-using ClassData.Models;
-using NASARData;
+﻿using NASARData;
 using Squirrel;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace NASR_GUI

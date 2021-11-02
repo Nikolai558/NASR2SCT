@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NASRData.Models
+﻿namespace NASRData.Models
 {
     /// <summary>
     /// Fix Model, Think of this as a template. 

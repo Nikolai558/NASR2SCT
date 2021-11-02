@@ -95,8 +95,6 @@
   <ItemGroup>
     <Content Include="NASR_2_SCT_icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Static\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
