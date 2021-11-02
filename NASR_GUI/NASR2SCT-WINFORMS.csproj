@@ -151,15 +151,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClassData\NASR2SCT-DATA.csproj">
-      <Project>{089ac99f-157a-444f-9985-4a6d717a3932}</Project>
+    <Content Include="NASR_2_SCT_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NASR2SCT-DATA\NASR2SCT-DATA.csproj">
+      <Project>{089AC99F-157A-444F-9985-4A6D717A3932}</Project>
       <Name>NASR2SCT-DATA</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="NASR_2_SCT_icon.ico" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
