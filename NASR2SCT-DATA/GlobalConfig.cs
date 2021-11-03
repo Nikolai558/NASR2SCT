@@ -216,6 +216,11 @@ namespace NASR2SCTDATA
                             CreateCurlBatchFile("TELEPHONY.bat", "https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html", fileName);
                             ExecuteCurlBatchFile("TELEPHONY.bat");
                         }
+                        else if (fileName == $"{airacCycle}_FAA_Meta.xml")
+                        {
+                            CreateCurlBatchFile("FAA_Meta.bat", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml", fileName);
+                            ExecuteCurlBatchFile("FAA_Meta.bat");
+                        }
                         else
                         {
                             client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
