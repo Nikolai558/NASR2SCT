@@ -208,8 +208,13 @@ namespace NASR2SCTDATA
                     {
                         if (fileName == $"{effectiveDate}_NWS-WX-STATIONS.xml")
                         {
-                            CreateCurlBatchFile("WXCROSSCHECK.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
-                            ExecuteCurlBatchFile("WXCROSSCHECK.bat");
+                            CreateCurlBatchFile("NWS-WX-STATIONS.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
+                            ExecuteCurlBatchFile("NWS-WX-STATIONS.bat");
+                        }
+                        else if (fileName == $"{airacCycle}_TELEPHONY.html")
+                        {
+                            CreateCurlBatchFile("TELEPHONY.bat", "https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html", fileName);
+                            ExecuteCurlBatchFile("TELEPHONY.bat");
                         }
                         else
                         {
