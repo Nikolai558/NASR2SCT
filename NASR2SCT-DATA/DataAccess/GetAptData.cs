@@ -11,11 +11,19 @@ using System.Xml.Serialization;
 
 namespace NASR2SCTDATA.DataAccess
 {
+    /// <summary>
+    /// Parse and write all Airport and Weather Station Data.
+    /// </summary>
     public class GetAptData
     {
+        /// Private List to hold ALL Airport Models.
         private List<AptModel> allAptModels = new List<AptModel>();
-        private List<WxStationModel> allWxStationsInData = new List<WxStationModel>();
-        
+
+        /// <summary>
+        /// Calls all internal functions inorder to process the Airport and Weather Station Data.
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
+        /// <param name="artcc">Selected ARTCC (e.x. "FAA")</param>
         public void APTQuarterbackFunc(string effectiveDate, string artcc) 
         {
             ParseAptData(effectiveDate);
@@ -29,51 +37,59 @@ namespace NASR2SCTDATA.DataAccess
             WriteAptGeoMap();
             WriteAptTextGeoMap();
 
-
             ParseAndWriteWxStation(effectiveDate);
             WriteWxXmlOutput();
         }
 
+        /// <summary>
+        /// Write the vERAM Airports Geomap to an XML File
+        /// </summary>
         public void WriteAptGeoMap()
         {
+            string saveFilePath = $"{GlobalConfig.outputDirectory}\\VERAM\\AIRPORTS_GEOMAP.xml";
             StringBuilder sb = new StringBuilder();
 
+            // Top of the XML file for the vERAM Airport Geomap
             sb.AppendLine("        <GeoMapObject Description=\"APT\" TdmOnly=\"false\">");
             sb.AppendLine("          <SymbolDefaults Bcg=\"10\" Filters=\"10\" Style=\"Airport\" Size=\"1\" />");
             sb.AppendLine("          <Elements>");
 
-
-            string saveFilePath = $"{GlobalConfig.outputDirectory}\\VERAM\\AIRPORTS_GEOMAP.xml";
-
             foreach (AptModel apt in allAptModels)
             {
+                // Airport status "O" means it is in operation. 
                 if (apt.Status == "O")
                 {
-                    sb.AppendLine($"            <Element xsi:type=\"Symbol\" Filters=\"\" Size=\"2\" Lat=\"{ apt.Lat_Dec}\" Lon=\"{ apt.Lon_Dec}\" />");
+                    sb.AppendLine($"            <Element xsi:type=\"Symbol\" Filters=\"\" Size=\"2\" Lat=\"{ apt.Lat_Dec }\" Lon=\"{ apt.Lon_Dec }\" />");
                 }
             }
 
+            // Bottom of the XML file for the vERAM Airport Geomap
             sb.AppendLine("          </Elements>");
             sb.AppendLine("        </GeoMapObject>");
 
             File.WriteAllText(saveFilePath, sb.ToString());
         }
 
+        /// <summary>
+        /// Write the vERAM Airports Text Geomap to an XML File
+        /// </summary>
         private void WriteAptTextGeoMap() 
         {
             string saveFilePath = $"{GlobalConfig.outputDirectory}\\vERAM\\AIRPORT_TEXT_GEOMAP.xml";
-
             StringBuilder sb = new StringBuilder();
+
+            // Top of the XML file for the vERAM Airport Text Geomap
             sb.AppendLine("        <GeoMapObject Description=\"AIRPORT TEXT\" TdmOnly=\"true\">");
             sb.AppendLine("          <TextDefaults Bcg=\"10\" Filters=\"10\" Size=\"1\" Underline=\"false\" Opaque=\"false\" XOffset=\"12\" YOffset=\"0\" />");
             sb.AppendLine("          <Elements>");
 
+            string id;
+            List<char> badChar = new List<char>() { '&', '"' };
             foreach (AptModel apt in allAptModels)
             {
-                string id;
+                string tempAptName = apt.Name;
 
-                List<char> badChar = new List<char>() { '&', '"' };
-
+                // Grab the FAA or ICAO code for the current Airport.
                 if (string.IsNullOrEmpty(apt.Icao))
                 {
                     id = apt.Id;
@@ -83,119 +99,133 @@ namespace NASR2SCTDATA.DataAccess
                     id = apt.Icao;
                 }
 
-
-                string tempAptName = apt.Name;
-
+                // Replace all "Bad Characters" with a "-"
                 foreach (char bad in badChar)
                 {
                     tempAptName = tempAptName.Replace(bad, '-');
                 }
 
+                // Verify the airport is operational.
                 if (apt.Status == "O")
                 {
                     sb.AppendLine($"            <Element xsi:type=\"Text\" Filters=\"\" Lat=\"{apt.Lat_Dec}\" Lon=\"{apt.Lon_Dec}\" Lines=\"{id} {tempAptName}\" />");
                 }
             }
 
+            // Bottom of the XML file for the vERAM Airport Text Geomap
             sb.AppendLine("          </Elements>");
             sb.AppendLine("        </GeoMapObject>");
 
             File.WriteAllText(saveFilePath, sb.ToString());
         }
 
-
+        /// <summary>
+        /// Parse through the NWS WX Station XML file and write the VRC [LABELS].sct2 file.
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
         private void ParseAndWriteWxStation(string effectiveDate)
         {
-            string metar_data_filepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_NWS-WX-STATIONS.xml";
-            string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
-
-
+            string metarDataFilepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_NWS-WX-STATIONS.xml";
+            string outputFilepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
+            Dictionary<string, List<double>> stationInfo = new Dictionary<string, List<double>>();
+            Dictionary<string, List<string>> aptInfo = new Dictionary<string, List<string>>();
             StringBuilder sb = new StringBuilder();
+            
+            // VRC Labels Header
             sb.AppendLine("[LABELS]");
 
-            XDocument xDocSload = XDocument.Load(metar_data_filepath);
-
-            Dictionary<string, List<double>> station_info = new Dictionary<string, List<double>>();
-
-            foreach (XElement xElement in xDocSload.Descendants("station"))
+            // Load Metar XML File and populate our stationInfo Dictionary
+            XDocument metarXML = XDocument.Load(metarDataFilepath);
+            foreach (XElement xElement in metarXML.Descendants("station"))
             {
                 string id = xElement.Element("station_id").Value;
                 double lat = Convert.ToDouble(xElement.Element("latitude").Value);
                 double lon = Convert.ToDouble(xElement.Element("longitude").Value);
 
-                station_info.Add(id, new List<double> { lat, lon });
+                stationInfo.Add(id, new List<double> { lat, lon });
             }
 
-            Dictionary<string, List<string>> all_apt_info = new Dictionary<string, List<string>>();
-
-
+            // Load all of our Airports and Populate our aptInfo Dictionary
             foreach (AptModel apt in allAptModels)
             {
-
                 if (string.IsNullOrEmpty(apt.Icao))
                 {
-                    all_apt_info.Add(apt.Id, new List<string> { apt.Name, apt.Lat_Dec, apt.Lon_Dec });
+                    aptInfo.Add(apt.Id, new List<string> { apt.Name, apt.Lat_Dec, apt.Lon_Dec });
                 }
                 else
                 {
-                    all_apt_info.Add(apt.Icao, new List<string> { apt.Name, apt.Lat_Dec, apt.Lon_Dec });
+                    aptInfo.Add(apt.Icao, new List<string> { apt.Name, apt.Lat_Dec, apt.Lon_Dec });
                 }
-
             }
 
-            string final;
-            foreach (string metar_id in station_info.Keys)
+            string labelLineToBeAdded;
+            foreach (string metar_id in stationInfo.Keys)
             {
-                if (all_apt_info.Keys.Contains(metar_id))
+                // Metar Id and Airport Code (FAA or ICAO) matches Exactly.
+                if (aptInfo.Keys.Contains(metar_id))
                 {
-                    final = $"\"{metar_id} {all_apt_info[metar_id][0].Replace('"', '-')}\" {GlobalConfig.createDMS(station_info[metar_id][0], true)} {GlobalConfig.createDMS(station_info[metar_id][1], false)} 11579568";
-                    sb.AppendLine(final);
+                    labelLineToBeAdded = $"\"{metar_id} {aptInfo[metar_id][0].Replace('"', '-')}\" {GlobalConfig.createDMS(stationInfo[metar_id][0], true)} {GlobalConfig.createDMS(stationInfo[metar_id][1], false)} 11579568";
+                    sb.AppendLine(labelLineToBeAdded);
 
                 }
-                else if (all_apt_info.Keys.Contains(metar_id.Substring(1)))
+                // Metar Id (Without Prefixing character) and Airport Code (FAA or ICAO) matches.
+                else if (aptInfo.Keys.Contains(metar_id.Substring(1)))
                 {
-                    foreach (var apt in all_apt_info.Keys)
+                    foreach (var apt in aptInfo.Keys)
                     {
+                        // Find what airport matches the Metar ID (Without Prefixing character).
                         if (metar_id.Substring(1) == apt)
                         {
-                            string station_lat = station_info[metar_id][0].ToString().Split('.')[0];
-                            string airport_lat = all_apt_info[apt][1].Split('.')[0];
-                            string station_lon = station_info[metar_id][1].ToString().Split('.')[0];
-                            string airport_lon = all_apt_info[apt][2].Split('.')[0];
+                            /* 
+                             * In some cases there will be an airport that matches the Metar ID (Without Prefixing character) that does not actually belong to that airport.
+                             * We have to verify the Degrees of both the airport and the WX station to make sure that station actually belongs to the airport.
+                             * e.x. CWVI and WVI are two valid airports, however, they are in very different locations.
+                             * The reason we do not check the entire Degrees, minutes, seconds, is because the full Lat and Lon can be different slightly.
+                             */
+
+                            string station_lat = stationInfo[metar_id][0].ToString().Split('.')[0];
+                            string airport_lat = aptInfo[apt][1].Split('.')[0];
+                            string station_lon = stationInfo[metar_id][1].ToString().Split('.')[0];
+                            string airport_lon = aptInfo[apt][2].Split('.')[0];
 
                             if (station_lat == airport_lat && station_lon == airport_lon)
                             {
-                                final = $"\"{metar_id} {all_apt_info[metar_id.Substring(1)][0].Replace('"', '-')}\" {GlobalConfig.createDMS(station_info[metar_id][0], true)} {GlobalConfig.createDMS(station_info[metar_id][1], false)} 11579568";
-                                sb.AppendLine(final);
+                                labelLineToBeAdded = $"\"{metar_id} {aptInfo[metar_id.Substring(1)][0].Replace('"', '-')}\" {GlobalConfig.createDMS(stationInfo[metar_id][0], true)} {GlobalConfig.createDMS(stationInfo[metar_id][1], false)} 11579568";
+                                sb.AppendLine(labelLineToBeAdded);
                                 break;
                             }
                         }
                     }
                 }
+                // Metar ID does not match, in any way, the airport code. If they do not match we do not want the WX station. 
                 else
                 {
                     continue;
                 }
-
             }
 
-            File.WriteAllText(filepath, sb.ToString());
-            File.AppendAllText(filepath, $"\n\n\n\n\n\n");
-
-            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
+            // Bottom of VRC [LABELS].sct2 file.
+            sb.AppendLine("\n\n\n\n\n\n");
+            
+            File.WriteAllText(outputFilepath, sb.ToString());
+            File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(outputFilepath));
         }
 
+        /// <summary>
+        /// Create the vSTARS and vERAM WX XML file.
+        /// </summary>
         public static void WriteWxXmlOutput()
         {
+            string readFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
+            string saveFilePath = $"{GlobalConfig.outputDirectory}\\VERAM\\WX_STATIONS_GEOMAP.xml";
             StringBuilder sb = new StringBuilder();
 
+            // Top of XML File
             sb.AppendLine("        <GeoMapObject Description=\"WX STATIONS\" TdmOnly=\"false\">");
             sb.AppendLine("          <TextDefaults Bcg=\"9\" Filters=\"9\" Size=\"1\" Underline=\"false\" Opaque=\"false\" XOffset=\"3\" YOffset=\"0\" />");
             sb.AppendLine("          <Elements>");
-
-            string readFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
-            string saveFilePath = $"{GlobalConfig.outputDirectory}\\VERAM\\WX_STATIONS_GEOMAP.xml";
-
+            
+            // Read through the [Labels].sct2 file
             foreach (string line in File.ReadAllLines(readFilePath))
             {
                 if (line != string.Empty)
@@ -203,7 +233,6 @@ namespace NASR2SCTDATA.DataAccess
                     if (line.Substring(0, 1) != " " && line.Substring(0, 1) != "[")
                     {
                         string split = line.Substring(line.LastIndexOf('"') + 2);
-
                         List<string> splitValue = split.Split(' ').ToList();
 
                         if (splitValue.Count >= 3)
@@ -215,16 +244,20 @@ namespace NASR2SCTDATA.DataAccess
                 }
             }
 
+            // End of XML file.
             sb.AppendLine("          </Elements>");
             sb.AppendLine("        </GeoMapObject>");
 
             File.WriteAllText(saveFilePath, sb.ToString());
         }
 
+        /// <summary>
+        /// Parse and sort through the FAA Apt.txt file and create the Airport Model.
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
         private void ParseAptData(string effectiveDate)
         {
             char[] removeChars = { ' ', '.' };
-
             AptModel airport = null ;
 
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_APT\\APT.txt"))
@@ -236,21 +269,22 @@ namespace NASR2SCTDATA.DataAccess
                         allAptModels.Add(airport);
                     }
 
-                    airport = new AptModel();
+                    airport = new AptModel
+                    {
+                        Runways = new List<RunwayModel>(),
+                        Type = line.Substring(14, 13).Trim(removeChars),
+                        Id = line.Substring(27, 4).Trim(removeChars),
+                        Name = line.Substring(133, 50).Trim(removeChars),
+                        Lat = GlobalConfig.CorrectLatLon(line.Substring(523, 15).Trim(removeChars), true, GlobalConfig.Convert),
+                        Elv = Math.Round(double.Parse(line.Substring(578, 7).Trim(removeChars)), 0).ToString(),
+                        ResArtcc = line.Substring(674, 4).Trim(removeChars),
+                        Status = line.Substring(840, 2).Trim(removeChars),
+                        Twr = line.Substring(980, 1).Trim(removeChars),
+                        Ctaf = line.Substring(988, 7).Trim(removeChars),
+                        Icao = line.Substring(1210, 7).Trim(removeChars),
+                        Lon = GlobalConfig.CorrectLatLon(line.Substring(550, 15).Trim(removeChars), false, GlobalConfig.Convert)
+                    };
 
-                    airport.Runways = new List<RunwayModel>();
-
-                    airport.Type = line.Substring(14, 13).Trim(removeChars);
-                    airport.Id = line.Substring(27, 4).Trim(removeChars);
-                    airport.Name = line.Substring(133, 50).Trim(removeChars);
-                    airport.Lat = GlobalConfig.CorrectLatLon(line.Substring(523, 15).Trim(removeChars), true, GlobalConfig.Convert);
-                    airport.Elv = Math.Round(double.Parse(line.Substring(578, 7).Trim(removeChars)),0).ToString();
-                    airport.ResArtcc = line.Substring(674, 4).Trim(removeChars);
-                    airport.Status = line.Substring(840, 2).Trim(removeChars);
-                    airport.Twr = line.Substring(980, 1).Trim(removeChars);
-                    airport.Ctaf = line.Substring(988, 7).Trim(removeChars);
-                    airport.Icao = line.Substring(1210, 7).Trim(removeChars);
-                    airport.Lon = GlobalConfig.CorrectLatLon(line.Substring(550, 15).Trim(removeChars), false, GlobalConfig.Convert);
                     airport.Lat_Dec = GlobalConfig.CreateDecFormat(airport.Lat, true);
                     airport.Lon_Dec = GlobalConfig.CreateDecFormat(airport.Lon, true);
                     airport.magVariation = line.Substring(586, 3).Trim();
@@ -269,13 +303,14 @@ namespace NASR2SCTDATA.DataAccess
                 }
                 else if (line.Substring(0,3) == "RWY")
                 {
-                    RunwayModel rwy = new RunwayModel();
-
-                    rwy.RwyGroup = line.Substring(16, 7).Trim();
-                    rwy.RwyLength = line.Substring(23, 5).Trim();
-                    rwy.RwyWidth = line.Substring(28, 4).Trim();
-                    rwy.BaseRwyHdg = line.Substring(68, 3).Trim();
-                    rwy.RecRwyHdg = line.Substring(290, 3).Trim();
+                    RunwayModel rwy = new RunwayModel
+                    {
+                        RwyGroup = line.Substring(16, 7).Trim(),
+                        RwyLength = line.Substring(23, 5).Trim(),
+                        RwyWidth = line.Substring(28, 4).Trim(),
+                        BaseRwyHdg = line.Substring(68, 3).Trim(),
+                        RecRwyHdg = line.Substring(290, 3).Trim()
+                    };
 
                     if (rwy.BaseRwyHdg != string.Empty && airport.magVariation != string.Empty)
                     {
@@ -329,21 +364,21 @@ namespace NASR2SCTDATA.DataAccess
             GlobalConfig.allAptModelsForCheck = allAptModels;
         }
 
+        /// <summary>
+        /// Write all the airports to vSTARS and vERAM Airports xml. 
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
         public void WriteEramAirportsXML(string effectiveDate)
         {
             string filePath = $"{GlobalConfig.outputDirectory}\\VERAM\\Airports.xml";
-
             List<Airport> allAptForXML = new List<Airport>();
 
             XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Airports");
             XmlSerializer serializer = new XmlSerializer(typeof(Airport[]), xmlRootAttribute);
-
             foreach (AptModel aptModel in allAptModels)
             {
                 bool doNotUseThisRwy = false;
-
                 string aptIdTempVar;
-
                 List<Runway> rwysTempVar = new List<Runway>();
 
                 if (aptModel.Icao != string.Empty)
@@ -450,20 +485,20 @@ namespace NASR2SCTDATA.DataAccess
                 {
                     allAptForXML.Add(aptXMLFormat);
                 }
-
             }
 
             Airport[] aptArrayForXML = allAptForXML.ToArray();
-
             TextWriter writer = new StreamWriter(filePath);
             serializer.Serialize(writer, aptArrayForXML);
             writer.Close();
 
             File.AppendAllText(filePath, $"\n<!--AIRAC_EFFECTIVE_DATE {effectiveDate}-->");
-
             File.Copy($"{GlobalConfig.outputDirectory}\\VERAM\\Airports.xml", $"{GlobalConfig.outputDirectory}\\VSTARS\\Airports.xml");
         }
 
+        /// <summary>
+        /// Save the airport waypoints into the Global Waypoints list so that we can create the XML file with ALL waypoints properly added. 
+        /// </summary>
         public void StoreWaypointsXMLData() 
         {
             List<Waypoint> waypointList = new List<Waypoint>();
@@ -471,7 +506,6 @@ namespace NASR2SCTDATA.DataAccess
             foreach (AptModel apt in allAptModels)
             {
                 Location loc = new Location { Lat = apt.Lat_Dec, Lon = apt.Lon_Dec};
-
                 Waypoint wpt = new Waypoint
                 {
                     Type = "Airport",
@@ -498,52 +532,60 @@ namespace NASR2SCTDATA.DataAccess
             GlobalConfig.waypoints = waypointList.ToArray();
         }
 
+        /// <summary>
+        /// Write the Airport In Scope Reference. 
+        /// </summary>
+        /// <param name="Artcc">Selected ARTCC (e.x. "FAA")</param>
         private void WriteAptISR(string Artcc) 
         {
             string filePath = $"{GlobalConfig.outputDirectory}\\ALIAS\\ISR_APT.txt";
-
             StringBuilder sb = new StringBuilder();
-            foreach (AptModel dataforEachApt in allAptModels)
+
+            foreach (AptModel apt in allAptModels)
             {
                 string icao;
                 string tower;
                 string elvation;
 
-                if (dataforEachApt.Icao == "") { icao = "N/A"; } else { icao = dataforEachApt.Icao; }
+                if (apt.Icao == "") { icao = "N/A"; } else { icao = apt.Icao; }
 
-                if (dataforEachApt.Twr == "Y") { tower = "Towered"; } else { tower = "Not Towered"; }
+                if (apt.Twr == "Y") { tower = "Towered"; } else { tower = "Not Towered"; }
 
-                elvation = dataforEachApt.Elv;
+                elvation = apt.Elv;
 
-                sb.AppendLine($".APT{dataforEachApt.Id} .MSG {Artcc}_ISR *** FAA-{dataforEachApt.Id} : ICAO-{icao} ___ {dataforEachApt.Name} {dataforEachApt.Type} ___ {elvation}'MSL ___ {tower} ___ {dataforEachApt.ResArtcc}");
+                sb.AppendLine($".APT{apt.Id} .MSG {Artcc}_ISR *** FAA-{apt.Id} : ICAO-{icao} ___ {apt.Name} {apt.Type} ___ {elvation}'MSL ___ {tower} ___ {apt.ResArtcc}");
 
-                if (dataforEachApt.Icao != "")
+                if (apt.Icao != "")
                 {
-                    sb.AppendLine($".APT{dataforEachApt.Icao} .MSG {Artcc}_ISR *** FAA-{dataforEachApt.Id} : ICAO-{icao} ___ {dataforEachApt.Name} {dataforEachApt.Type} ___ {elvation}'MSL ___ {tower} ___ {dataforEachApt.ResArtcc}");
+                    sb.AppendLine($".APT{apt.Icao} .MSG {Artcc}_ISR *** FAA-{apt.Id} : ICAO-{icao} ___ {apt.Name} {apt.Type} ___ {elvation}'MSL ___ {tower} ___ {apt.ResArtcc}");
                 }
             }
 
             File.WriteAllText(filePath, sb.ToString());
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\ALIAS\\AliasTestFile.txt", sb.ToString());
-
         }
 
+        /// <summary>
+        /// Write the VRC Runway data to the .sct2 file.
+        /// </summary>
         private void WriteRunwayData() 
         {
             string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[RUNWAY].sct2";
             string aptId;
-
             StringBuilder sb = new StringBuilder();
+
+            // Runway File Header
             sb.AppendLine("[RUNWAY]");
 
             foreach (AptModel apt in allAptModels)
             {
-                if (string.IsNullOrEmpty(apt.Icao)){aptId = apt.Id;} else {aptId = apt.Icao;}
+                if (string.IsNullOrEmpty(apt.Icao)) {aptId = apt.Id;} else {aptId = apt.Icao;}
 
                 foreach (RunwayModel runwayModel in apt.Runways)
                 {
                     bool doNotUseThisRwy = false;
 
+                    // Get all the runway properties
                     List<string> rwyProperties = new List<string>()
                     {
                         runwayModel.RwyGroup,
@@ -563,6 +605,7 @@ namespace NASR2SCTDATA.DataAccess
                         runwayModel.RecRwyHdg
                     };
                     
+                    // Make sure NONE of the runway properties are empty or null. 
                     foreach (string stringProperty in rwyProperties)
                     {
                         if (string.IsNullOrEmpty(stringProperty))
@@ -584,12 +627,17 @@ namespace NASR2SCTDATA.DataAccess
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
 
+        /// <summary>
+        /// Write the VRC Airport.Sct2 File
+        /// </summary>
         private void WriteAptSctData()
         {
             string filePath = $"{GlobalConfig.outputDirectory}\\VRC\\[AIRPORT].sct2";
-
             StringBuilder sb = new StringBuilder();
+
+            // Airport File Header
             sb.AppendLine("[AIRPORT]");
+
             foreach (AptModel dataforEachApt in allAptModels) 
             {
                 string id_icao;
@@ -602,10 +650,10 @@ namespace NASR2SCTDATA.DataAccess
                 sb.AppendLine($"{id_icao.PadRight(5)}{ctaf.PadRight(8)}{dataforEachApt.Lat} {dataforEachApt.Lon} ;{dataforEachApt.Name} {dataforEachApt.Type}");
             }
 
+            // Airport File Ending
+            sb.AppendLine("\n\n\n\n\n\n");
+
             File.WriteAllText(filePath, sb.ToString());
-
-            File.AppendAllText(filePath, $"\n\n\n\n\n\n");
-
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filePath));
         }
     }
