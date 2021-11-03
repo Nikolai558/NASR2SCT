@@ -1,10 +1,10 @@
-﻿using ClassData.Models;
-using NASARData;
+﻿using NASR2SCTDATA.Models;
+using NASR2SCTDATA;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     /// <summary>
     /// Parse, and Make SCT2 File for FAA NAV data.

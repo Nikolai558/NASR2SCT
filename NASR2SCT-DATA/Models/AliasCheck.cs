@@ -1,9 +1,9 @@
-﻿using NASARData;
+﻿using NASR2SCTDATA;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ClassData.Models
+namespace NASR2SCTDATA.Models
 {
     public class AliasCheck
     {

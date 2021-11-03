@@ -1,12 +1,12 @@
-﻿using ClassData.Models;
-using ClassData.Models.MetaFileModels;
-using NASARData;
+﻿using NASR2SCTDATA.Models;
+using NASR2SCTDATA.Models.MetaFileModels;
+using NASR2SCTDATA;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     public class PublicationParser
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClassData.Models
+namespace NASR2SCTDATA.Models
 {
     /// <summary>
     /// Airport Model - Template for all the information we need for FAA Airports.

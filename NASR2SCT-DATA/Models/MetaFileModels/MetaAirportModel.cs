@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClassData.Models.MetaFileModels
+namespace NASR2SCTDATA.Models.MetaFileModels
 {
     public class MetaAirportModel
     {

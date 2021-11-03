@@ -1,4 +1,4 @@
-﻿namespace ClassData.Models
+﻿namespace NASR2SCTDATA.Models
 {
     /// <summary>
     /// NDB Model, Think of this as a template. 

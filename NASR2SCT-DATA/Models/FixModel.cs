@@ -1,4 +1,4 @@
-﻿namespace NASRData.Models
+﻿namespace NASR2SCTDATA.Models
 {
     /// <summary>
     /// Fix Model, Think of this as a template. 

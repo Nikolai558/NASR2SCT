@@ -1,11 +1,10 @@
-﻿using ClassData.Models;
-using NASARData;
+﻿using NASR2SCTDATA.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     public class GetAtsAwyData
     {

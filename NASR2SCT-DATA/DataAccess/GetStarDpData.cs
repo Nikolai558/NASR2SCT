@@ -1,11 +1,11 @@
-﻿using ClassData.Models;
-using NASARData;
+﻿using NASR2SCTDATA.Models;
+using NASR2SCTDATA;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     public class GetStarDpData
     {

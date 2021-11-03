@@ -1,4 +1,4 @@
-﻿namespace ClassData.Models
+﻿namespace NASR2SCTDATA.Models
 {
     public class ArbModel
     {

@@ -1,10 +1,9 @@
-﻿using ClassData.Models;
-using NASARData;
+﻿using NASR2SCTDATA.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     /// <summary>
     /// Create SCT, Create XML for Airway Data.

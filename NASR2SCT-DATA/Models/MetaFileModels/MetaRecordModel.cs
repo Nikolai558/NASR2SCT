@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassData.Models.MetaFileModels
+namespace NASR2SCTDATA.Models.MetaFileModels
 {
     public class MetaRecordModel
     {
@@ -149,7 +149,7 @@ namespace ClassData.Models.MetaFileModels
                             }
 
                             // Might want to remove this - This is to see MisMatchingVaarents inside the Temp File.
-                            // File.AppendAllText($"{NASARData.GlobalConfig.tempPath}\\MisMatchingVariants.txt", $"APT IATA: {AptIata} - {tempRecordList[missingIndex].FAAChartName}\n");
+                            // File.AppendAllText($"{NASR2SCTDATA.GlobalConfig.tempPath}\\MisMatchingVariants.txt", $"APT IATA: {AptIata} - {tempRecordList[missingIndex].FAAChartName}\n");
                         }
                     }
                     

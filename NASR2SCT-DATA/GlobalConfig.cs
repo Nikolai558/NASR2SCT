@@ -1,4 +1,4 @@
-﻿using ClassData.Models;
+﻿using NASR2SCTDATA.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,10 +9,10 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using ClassData.Models.MetaFileModels;
+using NASR2SCTDATA.Models.MetaFileModels;
 using System.IO.Compression;
 
-namespace NASARData
+namespace NASR2SCTDATA
 {
     /// <summary>
     /// A Class to hold all of our "Global" configurations. ie. Temp Path.

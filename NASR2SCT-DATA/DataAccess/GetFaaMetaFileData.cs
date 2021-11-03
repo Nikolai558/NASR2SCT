@@ -1,11 +1,10 @@
-﻿using ClassData.Models.MetaFileModels;
-using NASARData;
+﻿using NASR2SCTDATA.Models.MetaFileModels;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     public class GetFaaMetaFileData
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClassData.Models
+namespace NASR2SCTDATA.Models
 {
     /// <summary>
     /// Model for our ATS Airway Routes.

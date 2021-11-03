@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ClassData.Models
+namespace NASR2SCTDATA.Models
 {
     //public class Waypoints
     //{

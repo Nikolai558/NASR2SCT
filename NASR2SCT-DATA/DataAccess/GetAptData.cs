@@ -1,5 +1,4 @@
-﻿using ClassData.Models;
-using NASARData;
+﻿using NASR2SCTDATA.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace ClassData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     /// <summary>
     /// Parse, Make SCT2, Make Airports.xml, and Make Lables sector Files from FAA APT data.

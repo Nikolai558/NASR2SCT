@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace ClassData.Models
+namespace NASR2SCTDATA.Models
 {
     public class RunwayModel
     {

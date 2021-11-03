@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using NASRData.Models;
-using NASARData;
-using ClassData.Models;
+using NASR2SCTDATA.Models;
 
-namespace NASRData.DataAccess
+namespace NASR2SCTDATA.DataAccess
 {
     /// <summary>
     /// Parse, and Make SCT2 File for FAA Fix data.

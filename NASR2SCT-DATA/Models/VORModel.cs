@@ -1,4 +1,4 @@
-﻿namespace ClassData.Models
+﻿namespace NASR2SCTDATA.Models
 {
     /// <summary>
     /// VOR Model - Holds all information we need about each VOR
