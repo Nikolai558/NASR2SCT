@@ -1,6 +1,15 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.8.3
+  - Cleaned up Backend Code including Typos and Folder/File Renames, #126
+  - If user has cURL, it will be used to download the FAA Meta, Telephony, and WX Station files. If the user does not have it, it will still use WebClient for downloading.
+    - Fixes #131, #129, #130
+    - Reduces File Download Time. 
+  - New system to get the WX Station data. NOAA NWS (National Oceanic and Atmospheric Administration's National Weather Service) is used to gather ALL WX Station Data, #104
+  - Fixed #132 Random Incorrect Coordinates. 
+  - Added App Manifest. This should account for verifing Windows Support and Windows Scaling #128
+
 - ## Version 0.8.2
   - Fixed bugs #120 and #118. There was an update to the telophony website we use. This broke NASR2SCT
   - Modified backend code to account for HTML updates from various websites NASR2SCT uses.
