@@ -40,6 +40,9 @@
   <PropertyGroup>
     <ApplicationIcon>NASR_2_SCT_icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
       <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.dll</HintPath>
@@ -133,6 +136,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Properties\romantic.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
