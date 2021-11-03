@@ -24,7 +24,7 @@ namespace NASR2SCTDATA.DataAccess
         /// </summary>
         /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
         /// <param name="artcc">Selected ARTCC (e.x. "FAA")</param>
-        public void APTQuarterbackFunc(string effectiveDate, string artcc) 
+        public void AptAndWxMain(string effectiveDate, string artcc) 
         {
             ParseAptData(effectiveDate);
             WriteAptISR(artcc);
