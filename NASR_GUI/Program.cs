@@ -112,23 +112,7 @@ namespace NASR_GUI
             // run OS specific update methods
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                // Download ZIP archive of program
-                WebClient webClient = new WebClient();
-                webClient.DownloadFile("https://github.com/Nikolai558/NASR2SCT/releases/download/" + GlobalConfig.GithubVersion + "/NASR2SCT-" + GlobalConfig.GithubVersion + ".zip", "update.zip");
-                // Unzip and delete archive
-                ZipFile.ExtractToDirectory("update.zip", "update");
-                File.Delete("update.zip");
-                // Move update to AppData\Roaming
-                try
-                {
-                    Directory.Move(@"update\NASR2SCT-" + GlobalConfig.GithubVersion, Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion);
-                } catch (IOException e)
-                {
-
-                }
-                string runner = $"start /d \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\" NASR2SCT.exe";
-                File.WriteAllText($"{GlobalConfig.tempPath}\\test.bat", runner);
-
+                //TODO Run Kyle's batch script
             } else
             {
                 MessageBox.Show("This platform is not yet supported.");
@@ -136,6 +120,39 @@ namespace NASR_GUI
 
         }
 
+        private static void StartNewVersion()
+        {
+            /*
+            string filePath = $"{GlobalConfig.tempPath}\\startNewVersion.bat";
+            string writeMe =
+                "SET /A COUNT=0\n\n" +
+                ":CHK\n" +
+                $"IF EXIST \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\\NASR2SCT.exe\" goto FOUND\n" +
+                "SET /A COUNT=%COUNT% + 1\n" +
+                "IF %COUNT% GEQ 12 GOTO FOUND\n" +
+                "PING 127.0.0.1 -n 3 >nul\n" +
+                "GOTO CHK\n\n" +
+                ":FOUND\n" +
+                $"start \"\" \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\\NASR2SCT.exe\"\n";
+
+
+            File.WriteAllText(filePath, writeMe);
+            */
+
+            int ExitCode;
+            ProcessStartInfo ProcessInfo;
+            Process Process;
+
+            ProcessInfo = new ProcessStartInfo("cmd.exe", "/c " + $"\"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT.bat"}\"");
+            ProcessInfo.CreateNoWindow = true;
+            ProcessInfo.UseShellExecute = false;
+
+            Process = Process.Start(ProcessInfo);
+            Process.WaitForExit();
+
+            ExitCode = Process.ExitCode;
+            Process.Close();
+        }
 
         //from https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
         public static void OpenBrowser(string url)
