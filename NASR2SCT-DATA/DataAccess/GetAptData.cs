@@ -14,7 +14,7 @@ namespace NASR2SCTDATA.DataAccess
     /// </summary>
     public class GetAptData
     {
-        /// Private List to hold ALL Airport Models.
+        // Private List to hold ALL Airport Models.
         private List<AptModel> allAptModels = new List<AptModel>();
 
         /// <summary>
