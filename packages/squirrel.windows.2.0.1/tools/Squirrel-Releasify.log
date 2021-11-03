@@ -7,3 +7,21 @@
 [28/08/21 12:48:50] info: ReleasePackage: No release notes found in C:\Users\Pocono Coast West\AppData\Local\SquirrelTemp\tempc\NASR2SCT.nuspec
 [28/08/21 12:48:51] info: Program: Building embedded zip file for Setup.exe
 [28/08/21 12:48:55] info: Program: Finished Squirrel Updater
+[02/11/21 19:29:08] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.x.x.x.nupkg
+[02/11/21 19:29:08] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[02/11/21 19:29:08] fatal: Finished with unhandled exception: System.IO.FileNotFoundException: Could not find file 'NASR2SCT.x.x.x.nupkg'.
+File name: 'NASR2SCT.x.x.x.nupkg'
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.File.InternalCopy(String sourceFileName, String destFileName, Boolean overwrite, Boolean checkHost)
+   at Squirrel.Update.Program.Releasify(String package, String targetDir, String packagesDir, String bootstrapperExe, String backgroundGif, String signingOpts, String baseUrl, String setupIcon, Boolean generateMsi, Boolean packageAs64Bit, String frameworkVersion, Boolean generateDeltas)
+   at Squirrel.Update.Program.executeCommandLine(String[] args)
+   at Squirrel.Update.Program.main(String[] args)
+[02/11/21 19:29:32] info: Program: Starting Squirrel Updater: --releasify NASR2SCT.0.8.3.nupkg
+[02/11/21 19:29:32] info: Program: Bootstrapper EXE found at:C:\Repos\NASR2SCT\packages\squirrel.windows.2.0.1\tools\Setup.exe
+[02/11/21 19:29:32] info: Program: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.3.nupkg
+[02/11/21 19:29:32] info: ReleasePackage: Creating release package: C:\Repos\NASR2SCT\Releases\NASR2SCT.0.8.3.nupkg => C:\Repos\NASR2SCT\Releases\NASR2SCT-0.8.3-full.nupkg
+[02/11/21 19:29:33] info: ReleasePackage: Extracting dependent packages: []
+[02/11/21 19:29:33] info: ReleasePackage: Removing unnecessary data
+[02/11/21 19:29:33] info: ReleasePackage: No release notes found in C:\Users\nikol\AppData\Local\SquirrelTemp\tempa\NASR2SCT.nuspec
+[02/11/21 19:29:33] info: Program: Building embedded zip file for Setup.exe
+[02/11/21 19:29:36] info: Program: Finished Squirrel Updater

@@ -21,7 +21,7 @@ namespace NASR2SCTDATA
     /// </summary>
     public class GlobalConfig
     {
-        public static readonly string ProgramVersion = "0.8.2";
+        public static readonly string ProgramVersion = "0.8.3";
 
         public static string GithubVersion = "";
 
