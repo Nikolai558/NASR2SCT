@@ -74,6 +74,7 @@ namespace NASR2SCTDATA
             "ZHU","ZID","ZJX","ZKC","ZLA","ZLC","ZMA","ZME","ZMP","ZNY","ZOA","ZOB","ZSE","ZSU",
             "ZTL","ZUA","ZUL","ZVR","ZWG","ZYZ"
         };
+        private static bool hasCurl;
 
         public static bool GetMetaUrlResponse() 
         {
@@ -206,20 +207,27 @@ namespace NASR2SCTDATA
                 {
                     try
                     {
-                        if (fileName == $"{effectiveDate}_NWS-WX-STATIONS.xml")
+                        if (hasCurl)
                         {
-                            CreateCurlBatchFile("NWS-WX-STATIONS.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
-                            ExecuteCurlBatchFile("NWS-WX-STATIONS.bat");
-                        }
-                        else if (fileName == $"{airacCycle}_TELEPHONY.html")
-                        {
-                            CreateCurlBatchFile("TELEPHONY.bat", "https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html", fileName);
-                            ExecuteCurlBatchFile("TELEPHONY.bat");
-                        }
-                        else if (fileName == $"{airacCycle}_FAA_Meta.xml")
-                        {
-                            CreateCurlBatchFile("FAA_Meta.bat", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml", fileName);
-                            ExecuteCurlBatchFile("FAA_Meta.bat");
+                            if (fileName == $"{effectiveDate}_NWS-WX-STATIONS.xml")
+                            {
+                                CreateCurlBatchFile("NWS-WX-STATIONS.bat", "https://w1.weather.gov/xml/current_obs/index.xml", fileName);
+                                ExecuteCurlBatchFile("NWS-WX-STATIONS.bat");
+                            }
+                            else if (fileName == $"{airacCycle}_TELEPHONY.html")
+                            {
+                                CreateCurlBatchFile("TELEPHONY.bat", "https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/chap3_section_2.html", fileName);
+                                ExecuteCurlBatchFile("TELEPHONY.bat");
+                            }
+                            else if (fileName == $"{airacCycle}_FAA_Meta.xml")
+                            {
+                                CreateCurlBatchFile("FAA_Meta.bat", $"https://aeronav.faa.gov/d-tpp/{airacCycle}/xml_data/d-tpp_Metafile.xml", fileName);
+                                ExecuteCurlBatchFile("FAA_Meta.bat");
+                            }
+                            else 
+                            {
+                                client.DownloadFile(allURLs[fileName], $"{tempPath}\\{fileName}");
+                            }
                         }
                         else
                         {
@@ -621,10 +629,12 @@ namespace NASR2SCTDATA
             if (File.Exists($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML")  && File.ReadAllText($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML").Length > 10)
             {
                 response = File.ReadAllText($"{tempPath}\\{FaaHtmlFileVariable}_FAA_NASR.HTML");
+                hasCurl = true;
             }
             else
             {
                 // If we get here the user does not have Curl, OR Curl returned a file that is not longer than 10 Characters.
+                hasCurl = false;
                 using (var client = new System.Net.WebClient())
                 {
                     client.Proxy = null;
