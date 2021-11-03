@@ -1,13 +1,18 @@
-0.8.2
+0.8.3
 
-Release Candidate V-0.8.2
+Release Candidate V-0.8.3
 
 ## Instructions to install:
-1. Download the zip file named "NASR2SCT-0.8.1.zip"
+1. Download the zip file named "NASR2SCT-0.8.3.zip"
 2. Unzip the file
 3. Keep all files inside it together. 
 4. Run the Setup.exe
 
 ## Change log:
--  Fixed backend code to account for HTML changes for the websites NASR2SCT uses.
--  Fixed bugs #118 and #120
+- Cleaned up Backend Code including Typos and Folder/File Renames, #126
+- If user has cURL, it will be used to download the FAA Meta, Telephony, and WX Station files. If the user does not have it, it will still use WebClient for downloading.
+  - Fixes #131, #129, #130
+  - Reduces File Download Time. 
+- New system to get the WX Station data. NOAA NWS (National Oceanic and Atmospheric Administration's National Weather Service) is used to gather ALL WX Station Data, #104
+- Fixed #132 Random Incorrect Coordinates. 
+- Added App Manifest. This should account for verifing Windows Support and Windows Scaling #128
