@@ -295,7 +295,7 @@ namespace NASR_GUI
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
                 GetAptData ParseAPT = new GetAptData();
-                ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
+                ParseAPT.AptAndWxMain(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Fixes");
                 GetFixData ParseFixes = new GetFixData();
@@ -303,7 +303,7 @@ namespace NASR_GUI
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Boundaries");
                 GetArbData ParseArb = new GetArbData();
-                ParseArb.ArbQuarterbacFunc(GlobalConfig.airacEffectiveDate);
+                ParseArb.ArbMain(GlobalConfig.airacEffectiveDate);
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airways");
                 GlobalConfig.CreateAwyGeomapHeadersAndEnding(true);
@@ -347,7 +347,7 @@ namespace NASR_GUI
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airports");
                 GetAptData ParseAPT = new GetAptData();
-                ParseAPT.APTQuarterbackFunc(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
+                ParseAPT.AptAndWxMain(GlobalConfig.airacEffectiveDate, GlobalConfig.facilityID);
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Chart Recalls");
                 GetFaaMetaFileData ParseMeta = new GetFaaMetaFileData();
@@ -363,7 +363,7 @@ namespace NASR_GUI
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Boundaries");
                 GetArbData ParseArb = new GetArbData();
-                ParseArb.ArbQuarterbacFunc(GlobalConfig.airacEffectiveDate);
+                ParseArb.ArbMain(GlobalConfig.airacEffectiveDate);
 
                 SetControlPropertyThreadSafe(processingDataLabel, "Text", "Processing Airways");
                 GlobalConfig.CreateAwyGeomapHeadersAndEnding(true);

@@ -7,17 +7,29 @@ using System.Text;
 
 namespace NASR2SCTDATA.DataAccess
 {
+    /// <summary>
+    /// Parse and write all the FAA ARB's
+    /// </summary>
     public class GetArbData
     {
+        // Private lists to hold all the Boundary points and boundaries. 
         private List<ArbModel> allBoundaryPoints = new List<ArbModel>();
-        private List<BoundryModel> allBoundarys = new List<BoundryModel>();
+        private List<BoundryModel> allBoundaries = new List<BoundryModel>();
 
-        public void ArbQuarterbacFunc(string effectiveDate) 
+        /// <summary>
+        /// Calls all internal functions in order to process the FAA Boundary Data.
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
+        public void ArbMain(string effectiveDate) 
         {
             ParseArb(effectiveDate);
             WriteArbSct();
         }
 
+        /// <summary>
+        /// Parse and create our ARB Model
+        /// </summary>
+        /// <param name="effectiveDate">Airacc Effective Date (e.x. "2021-10-07")</param>
         private void ParseArb(string effectiveDate) 
         {
             foreach (string line in File.ReadAllLines($"{GlobalConfig.tempPath}\\{effectiveDate}_ARB\\ARB.txt"))
@@ -43,22 +55,19 @@ namespace NASR2SCTDATA.DataAccess
             }
 
             BoundryModel Boundary = new BoundryModel();
-
             int totalPoints = allBoundaryPoints.Count;
             int currentPointCount = 0;
 
             foreach (ArbModel point in allBoundaryPoints)
             {
                 currentPointCount += 1;
-
                 if (point.Identifier == Boundary.Identifier && point.DecodeName == Boundary.Type)
                 {
                     Boundary.AllPoints.Add(point);
-
                     if (point.ToBeginingAfterThis)
                     {
                         Boundary.AllPoints.Add(Boundary.AllPoints.First());
-                        allBoundarys.Add(Boundary);
+                        allBoundaries.Add(Boundary);
                         Boundary = new BoundryModel();
                     }
                 }
@@ -66,44 +75,45 @@ namespace NASR2SCTDATA.DataAccess
                 {
                     if (Boundary.Identifier != null)
                     {
-                        allBoundarys.Add(Boundary);
+                        allBoundaries.Add(Boundary);
                     }
 
-                    Boundary = new BoundryModel();
-                    Boundary.Identifier = point.Identifier;
-                    Boundary.Type = point.DecodeName;
-                    Boundary.AllPoints = new List<ArbModel>();
+                    Boundary = new BoundryModel
+                    {
+                        Identifier = point.Identifier,
+                        Type = point.DecodeName,
+                        AllPoints = new List<ArbModel>()
+                    };
                     Boundary.AllPoints.Add(point);
                 }
 
                 if (totalPoints == currentPointCount && Boundary.Identifier != null)
                 {
-                    allBoundarys.Add(Boundary);
+                    allBoundaries.Add(Boundary);
                 }
             }
         }
 
+        /// <summary>
+        /// Write our ARB Sector Files for VRC. Will create both HIGH and LOW .sct2 Files.
+        /// </summary>
         private void WriteArbSct() 
         {
-            // File Path to the file we want to write to
+            // HIGH ARTCC = HIGH, FIR_ONLY, UTA
+            // LOW ARTCC  = LOW, CTA, BDRY
+
             string highFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[ARTCC HIGH].sct2";
             string lowFilePath = $"{GlobalConfig.outputDirectory}\\VRC\\[ARTCC LOW].sct2";
-
-
-            // String Builder to store all the lines we want to write to the file.
             StringBuilder highArb = new StringBuilder();
-            highArb.AppendLine("[ARTCC HIGH]");
-
             StringBuilder lowArb = new StringBuilder();
+            
+            // ARB File Headers
+            highArb.AppendLine("[ARTCC HIGH]");
             lowArb.AppendLine("[ARTCC LOW]");
             
-            foreach (BoundryModel boundry in allBoundarys)
+            foreach (BoundryModel boundry in allBoundaries)
             {
-                // HIGH ARTCC =       HIGH, FIR_ONLY, UTA
-                // LOW ARTCC =        LOW, CTA, BDRY
-
                 ArbModel prevPoint = new ArbModel();
-
                 foreach (ArbModel arbPoint in boundry.AllPoints)
                 {
                     if (prevPoint.Identifier == null)
@@ -122,6 +132,7 @@ namespace NASR2SCTDATA.DataAccess
                         }
                         else
                         {
+                            // If we get here the FAA created a new Boundary Type. Need to handle that when it comes. 
                             throw new NotImplementedException();
                         }
 
@@ -130,15 +141,11 @@ namespace NASR2SCTDATA.DataAccess
                 }
             }
 
-            // Write to the file.
+            highArb.AppendLine("\n\n\n\n\n\n");
+            lowArb.AppendLine("\n\n\n\n\n\n");
+
             File.WriteAllText(highFilePath, highArb.ToString());
             File.WriteAllText(lowFilePath, lowArb.ToString());
-
-            // Add some new lines to the end of the file.
-            File.AppendAllText(highFilePath, $"\n\n\n\n\n\n");
-            File.AppendAllText(lowFilePath, $"\n\n\n\n\n\n");
-
-            // Add this file to our TEST SECTOR file.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(highFilePath));
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(lowFilePath));
         }
