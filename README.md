@@ -22,5 +22,4 @@ https://docs.google.com/presentation/d/e/2PACX-1vR79DqYD9FxQhA-mUK1FQLO4Xx4mg5xO
 
 ### REQUIREMENTS:
 - Windows OS (8.1 or newer)
-- CUrl (recomended)
-
+- CUrl (recommended, comes preinstalled on Windows 10 version 1806 and newer)
