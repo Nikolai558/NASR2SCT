@@ -94,9 +94,6 @@ namespace NASR_GUI
 				// This is incharge of calling squirrel to patch update the program. 
 			        UpdateProgram();
 
-				// Opens program after update
-				StartNewVersion();
-
                     Environment.Exit(1);
 				}
             }
@@ -112,22 +109,25 @@ namespace NASR_GUI
             // run OS specific update methods
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                // Download ZIP archive of program
-                WebClient webClient = new WebClient();
-                webClient.DownloadFile("https://github.com/Nikolai558/NASR2SCT/releases/download/" + GlobalConfig.GithubVersion + "/NASR2SCT-" + GlobalConfig.GithubVersion + ".zip", "update.zip");
-                // Unzip and delete archive
-                ZipFile.ExtractToDirectory("update.zip", "update");
-                File.Delete("update.zip");
-                // Move update to AppData\Roaming
-                try
-                {
-                    Directory.Move(@"update\NASR2SCT-" + GlobalConfig.GithubVersion, Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion);
-                } catch (IOException e)
-                {
+                String updateScript = "@echo off" +
+                    @"CD %USERPROFILE%\AppData\Local\NASR2SCT" +
+                    "for /f \"tokens = *\" %%a in ('CURL https://github.com/Nikolai558/NASR2SCT/releases/latest') do set latest_ver_URL=%%a" +
+                    "for /f delims^=^\" ^ tokens ^= 2 %% x in (\"%latest_ver_URL%\") do set latest_ver_URL =%% x" +
+                    "for /f \"tokens = 7 delims =/ \" %%a in (\" % latest_ver_URL % \") do set NASR2SCT_LATEST_VERSION_NUM=%%a" +
+                    "powershell -Command \"Invoke - WebRequest https://github.com/Nikolai558/NASR2SCT/releases/download/%NASR2SCT_LATEST_VERSION_NUM%/NASR2SCT-%NASR2SCT_LATEST_VERSION_NUM%-full.nupkg -OutFile 'NASR2SCT-%NASR2SCT_LATEST_VERSION_NUM%-full.zip'\"" +
+                    "powershell -Command \"Expand - Archive - Path NASR2SCT -% NASR2SCT_LATEST_VERSION_NUM % -full.zip - DestinationPath NASR2SCT -% NASR2SCT_LATEST_VERSION_NUM % -full\"" +
+                    "DEL /Q /S NASR2SCT-%NASR2SCT_LATEST_VERSION_NUM%-full.zip" +
+                    "MOVE \"%USERPROFILE%\\AppData\\Local\\NASR2SCT\\NASR2SCT-0.8.3-full\\lib\\net45\" \"%USERPROFILE%\\AppData\\Local\\NASR2SCT\\app-%NASR2SCT_LATEST_VERSION_NUM%\\" +
+                    "RD /Q /S NASR2SCT-%NASR2SCT_LATEST_VERSION_NUM%-full" +
+                    "CD \" % USERPROFILE %\\AppData\\Local\\NASR2SCT\app -% NASR2SCT_LATEST_VERSION_NUM % \"" +
+                    "START \"\" \"NASR2SCT.exe\"" +
+                    "CD \"%USERPROFILE%\\AppData\\Local\\NASR2SCT\"" +
+                    "MKLINK /H NASR2SCT.exe \" % USERPROFILE %\\AppData\\Local\\NASR2SCT\\app -% NASR2SCT_LATEST_VERSION_NUM %\\NASR2SCT\\\"" +
+                    "EXIT";
 
-                }
-                string runner = $"start /d \"{Directory.GetParent(Application.UserAppDataPath) + @"\NASR2SCT-" + GlobalConfig.GithubVersion}\" NASR2SCT.exe";
-                File.WriteAllText($"{GlobalConfig.tempPath}\\test.bat", runner);
+                File.WriteAllText($"{GlobalConfig.tempPath}\\update.bat", updateScript);
+                Process.Start($"{GlobalConfig.tempPath}\\update.bat");
+                Process.Start(@$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AppData\Local\NASR2SCT\app-{GlobalConfig.GithubVersion}\NASR2SCT.exe");
 
             } else
             {
