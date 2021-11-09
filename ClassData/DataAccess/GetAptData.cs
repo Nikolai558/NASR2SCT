@@ -206,7 +206,7 @@ namespace ClassData.DataAccess
              */
 
 
-            string metar_data_filepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
+            string metar_data_filepath = $"{GlobalConfig.tempPath}\\{effectiveDate}_NWS-WX-STATIONS.xml";
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
 
 
@@ -298,16 +298,16 @@ namespace ClassData.DataAccess
             // Add this file to our TEST SECTOR FILE.
             File.AppendAllText($"{GlobalConfig.outputDirectory}\\{GlobalConfig.testSectorFileName}", File.ReadAllText(filepath));
             /* OLD
-            string wxCrossCheckFilePathIn = $"{GlobalConfig.tempPath}\\{effectiveDate}_WX-CROSSCHECK.xml";
+            string wxCrossCheckFilePathIn = $"{GlobalConfig.tempPath}\\{effectiveDate}_NWS-WX-STATIONS.xml";
             string filepath = $"{GlobalConfig.outputDirectory}\\VRC\\[LABELS].sct2";
             
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("[LABELS]");
 
-            // DEBUGING ONLY! WX STATION
+            // DEBUGGING ONLY! WX STATION
             // string debugfilepath = $"{GlobalConfig.outputDirectory}\\debug.txt";
             // StringBuilder debugSB = new StringBuilder();
-            // debugSB.AppendLine("DEBUGING ONLY! The following weather stations would have been added the old way. But now they will not be in [LABELS].\n\n");
+            // debugSB.AppendLine("DEBUGGING ONLY! The following weather stations would have been added the old way. But now they will not be in [LABELS].\n\n");
 
             List<string> countryCodes = new List<string> { "AS", "GU", "MP", "PR", "VI", "US" };
             string id;
