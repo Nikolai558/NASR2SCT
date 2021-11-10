@@ -12,6 +12,9 @@
     <ApplicationIcon>NASR_2_SCT_icon.ico</ApplicationIcon>
     <StartupObject>NASR_GUI.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\romantic.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
