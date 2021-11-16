@@ -1,6 +1,10 @@
 
 ## Pre-V1.0.0
 ---
+- ## Version 0.8.4
+  - THIS CHANGE MARKS THE END OF LIFE FOR "NASR2SCT"
+  - INSTRUCTIONS ARE INCLUDED WITH THIS UPDATE FOR HOW TO BEGIN USING THE NEW "FE-BUDDY" PROGRAM.
+
 - ## Version 0.8.3
   - Cleaned up Backend Code including Typos and Folder/File Renames, #126
   - If user has cURL, it will be used to download the FAA Meta, Telephony, and WX Station files. If the user does not have it, it will still use WebClient for downloading.
