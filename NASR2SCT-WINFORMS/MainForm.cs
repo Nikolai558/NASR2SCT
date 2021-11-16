@@ -15,7 +15,7 @@ namespace NASR_GUI
 {
     public partial class MainForm : Form
     {
-        private bool nextAiracAvailable;
+        //private bool nextAiracAvailable;
 
         public MainForm()
         {
@@ -24,7 +24,7 @@ namespace NASR_GUI
             // It should grab from the assembily info. 
             this.Text = $"NASR 2 SCT - V{GlobalConfig.ProgramVersion}";
 
-            chooseDirButton.Enabled = false;
+            /*chooseDirButton.Enabled = false;
             startButton.Enabled = false;
             airacCycleGroupBox.Enabled = false;
             airacCycleGroupBox.Visible = false;
@@ -45,9 +45,9 @@ namespace NASR_GUI
             GlobalConfig.outputDirBase = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             filePathLabel.Text = GlobalConfig.outputDirBase;
             filePathLabel.Visible = true;
-            filePathLabel.MaximumSize = new Size(257, 82);
+            filePathLabel.MaximumSize = new Size(257, 82);*/
         }
-
+        /*
         private void currentAiracSelection_CheckedChanged(object sender, EventArgs e)
         {
             currentAiracSelection.Text = GlobalConfig.currentAiracDate;
@@ -417,18 +417,19 @@ namespace NASR_GUI
 
             Worker.RunWorkerAsync();
         }
-
+        */
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            getAiracDate();
-            currentAiracSelection.Text = GlobalConfig.currentAiracDate;
-            nextAiracSelection.Text = GlobalConfig.nextAiracDate;
+            //getAiracDate();
+            //currentAiracSelection.Text = GlobalConfig.currentAiracDate;
+            //nextAiracSelection.Text = GlobalConfig.nextAiracDate;
 
             // Disable the Facility ID for Now, Might want it later, If so comment out the below line.
             // facilityIdTextbox.Enabled = false;
 
 
         }
+        /*
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -483,23 +484,23 @@ namespace NASR_GUI
         {
             CreditsForm frm = new CreditsForm();
             frm.ShowDialog();
-        }
+        }*/
 
         private void MainForm_Load(object sender, EventArgs e)
         {
 
             var pfc = new PrivateFontCollection();
             pfc.AddFontFile("Properties\\romantic.ttf");
-            instructionsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
-            creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
-            changeLogToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            //instructionsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            //creditsToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            //changeLogToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
             uninstallToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
-            fAQToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
+            //fAQToolStripMenuItem.Font = new Font(pfc.Families[0], 12, FontStyle.Regular);
 
 
 
         }
-
+        /*
         private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/Nikolai558/NASR2SCT/blob/development/ChangeLog.md");
@@ -517,7 +518,7 @@ namespace NASR_GUI
                 frm.ShowDialog();
             }
         }
-
+        */
         private void uninstallToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Would you like to UNINSTALL NASR2SCT?", "Uninstall NASR2SCT", MessageBoxButtons.YesNo);
@@ -633,15 +634,25 @@ namespace NASR_GUI
                 Environment.Exit(1);
             }
         }
-
+        /*
         private void facilityIdCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GlobalConfig.facilityID = facilityIdCombobox.SelectedItem.ToString();
+            //GlobalConfig.facilityID = facilityIdCombobox.SelectedItem.ToString();
         }
 
         private void fAQToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://docs.google.com/presentation/d/e/2PACX-1vSlhz1DhDwZ-43BY4Q2vg-ff0QBGssxpmv4-nhZlz9LpGJvWjqLsHVaQwwsV1AGMWFFF_x_j_b3wTBO/embed");
+        }
+
+        private void convertLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+        */
+        private void label1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/Nikolai558/FE-BUDDY/releases/latest");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace NASR_GUI
             //ParseMeta.QuarterbackFunc();
 
             // API CALL TO GITHUB, WARNING ONLY 60 PER HOUR IS ALLOWED, WILL BREAK IF WE DO MORE!
-            try
+            /*try
             {
                 GlobalConfig.UpdateCheck();
             }
@@ -38,7 +38,7 @@ namespace NASR_GUI
             }
 
             // Check Current Program Against Github, if different ask user if they want to update.
-            CheckVersion();
+            CheckVersion();*/
 
             // Start the application
             Application.Run(new MainForm());
