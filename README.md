@@ -1,4 +1,4 @@
-# NASR2SCT
+# NASR2SCT - ARCHIVED PLEASE VISIT [FE-BUDDY](https://github.com/Nikolai558/FE-BUDDY/tree/development)
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Nikolai558/NASR2SCT?style=for-the-badge)
 ![GitHub contributors](https://img.shields.io/github/contributors/Nikolai558/NASR2SCT?style=for-the-badge)
